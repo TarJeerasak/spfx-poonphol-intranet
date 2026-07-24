@@ -1,0 +1,90 @@
+@import '../../../../shared/styles/tokens';
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 24px 12px 25px;
+  background: $color-surface-elevated;
+  border-radius: $radius-sm;
+  border-bottom: 1px solid #71b87f;
+}
+
+.header {
+  display: flex;
+  gap: 12px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.headerText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.nameRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.authorName {
+  font-family: $font-en;
+  font-weight: 500;
+  font-size: 14px;
+  color: $color-text-primary;
+}
+
+.dot,
+.postedAt {
+  font-family: $font-en;
+  font-size: 12px;
+  color: $color-text-secondary;
+}
+
+.role {
+  margin: 0;
+  font-family: $font-en;
+  font-size: 12px;
+  color: $color-text-secondary;
+}
+
+.text {
+  margin: 12px 0 0;
+  font-family: $font-en;
+  font-size: 14px;
+  line-height: 20px;
+  color: $color-text-primary;
+}
+
+.postImage {
+  margin-top: 12px;
+  height: 192px;
+  border-radius: 10px;
+  background-size: cover;
+  background-position: center;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-top: 12px;
+}
+
+.action {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: $font-en;
+  font-weight: 500;
+  font-size: 16px;
+  color: $color-text-secondary;
+}

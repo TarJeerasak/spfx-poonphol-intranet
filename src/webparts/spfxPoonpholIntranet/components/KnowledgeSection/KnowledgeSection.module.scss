@@ -1,0 +1,54 @@
+@import '../../../../shared/styles/tokens';
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  background: $color-surface;
+  border-radius: $radius-md;
+  box-shadow: $shadow-section;
+  padding: 24px;
+}
+
+.divider {
+  height: 1px;
+  background: #71b4a0;
+  width: 100%;
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tab {
+  height: 32px;
+  padding: 4px 12px;
+  border-radius: 8px;
+  border: 1px solid #71b4a0;
+  background: transparent;
+  box-shadow: 0px 2px 8px 0px rgba(22, 169, 117, 0.3);
+  font-family: $font-thai;
+  font-weight: 600;
+  font-size: 14px;
+  color: #71b4a0;
+  cursor: pointer;
+}
+
+.tabActive {
+  background: #71b4a0;
+  border-color: #71b4a0;
+  color: $color-surface;
+  box-shadow: none;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+}

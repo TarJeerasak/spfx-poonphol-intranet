@@ -1,0 +1,15 @@
+.wrap {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.img {
+  position: absolute;
+  left: -234.1%;
+  top: -385.71%;
+  width: 383.39%;
+  height: 632.65%;
+  max-width: none;
+}

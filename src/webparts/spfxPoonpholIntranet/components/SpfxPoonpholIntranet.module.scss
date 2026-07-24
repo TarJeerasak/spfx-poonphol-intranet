@@ -1,34 +1,76 @@
-@import '~@fluentui/react/dist/sass/References.scss';
+@import '../../../shared/styles/tokens';
 
-.spfxPoonpholIntranet {
-  overflow: hidden;
-  padding: 1em;
-  color: "[theme:bodyText, default: #323130]";
+.page {
+  background: #f2f6f3;
   color: var(--bodyText);
+
+  // Scoped to this web part only (not a global `*` reset) so width:100% +
+  // padding/border combos (e.g. the hero search box) size to their parent
+  // instead of overflowing it.
+  * {
+    box-sizing: border-box;
+  }
+
   &.teams {
-    font-family: $ms-font-family-fallbacks;
+    font-family: $font-thai;
   }
 }
 
-.welcome {
-  text-align: center;
+.container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 24px clamp(16px, 5.5vw, 80px) 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
-.welcomeImage {
-  width: 100%;
-  max-width: 420px;
+.contentGrid {
+  display: flex;
+  align-items: flex-start;
+  gap: 32px;
+  flex-wrap: wrap;
 }
 
-.links {
-  a {
-    text-decoration: none;
-    color: "[theme:link, default:#03787c]";
-    color: var(--link); // note: CSS Custom Properties support is limited to modern browsers only
+.mainColumn {
+  flex: 3 1 700px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 0;
+}
 
-    &:hover {
-      text-decoration: underline;
-      color: "[theme:linkHovered, default: #014446]";
-      color: var(--linkHovered); // note: CSS Custom Properties support is limited to modern browsers only
-    }
+.sidebarColumn {
+  flex: 1 1 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 0;
+}
+
+// Hide SharePoint's own page chrome (suite nav bar, site header/nav, command
+// bar, search box) so this web part reads as a full custom home page. These
+// target SharePoint's own DOM classes outside this component, so they must
+// stay unscoped — wrapped in :global instead of following CSS Modules'
+// local-by-default class hashing.
+:global {
+  .headerRow-107,
+  .commandBarWrapper,
+  div[class*='headerRow-'],
+  div[class*='shyHeader-'] {
+    display: none !important;
+  }
+
+  .spAppAndPropertyPanelContainer .sp-appBar.spDeThemeAppBar {
+    display: none !important;
+  }
+
+  form[role='search'],
+  input[aria-label='Search box'],
+  input[placeholder='Search this site'],
+  #sbcId,
+  [id*='SearchBoxContainer'],
+  [id*='searchBoxInactive'] {
+    display: none !important;
   }
 }

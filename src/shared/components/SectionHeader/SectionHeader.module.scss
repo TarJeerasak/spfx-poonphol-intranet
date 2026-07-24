@@ -1,0 +1,41 @@
+@import '../../styles/tokens';
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.titles {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  margin: 0;
+  font-family: $font-thai;
+  font-weight: 600;
+  font-size: 20px;
+  color: $color-text-primary;
+  letter-spacing: 0.5px;
+}
+
+.subtitle {
+  margin: 0;
+  font-family: $font-thai;
+  font-weight: 400;
+  font-size: 14px;
+  color: $color-text-secondary;
+}
+
+.right {
+  flex-shrink: 0;
+}

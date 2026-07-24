@@ -1,0 +1,10 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Frame">
+<path id="Vector" d="M20 11.667V35.0003" stroke="var(--stroke-0, white)" stroke-width="3.33333" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_2" d="M26.6667 20H30" stroke="var(--stroke-0, white)" stroke-width="3.33333" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_3" d="M26.6667 13.333H30.0001" stroke="var(--stroke-0, white)" stroke-width="3.33333" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_4" d="M5 30C4.55797 30 4.13405 29.8244 3.82149 29.5118C3.50893 29.1993 3.33333 28.7754 3.33333 28.3333V6.66667C3.33333 6.22464 3.50893 5.80072 3.82149 5.48816C4.13405 5.17559 4.55797 5 5 5H13.3333C15.1014 5 16.7971 5.70238 18.0474 6.95262C19.2976 8.20286 20 9.89856 20 11.6667C20 9.89856 20.7024 8.20286 21.9526 6.95262C23.2029 5.70238 24.8986 5 26.6667 5H35C35.442 5 35.866 5.17559 36.1785 5.48816C36.4911 5.80072 36.6667 6.22464 36.6667 6.66667V28.3333C36.6667 28.7754 36.4911 29.1993 36.1785 29.5118C35.866 29.8244 35.442 30 35 30H25C23.6739 30 22.4021 30.5268 21.4645 31.4645C20.5268 32.4021 20 33.6739 20 35C20 33.6739 19.4732 32.4021 18.5355 31.4645C17.5979 30.5268 16.3261 30 15 30H5Z" stroke="var(--stroke-0, white)" stroke-width="3.33333" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_5" d="M10 20H13.3333" stroke="var(--stroke-0, white)" stroke-width="3.33333" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_6" d="M10 13.333H13.3333" stroke="var(--stroke-0, white)" stroke-width="3.33333" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</svg>

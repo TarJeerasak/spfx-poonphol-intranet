@@ -1,0 +1,77 @@
+@import '../../../../shared/styles/tokens';
+
+.header {
+  background: $color-header-footer-bg;
+  padding: 20px clamp(16px, 5.5vw, 80px);
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  max-width: 1280px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.divider {
+  width: 2px;
+  height: 63px;
+  background: #d9d9d9;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.navLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 0;
+  font-family: $font-thai;
+  font-weight: 500;
+  font-size: 16px;
+  color: $color-surface;
+  text-decoration: none;
+  border-bottom: 3px solid transparent;
+  white-space: nowrap;
+
+  &:hover {
+    opacity: 0.85;
+  }
+}
+
+.navLinkActive {
+  font-weight: 600;
+  color: $color-nav-active;
+  border-bottom-color: $color-nav-active;
+}
+
+.avatarBlock {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.userName {
+  font-family: $font-en;
+  font-weight: 600;
+  font-size: 16px;
+  color: $color-accent;
+  white-space: nowrap;
+}
+
+.chevron {
+  color: $color-surface;
+}

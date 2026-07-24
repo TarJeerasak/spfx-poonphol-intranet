@@ -1,0 +1,17 @@
+@import '../../styles/tokens';
+
+.tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.circle {
+  border-radius: 999px;
+  border: 2px solid #a0bbcb;
+}
+
+.square {
+  border-radius: 10px;
+}

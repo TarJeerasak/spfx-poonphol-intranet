@@ -1,0 +1,23 @@
+@import '../../../../shared/styles/tokens';
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  background: $color-surface;
+  border-radius: $radius-md;
+  box-shadow: $shadow-section;
+  padding: 24px;
+}
+
+.divider {
+  height: 1px;
+  background: #71b87f;
+  width: 100%;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}

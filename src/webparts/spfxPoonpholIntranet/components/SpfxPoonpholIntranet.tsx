@@ -1,43 +1,62 @@
 import * as React from 'react';
+import { useExternalStylesheet } from '../../../shared/hooks/useExternalStylesheet';
 import styles from './SpfxPoonpholIntranet.module.scss';
 import type { ISpfxPoonpholIntranetProps } from './ISpfxPoonpholIntranetProps';
-import { escape } from '@microsoft/sp-lodash-subset';
+import { Header } from './Header/Header';
+import { Footer } from './Footer/Footer';
+import { Hero } from './Hero/Hero';
+import { QuickLinks } from './QuickLinks/QuickLinks';
+import { NewsSection } from './NewsSection/NewsSection';
+import { KnowledgeSection } from './KnowledgeSection/KnowledgeSection';
+import { EventSection } from './EventSection/EventSection';
+import { CommunitySection } from './CommunitySection/CommunitySection';
+import {
+  announcements,
+  communityPosts,
+  eventFeature,
+  eventList,
+  heroBackgroundUrl,
+  knowledgeCategories,
+  knowledgeItems,
+  navLinks,
+  newsFeature,
+  newsList,
+  quickAppSearches,
+  quickLinks
+} from './data/mockContent';
 
-export default class SpfxPoonpholIntranet extends React.Component<ISpfxPoonpholIntranetProps> {
-  public render(): React.ReactElement<ISpfxPoonpholIntranetProps> {
-    const {
-      description,
-      isDarkTheme,
-      environmentMessage,
-      hasTeamsContext,
-      userDisplayName
-    } = this.props;
+const TOTAL_NEWS_COUNT = 24;
+const TOTAL_KNOWLEDGE_COUNT = 24;
+const TOTAL_EVENT_COUNT = 24;
+const GOOGLE_FONTS_URL =
+  'https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&family=Noto+Sans:wght@400;600&display=swap';
 
-    return (
-      <section className={`${styles.spfxPoonpholIntranet} ${hasTeamsContext ? styles.teams : ''}`}>
-        <div className={styles.welcome}>
-          <img alt="" src={isDarkTheme ? require('../assets/welcome-dark.png') : require('../assets/welcome-light.png')} className={styles.welcomeImage} />
-          <h2>Well done, {escape(userDisplayName)}!</h2>
-          <div>{environmentMessage}</div>
-          <div>Web part property value: <strong>{escape(description)}</strong></div>
+export default function SpfxPoonpholIntranet({ hasTeamsContext, userDisplayName }: ISpfxPoonpholIntranetProps): React.ReactElement {
+  useExternalStylesheet(GOOGLE_FONTS_URL);
+
+  return (
+    <div className={`${styles.page} ${hasTeamsContext ? styles.teams : ''}`}>
+      <Header navLinks={navLinks} userDisplayName={userDisplayName} />
+      <div className={styles.container}>
+        <Hero
+          userDisplayName={userDisplayName}
+          backgroundUrl={heroBackgroundUrl}
+          quickAppSearches={quickAppSearches}
+          announcements={announcements}
+        />
+        <QuickLinks items={quickLinks} />
+        <div className={styles.contentGrid}>
+          <div className={styles.mainColumn}>
+            <NewsSection feature={newsFeature} items={newsList} totalCount={TOTAL_NEWS_COUNT} />
+            <KnowledgeSection categories={knowledgeCategories} items={knowledgeItems} totalCount={TOTAL_KNOWLEDGE_COUNT} />
+          </div>
+          <div className={styles.sidebarColumn}>
+            <EventSection feature={eventFeature} items={eventList} totalCount={TOTAL_EVENT_COUNT} />
+            <CommunitySection posts={communityPosts} />
+          </div>
         </div>
-        <div>
-          <h3>Welcome to SharePoint Framework!</h3>
-          <p>
-            The SharePoint Framework (SPFx) is a extensibility model for Microsoft Viva, Microsoft Teams and SharePoint. It&#39;s the easiest way to extend Microsoft 365 with automatic Single Sign On, automatic hosting and industry standard tooling.
-          </p>
-          <h4>Learn more about SPFx development:</h4>
-          <ul className={styles.links}>
-            <li><a href="https://aka.ms/spfx" target="_blank" rel="noreferrer">SharePoint Framework Overview</a></li>
-            <li><a href="https://aka.ms/spfx-yeoman-graph" target="_blank" rel="noreferrer">Use Microsoft Graph in your solution</a></li>
-            <li><a href="https://aka.ms/spfx-yeoman-teams" target="_blank" rel="noreferrer">Build for Microsoft Teams using SharePoint Framework</a></li>
-            <li><a href="https://aka.ms/spfx-yeoman-viva" target="_blank" rel="noreferrer">Build for Microsoft Viva Connections using SharePoint Framework</a></li>
-            <li><a href="https://aka.ms/spfx-yeoman-store" target="_blank" rel="noreferrer">Publish SharePoint Framework applications to the marketplace</a></li>
-            <li><a href="https://aka.ms/spfx-yeoman-api" target="_blank" rel="noreferrer">SharePoint Framework API reference</a></li>
-            <li><a href="https://aka.ms/m365pnp" target="_blank" rel="noreferrer">Microsoft 365 Developer Community</a></li>
-          </ul>
-        </div>
-      </section>
-    );
-  }
+      </div>
+      <Footer navLinks={navLinks} />
+    </div>
+  );
 }

@@ -35,6 +35,6 @@
     ]
   },
   "paths": {
-    "zippedPackage": "solution/spfx-poonphol-intranet.sppkg"
+    "zippedPackage": "solution/spfx-intranet-poonphol.sppkg"
   }
 }

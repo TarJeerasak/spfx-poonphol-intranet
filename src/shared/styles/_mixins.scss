@@ -1,0 +1,19 @@
+@import 'tokens';
+
+// Full-bleed image card with a bottom-to-top black gradient overlay so light
+// text stays legible regardless of the underlying photo (news/event hero cards).
+@mixin gradient-card($radius: $radius-sm) {
+  position: relative;
+  border-radius: $radius;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.7) 72%, rgba(0, 0, 0, 0.95) 100%);
+    pointer-events: none;
+  }
+}

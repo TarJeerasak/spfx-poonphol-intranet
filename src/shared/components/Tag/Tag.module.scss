@@ -1,0 +1,16 @@
+@import '../../styles/tokens';
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 12px;
+  border-radius: $radius-pill;
+  background: $color-secondary;
+  color: $color-surface;
+  font-family: $font-body;
+  font-size: 12px;
+  line-height: 1;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
