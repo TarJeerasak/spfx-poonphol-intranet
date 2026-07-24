@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "spfx-poonphol-intranet-client-side-solution",
+    "id": "52ea4128-656f-42a0-ac39-14a4620cc977",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.22.2"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "spfx-poonphol-intranet description"
+      },
+      "longDescription": {
+        "default": "spfx-poonphol-intranet description"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "spfx-poonphol-intranet Feature",
+        "description": "The feature that activates elements of the spfx-poonphol-intranet solution.",
+        "id": "af6fed0d-1b85-49bc-8463-d3c684cfc9ad",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/spfx-poonphol-intranet.sppkg"
+  }
+}

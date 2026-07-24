@@ -1,0 +1,19 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "useGulp": false,
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "nodeVersion": "22.19.0",
+    "sdksVersions": {},
+    "version": "1.22.2",
+    "libraryName": "spfx-poonphol-intranet",
+    "libraryId": "52ea4128-656f-42a0-ac39-14a4620cc977",
+    "environment": "spo",
+    "packageManager": "npm",
+    "solutionName": "spfx-poonphol-intranet",
+    "solutionShortDescription": "spfx-poonphol-intranet description",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "componentType": "webpart"
+  }
+}
