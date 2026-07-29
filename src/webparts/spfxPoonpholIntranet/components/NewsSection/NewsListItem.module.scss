@@ -1,4 +1,5 @@
 @import '../../../../shared/styles/tokens';
+@import '../../../../shared/styles/mixins';
 
 .row {
   display: flex;
@@ -39,6 +40,7 @@
   line-height: 1.4;
   color: $color-text-primary;
   text-transform: capitalize;
+  @include line-clamp(2);
 }
 
 .meta {
@@ -68,4 +70,5 @@
   font-size: 15px;
   line-height: 1.5;
   color: $color-text-primary;
+  @include line-clamp(2);
 }

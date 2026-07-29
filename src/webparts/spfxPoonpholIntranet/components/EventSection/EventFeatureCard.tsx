@@ -1,41 +1,29 @@
 import * as React from 'react';
 import { Icon } from '../../../../shared/components/Icon/Icon';
+import { EventItem } from '../../../../shared/types/content';
 import styles from './EventFeatureCard.module.scss';
 
 export interface EventFeatureCardProps {
-  title: string;
-  subtitle: string;
-  dateLabel: string;
-  timeLabel: string;
-  locationLabel: string;
-  imageUrl: string;
+  item: EventItem;
 }
 
-export function EventFeatureCard({
-  title,
-  subtitle,
-  dateLabel,
-  timeLabel,
-  locationLabel,
-  imageUrl
-}: EventFeatureCardProps): React.ReactElement {
+export function EventFeatureCard({ item }: EventFeatureCardProps): React.ReactElement {
   return (
-    <div className={styles.card} style={{ backgroundImage: `url(${imageUrl})` }}>
+    <div className={styles.card} style={{ backgroundImage: `url(${item.imageUrl})` }}>
       <div className={styles.content}>
-        <h3 className={styles.title}>{title}</h3>
-        <p className={styles.subtitle}>{subtitle}</p>
+        <h3 className={styles.title}>{item.title}</h3>
         <div className={styles.meta}>
           <span className={styles.metaItem}>
             <Icon name="calendar" size={14} />
-            {dateLabel}
+            {item.dateDay} {item.dateMonthLabel}
           </span>
           <span className={styles.metaItem}>
             <Icon name="clock" size={14} />
-            {timeLabel}
+            {item.timeLabel}
           </span>
           <span className={styles.metaItem}>
             <Icon name="location" size={14} />
-            {locationLabel}
+            {item.locationLabel}
           </span>
         </div>
       </div>

@@ -2,23 +2,16 @@ import { formatThaiDate } from '../../../../shared/utils/formatThaiDate';
 import {
   Announcement,
   CommunityPost,
-  EventItem,
   KnowledgeCategory,
   KnowledgeItem,
   NavLink,
-  NewsItem,
   QuickLink
 } from '../../../../shared/types/content';
 
 import heroBg from '../../assets/home/hero-bg.jpg';
-import newsFeatureImg from '../../assets/home/news-feature.jpg';
-import newsThumbImg from '../../assets/home/news-thumb.jpg';
 import kmThumbImg from '../../assets/home/km-thumb.jpg';
-import eventFeatureImg from '../../assets/home/event-feature.jpg';
-import eventThumbImg from '../../assets/home/event-thumb.jpg';
 import communityAvatarImg from '../../assets/home/community-avatar.png';
 import communityPostImg from '../../assets/home/community-post.jpg';
-import ellipseAvatarImg from '../../assets/home/ellipse-avatar-small.png';
 import documentIcon from '../../assets/home/icons/quicklinks/document.svg';
 import dtHelpdeskIcon from '../../assets/home/icons/quicklinks/dt-helpdesk.svg';
 import telephoneListsIcon from '../../assets/home/icons/quicklinks/telephone-lists.svg';
@@ -74,54 +67,6 @@ export const announcements: Announcement[] = [
   }
 ];
 
-export const newsFeature: NewsItem = {
-  id: 'news-feature',
-  tag: 'Business',
-  tagColor: '#63b37d',
-  title: 'Group Orientation ประจำเดือนกรกฎาคม',
-  excerpt: 'บรรยากาศกิจกรรม Group Orientation ประจำเดือนกรกฎาคม ที่ชั้น 20 อาคารสาธรธานี',
-  dateLabel: formatThaiDate(new Date(2025, 5, 10)),
-  timeLabel: '09:00 - 12:00',
-  locationLabel: 'อาคาร A ชั้น 3 และ Online',
-  imageUrl: newsFeatureImg
-};
-
-export const newsList: NewsItem[] = [
-  {
-    id: 'news-1',
-    tag: 'Business',
-    tagColor: '#63b37d',
-    title: 'กิจกรรมพัฒนา Core Competency',
-    excerpt: 'Did you come here for something in particular or just general Riker-bashing? And blowing into',
-    dateLabel: formatThaiDate(new Date(2022, 11, 2)),
-    timeLabel: '3 min. to read',
-    locationLabel: 'Jenny kiaa',
-    imageUrl: newsThumbImg
-  },
-  {
-    id: 'news-2',
-    tag: 'Activities',
-    tagColor: '#d38f9a',
-    title: 'กิจกรรม PPG Townhall 2024',
-    excerpt: 'Did you come here for something in particular or just general Riker-bashing? And blowing into',
-    dateLabel: formatThaiDate(new Date(2022, 11, 15)),
-    timeLabel: '1 min. to read',
-    locationLabel: 'Jenny kiaa',
-    imageUrl: newsThumbImg
-  },
-  {
-    id: 'news-3',
-    tag: 'Activities',
-    tagColor: '#d38f9a',
-    title: 'ทำบุญครบรอบ 50 ปี',
-    excerpt: 'Did you come here for something in particular or just general Riker-bashing? And blowing into',
-    dateLabel: formatThaiDate(new Date(2022, 11, 3)),
-    timeLabel: '1 min. to read',
-    locationLabel: 'Jenny kiaa',
-    imageUrl: newsThumbImg
-  }
-];
-
 export const knowledgeCategories: KnowledgeCategory[] = [
   { id: 'all', label: 'ดูทั้งหมด' },
   { id: 'learning', label: 'Learning' },
@@ -159,51 +104,6 @@ export const knowledgeItems: KnowledgeItem[] = [
     progressPercent: 100,
     locationLabel: 'Virtual · Microsoft Teams',
     imageUrl: kmThumbImg
-  }
-];
-
-export const eventFeature = {
-  title: 'DIGITAL DAY',
-  subtitle: 'อัพเดตกลยุทธ์และทิศทางขององค์กร',
-  dateLabel: formatThaiDate(new Date(2025, 5, 10)),
-  timeLabel: '09:00 - 12:00',
-  locationLabel: 'อาคาร A ชั้น 3 และ Online',
-  imageUrl: eventFeatureImg
-};
-
-export const eventList: EventItem[] = [
-  {
-    id: 'event-1',
-    dateDay: '13',
-    dateMonthLabel: 'มิ.ย.',
-    title: 'กิจกรรม Culture Talk',
-    timeLabel: '08:00 - 12:00',
-    locationLabel: 'จ.ระยอง',
-    attendeeAvatarUrls: [ellipseAvatarImg, ellipseAvatarImg, ellipseAvatarImg],
-    overflowCount: 3,
-    imageUrl: eventThumbImg
-  },
-  {
-    id: 'event-2',
-    dateDay: '18',
-    dateMonthLabel: 'มิ.ย.',
-    title: 'Kensoa PPC Cluster Forum',
-    timeLabel: '13:00 - 16:00',
-    locationLabel: 'Bangkok Office',
-    attendeeAvatarUrls: [ellipseAvatarImg, ellipseAvatarImg, ellipseAvatarImg],
-    overflowCount: 3,
-    imageUrl: eventThumbImg
-  },
-  {
-    id: 'event-3',
-    dateDay: '25',
-    dateMonthLabel: 'มิ.ย.',
-    title: 'Goodz All In Your Area',
-    timeLabel: '09:00 - 17:00',
-    locationLabel: 'Online',
-    attendeeAvatarUrls: [ellipseAvatarImg, ellipseAvatarImg, ellipseAvatarImg],
-    overflowCount: 3,
-    imageUrl: eventThumbImg
   }
 ];
 

@@ -7,17 +7,8 @@ import { EventListItem } from './EventListItem';
 import eventIcon from '../../assets/home/icons/sections/event.svg';
 import styles from './EventSection.module.scss';
 
-export interface EventFeature {
-  title: string;
-  subtitle: string;
-  dateLabel: string;
-  timeLabel: string;
-  locationLabel: string;
-  imageUrl: string;
-}
-
 export interface EventSectionProps {
-  feature: EventFeature;
+  feature: EventItem;
   items: EventItem[];
   totalCount: number;
 }
@@ -26,7 +17,7 @@ export function EventSection({ feature, items, totalCount }: EventSectionProps):
   return (
     <section className={styles.section}>
       <SectionHeader iconUrl={eventIcon} tintColor="#316f64" title="Event" subtitle="กิจกรรมองค์กร" />
-      <EventFeatureCard {...feature} />
+      <EventFeatureCard item={feature} />
       <div className={styles.list}>
         {items.map(item => (
           <EventListItem key={item.id} item={item} />

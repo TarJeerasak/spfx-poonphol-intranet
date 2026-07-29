@@ -25,6 +25,7 @@
   font-family: $font-thai;
   font-weight: 600;
   font-size: 32px;
+  @include line-clamp(2);
 }
 
 .excerpt {
@@ -33,6 +34,7 @@
   font-weight: 500;
   font-size: 16px;
   line-height: 1.6;
+  @include line-clamp(2);
 }
 
 .meta {
