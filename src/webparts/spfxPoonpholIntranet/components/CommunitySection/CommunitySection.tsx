@@ -3,6 +3,7 @@ import { SectionHeader } from '../../../../shared/components/SectionHeader/Secti
 import { SectionFooter } from '../../../../shared/components/SectionFooter/SectionFooter';
 import { Button } from '../../../../shared/components/Button/Button';
 import { CommunityPost } from '../../../../shared/types/content';
+import { useCommunityLikes } from '../../hooks/useCommunityLikes';
 import { CommunityPostCard } from './CommunityPostCard';
 import communityIcon from '../../assets/home/icons/sections/community.svg';
 import styles from './CommunitySection.module.scss';
@@ -12,6 +13,8 @@ export interface CommunitySectionProps {
 }
 
 export function CommunitySection({ posts }: CommunitySectionProps): React.ReactElement {
+  const { getLikeState, toggleLike } = useCommunityLikes(posts);
+
   return (
     <section className={styles.section}>
       <SectionHeader
@@ -28,7 +31,12 @@ export function CommunitySection({ posts }: CommunitySectionProps): React.ReactE
       <div className={styles.divider} />
       <div className={styles.list}>
         {posts.map(post => (
-          <CommunityPostCard key={post.id} post={post} />
+          <CommunityPostCard
+            key={post.id}
+            post={post}
+            likeState={getLikeState(post)}
+            onToggleLike={() => toggleLike(post)}
+          />
         ))}
       </div>
       <SectionFooter />

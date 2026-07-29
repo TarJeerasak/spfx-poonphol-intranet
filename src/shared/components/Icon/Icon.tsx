@@ -10,7 +10,8 @@ export type IconName =
   | 'bell'
   | 'document'
   | 'menuBook'
-  | 'plus';
+  | 'plus'
+  | 'like';
 
 export interface IconProps {
   name: IconName;
@@ -63,7 +64,10 @@ const PATHS: Record<IconName, React.ReactNode> = {
       <path d="M20 5.5A2.5 2.5 0 0 0 17.5 3H12v18h5.5a2.5 2.5 0 0 0 2.5-2.5v-13z" />
     </>
   ),
-  plus: <path d="M12 5v14M5 12h14" />
+  plus: <path d="M12 5v14M5 12h14" />,
+  like: (
+    <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3v11z" />
+  )
 };
 
 export function Icon({ name, size = 20, className }: IconProps): React.ReactElement {

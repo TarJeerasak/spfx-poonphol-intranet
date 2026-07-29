@@ -132,8 +132,21 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  padding: 0;
+  border: none;
+  background: none;
   font-family: $font-en;
   font-weight: 500;
   font-size: 16px;
   color: $color-text-secondary;
+  cursor: pointer;
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.6;
+  }
+}
+
+.liked {
+  color: #71b87f;
 }

@@ -1,16 +1,19 @@
 import * as React from 'react';
+import { Icon } from '../../../../shared/components/Icon/Icon';
 import { CommunityPost } from '../../../../shared/types/content';
 import { shouldClampText } from '../../../../shared/utils/shouldClampText';
-import likeIcon from '../../assets/home/icons/like.svg';
+import { CommunityLikeState } from '../../hooks/useCommunityLikes';
 import styles from './CommunityPostCard.module.scss';
 
 const MAX_VISIBLE_IMAGES = 4;
 
 export interface CommunityPostCardProps {
   post: CommunityPost;
+  likeState: CommunityLikeState;
+  onToggleLike: () => void;
 }
 
-export function CommunityPostCard({ post }: CommunityPostCardProps): React.ReactElement {
+export function CommunityPostCard({ post, likeState, onToggleLike }: CommunityPostCardProps): React.ReactElement {
   const [isExpanded, setIsExpanded] = React.useState(false);
   const isClampable = shouldClampText(post.text);
   const visibleImages = post.imageUrls.slice(0, MAX_VISIBLE_IMAGES);
@@ -48,10 +51,16 @@ export function CommunityPostCard({ post }: CommunityPostCardProps): React.React
         </div>
       )}
       <div className={styles.actions}>
-        <span className={styles.action}>
-          <img src={likeIcon} alt="" width={16} height={16} />
-          {post.likeCount}
-        </span>
+        <button
+          type="button"
+          className={`${styles.action} ${likeState.isLiked ? styles.liked : ''}`}
+          onClick={onToggleLike}
+          disabled={likeState.isSaving}
+          aria-pressed={likeState.isLiked}
+        >
+          <Icon name="like" size={16} />
+          {likeState.likeCount}
+        </button>
       </div>
     </div>
   );
