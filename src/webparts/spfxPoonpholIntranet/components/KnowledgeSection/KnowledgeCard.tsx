@@ -12,7 +12,11 @@ export function KnowledgeCard({ item }: KnowledgeCardProps): React.ReactElement 
     <div className={styles.card}>
       <div className={styles.thumbnail} style={{ backgroundImage: `url(${item.imageUrl})` }} />
       <div className={styles.body}>
-        <Tag label={item.tag} color="#41a9e5" />
+        <div className={styles.tagGroup}>
+          {item.tags.map(tag => (
+            <Tag key={tag} label={tag} color="#41a9e5" />
+          ))}
+        </div>
         <div className={styles.textGroup}>
           <p className={styles.title}>{item.title}</p>
           <p className={styles.progressLabel}>{item.progressLabel}</p>

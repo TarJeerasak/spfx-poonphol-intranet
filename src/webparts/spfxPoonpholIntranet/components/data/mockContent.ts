@@ -1,17 +1,7 @@
 import { formatThaiDate } from '../../../../shared/utils/formatThaiDate';
-import {
-  Announcement,
-  CommunityPost,
-  KnowledgeCategory,
-  KnowledgeItem,
-  NavLink,
-  QuickLink
-} from '../../../../shared/types/content';
+import { Announcement, NavLink, QuickLink } from '../../../../shared/types/content';
 
 import heroBg from '../../assets/home/hero-bg.jpg';
-import kmThumbImg from '../../assets/home/km-thumb.jpg';
-import communityAvatarImg from '../../assets/home/community-avatar.png';
-import communityPostImg from '../../assets/home/community-post.jpg';
 import documentIcon from '../../assets/home/icons/quicklinks/document.svg';
 import dtHelpdeskIcon from '../../assets/home/icons/quicklinks/dt-helpdesk.svg';
 import telephoneListsIcon from '../../assets/home/icons/quicklinks/telephone-lists.svg';
@@ -64,76 +54,5 @@ export const announcements: Announcement[] = [
     title: 'Team Building Retreat',
     description: 'Enhance team dynamics and foster collaboration in a fun setting',
     dateTimeLabel: `${formatThaiDate(new Date(2026, 7, 5))} เวลา 09:00 น.`
-  }
-];
-
-export const knowledgeCategories: KnowledgeCategory[] = [
-  { id: 'all', label: 'ดูทั้งหมด' },
-  { id: 'learning', label: 'Learning' },
-  { id: 'mindset', label: 'Mindset' },
-  { id: 'management', label: 'Management' }
-];
-
-export const knowledgeItems: KnowledgeItem[] = [
-  {
-    id: 'km-1',
-    categoryId: 'mindset',
-    tag: 'Hybrid',
-    title: 'ETHICS MATTERS EP.1-4',
-    progressLabel: 'ดูไปแล้ว 2 EP. 50%',
-    progressPercent: 50,
-    locationLabel: 'Virtual · Microsoft Teams',
-    imageUrl: kmThumbImg
-  },
-  {
-    id: 'km-2',
-    categoryId: 'learning',
-    tag: 'Hybrid',
-    title: 'ETHICS MATTERS EP.1-4',
-    progressLabel: 'ดูไปแล้ว 1 EP. 25%',
-    progressPercent: 25,
-    locationLabel: 'Virtual · Microsoft Teams',
-    imageUrl: kmThumbImg
-  },
-  {
-    id: 'km-3',
-    categoryId: 'management',
-    tag: 'Hybrid',
-    title: 'ETHICS MATTERS EP.1-4',
-    progressLabel: 'ดูไปแล้ว 4 EP. 100%',
-    progressPercent: 100,
-    locationLabel: 'Virtual · Microsoft Teams',
-    imageUrl: kmThumbImg
-  }
-];
-
-export const communityPosts: CommunityPost[] = [
-  {
-    id: 'post-1',
-    authorName: 'Michael Chen',
-    authorRole: 'Operations Manager',
-    postedAtLabel: '2 hours ago',
-    authorAvatarUrl: communityAvatarImg,
-    text: "Great team collaboration today! Our Q2 project milestones are looking fantastic. Proud of everyone's dedication and hard work. 🎉",
-    imageUrl: communityPostImg,
-    likeCount: 24
-  },
-  {
-    id: 'post-2',
-    authorName: 'Michael Chen',
-    authorRole: 'Operations Manager',
-    postedAtLabel: '3 hours ago',
-    authorAvatarUrl: communityAvatarImg,
-    text: "Great team collaboration today! Our Q2 project milestones are looking fantastic. Proud of everyone's dedication and hard work. 🎉",
-    likeCount: 24
-  },
-  {
-    id: 'post-3',
-    authorName: 'Michael Chen',
-    authorRole: 'Operations Manager',
-    postedAtLabel: '5 hours ago',
-    authorAvatarUrl: communityAvatarImg,
-    text: "Great team collaboration today! Our Q2 project milestones are looking fantastic. Proud of everyone's dedication and hard work. 🎉",
-    likeCount: 24
   }
 ];

@@ -25,7 +25,7 @@ export interface KnowledgeCategory {
 export interface KnowledgeItem {
   id: string;
   categoryId: string;
-  tag: string;
+  tags: string[];
   title: string;
   progressLabel: string;
   progressPercent: number;
@@ -52,7 +52,7 @@ export interface CommunityPost {
   postedAtLabel: string;
   authorAvatarUrl: string;
   text: string;
-  imageUrl?: string;
+  imageUrls: string[];
   likeCount: number;
 }
 

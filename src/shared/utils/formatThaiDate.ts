@@ -3,7 +3,7 @@ const THAI_MONTHS = [
   'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'
 ];
 
-const BUDDHIST_ERA_OFFSET = 543;
+export const BUDDHIST_ERA_OFFSET = 543;
 
 export function formatThaiDate(date: Date): string {
   const day = date.getDate();
