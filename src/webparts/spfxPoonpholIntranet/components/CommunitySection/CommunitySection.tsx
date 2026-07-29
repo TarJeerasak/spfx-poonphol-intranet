@@ -6,16 +6,19 @@ import { useScrollReveal } from '../../../../shared/hooks/useScrollReveal';
 import { CommunityPost } from '../../../../shared/types/content';
 import { useCommunityLikes } from '../../hooks/useCommunityLikes';
 import { CommunityPostCard } from './CommunityPostCard';
+import { CreatePostModal } from './CreatePostModal';
 import communityIcon from '../../assets/home/icons/sections/community.svg';
 import styles from './CommunitySection.module.scss';
 
 export interface CommunitySectionProps {
   posts: CommunityPost[];
+  onPostCreated?: () => void;
 }
 
-export function CommunitySection({ posts }: CommunitySectionProps): React.ReactElement {
+export function CommunitySection({ posts, onPostCreated }: CommunitySectionProps): React.ReactElement {
   const { getLikeState, toggleLike } = useCommunityLikes(posts);
   const [ref, isVisible] = useScrollReveal<HTMLElement>();
+  const [isCreateModalOpen, setIsCreateModalOpen] = React.useState(false);
 
   return (
     <section ref={ref} className={`${styles.section} ${isVisible ? styles.isVisible : ''}`}>
@@ -25,7 +28,11 @@ export function CommunitySection({ posts }: CommunitySectionProps): React.ReactE
         title="Poonphol Community"
         subtitle="แบ่งปันเรื่องราวดีๆ ในองค์กร"
         rightSlot={
-          <Button variant="primary" style={{ background: '#71b87f', height: 32, padding: '4px 12px' }}>
+          <Button
+            variant="primary"
+            style={{ background: '#71b87f', height: 32, padding: '4px 12px' }}
+            onClick={() => setIsCreateModalOpen(true)}
+          >
             สร้างโพสต์
           </Button>
         }
@@ -42,6 +49,11 @@ export function CommunitySection({ posts }: CommunitySectionProps): React.ReactE
         ))}
       </div>
       <SectionFooter />
+      <CreatePostModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onCreated={() => onPostCreated?.()}
+      />
     </section>
   );
 }

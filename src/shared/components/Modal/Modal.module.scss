@@ -1,0 +1,101 @@
+@import '../../styles/tokens';
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(18, 52, 22, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  z-index: 1000;
+  overflow-y: auto;
+  animation: fadeIn 0.2s ease;
+}
+
+.panel {
+  width: 100%;
+  max-width: 560px;
+  background: $color-surface;
+  border-radius: $radius-md;
+  box-shadow: $shadow-elevated;
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  animation: slideUp 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid $color-border;
+  flex-shrink: 0;
+}
+
+.title {
+  margin: 0;
+  font-family: $font-thai;
+  font-weight: 600;
+  font-size: 18px;
+  color: $color-text-primary;
+}
+
+.closeButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: $color-text-secondary;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+
+  &:hover {
+    background: $color-border;
+    color: $color-text-primary;
+  }
+}
+
+.body {
+  padding: 20px 24px;
+  overflow-y: auto;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid $color-border;
+  flex-shrink: 0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

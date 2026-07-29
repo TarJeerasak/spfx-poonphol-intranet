@@ -17,7 +17,9 @@ export type IconName =
   | 'clipboardList'
   | 'fileEdit'
   | 'megaphone'
-  | 'download';
+  | 'download'
+  | 'close'
+  | 'image';
 
 export interface IconProps {
   name: IconName;
@@ -104,6 +106,14 @@ const PATHS: Record<IconName, React.ReactNode> = {
     <>
       <path d="M12 3v12M7 10l5 5 5-5" />
       <path d="M5 21h14" />
+    </>
+  ),
+  close: <path d="M6 6l12 12M18 6L6 18" />,
+  image: (
+    <>
+      <rect x="3" y="4" width="18" height="16" rx="2" />
+      <circle cx="9" cy="10" r="2" />
+      <path d="M21 16l-5.5-5.5L6 19" />
     </>
   )
 };

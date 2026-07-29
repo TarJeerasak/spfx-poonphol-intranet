@@ -1,4 +1,4 @@
-import { spApi } from '../../../shared/services/api';
+import { fetchRequestDigest, spApi } from '../../../shared/services/api';
 import { CommunityPost } from '../../../shared/types/content';
 import { buildUserPhotoUrl } from '../../../shared/utils/buildUserPhotoUrl';
 import { formatRelativeThaiTime } from '../../../shared/utils/formatRelativeThaiTime';
@@ -14,13 +14,16 @@ export const MAX_FEATURED_COMMUNITY_POST_COUNT = 3;
 // `${SiteURL}/_api/web/lists/getbytitle('Poonphol_Community')/fields?$select=Title,InternalName,TypeAsString&$filter=Hidden eq false`
 // and adjust the constants below if the request returns a "field does not exist" error.
 // "Created By" is exposed over REST as the "Author" person field.
+// Email_Created is itself a Person/Group field (confirmed by the "entity type" error SharePoint
+// returns for a plain string) - it must be written as `${emailCreated}Id` with the SP user's numeric Id.
 const COMMUNITY_FIELDS = {
   id: 'Id',
   description: 'Description',
   likeCount: 'LikeCount',
   created: 'Created',
   author: 'Author',
-  active: 'Active'
+  active: 'Active',
+  emailCreated: 'Email_Created'
 } as const;
 
 interface ISPCommunityListItem {
@@ -98,4 +101,44 @@ export async function fetchCommunityFeed(): Promise<CommunityFeedResult> {
     posts,
     totalCount: activeItems.length
   };
+}
+
+// Attachments upload as raw binary to the item's AttachmentFiles collection, so the
+// shared axios instance's default JSON content-type must be overridden per request.
+async function uploadCommunityAttachment(itemId: number, file: File, digest: string): Promise<void> {
+  const buffer = await file.arrayBuffer();
+
+  await spApi.post(
+    `/lists/getbytitle('${COMMUNITY_LIST_TITLE}')/items(${itemId})/AttachmentFiles/add(FileName='${encodeURIComponent(
+      file.name
+    )}')`,
+    buffer,
+    { headers: { 'X-RequestDigest': digest, 'Content-Type': 'application/octet-stream' } }
+  );
+}
+
+export async function createCommunityPost(description: string, createdByUserId: number, files: File[]): Promise<number> {
+  const digest = await fetchRequestDigest();
+
+  const body: Record<string, unknown> = {
+    [COMMUNITY_FIELDS.description]: description
+  };
+  if (createdByUserId) {
+    body[`${COMMUNITY_FIELDS.emailCreated}Id`] = createdByUserId;
+  }
+
+  const createResponse = await spApi.post<{ Id: number }>(
+    `/lists/getbytitle('${COMMUNITY_LIST_TITLE}')/items`,
+    body,
+    { headers: { 'X-RequestDigest': digest } }
+  );
+
+  const itemId = createResponse.data.Id;
+
+  // Uploaded sequentially (not Promise.all) so a slow/failed file doesn't race the shared digest.
+  for (const file of files) {
+    await uploadCommunityAttachment(itemId, file, digest);
+  }
+
+  return itemId;
 }
