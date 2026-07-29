@@ -40,6 +40,7 @@ export interface EventItem {
   dateDay: string;
   dateMonthLabel: string;
   title: string;
+  subtitle: string;
   timeLabel: string;
   locationLabel: string;
   attendeeAvatarUrls: string[];

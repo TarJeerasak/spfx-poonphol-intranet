@@ -45,19 +45,21 @@ describe('mapToEventItem', () => {
     const raw = {
       Id: 13,
       Title: 'กิจกรรม Culture Talk',
+      ShortDescription: '<p>อัพเดตกลยุทธ์และทิศทางขององค์กร</p>',
       Image: JSON.stringify({
         serverUrl: 'https://fusionsoftcompany.sharepoint.com',
         serverRelativeUrl: '/sites/Project-PoonpholIntranetPortal/SiteAssets/event-13.jpg'
       }),
-      Category: { Title: 'จ.ระยอง' },
+      Location: 'จ.ระยอง',
+      Time: '08:00 - 12:00',
       DateFrom: '2026-06-13T08:00:00',
-      DateTo: '2026-06-13T12:00:00',
       Active: true
     };
 
     expect(mapToEventItem(raw)).toEqual({
       id: '13',
       title: 'กิจกรรม Culture Talk',
+      subtitle: 'อัพเดตกลยุทธ์และทิศทางขององค์กร',
       dateDay: '13',
       dateMonthLabel: 'มิ.ย.',
       timeLabel: '08:00 - 12:00',
@@ -78,6 +80,7 @@ describe('mapToEventItem', () => {
     expect(mapToEventItem(raw)).toEqual({
       id: '7',
       title: 'No schedule yet',
+      subtitle: '',
       dateDay: '',
       dateMonthLabel: '',
       timeLabel: '',

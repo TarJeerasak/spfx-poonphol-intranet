@@ -2,6 +2,7 @@ import * as React from 'react';
 import { SectionHeader } from '../../../../shared/components/SectionHeader/SectionHeader';
 import { SectionFooter } from '../../../../shared/components/SectionFooter/SectionFooter';
 import { EventItem } from '../../../../shared/types/content';
+import { useEventJoins } from '../../hooks/useEventJoins';
 import { EventFeatureCard } from './EventFeatureCard';
 import { EventListItem } from './EventListItem';
 import eventIcon from '../../assets/home/icons/sections/event.svg';
@@ -14,13 +15,15 @@ export interface EventSectionProps {
 }
 
 export function EventSection({ feature, items, totalCount }: EventSectionProps): React.ReactElement {
+  const { getJoinState, toggleJoin } = useEventJoins(items);
+
   return (
     <section className={styles.section}>
       <SectionHeader iconUrl={eventIcon} tintColor="#316f64" title="Event" subtitle="กิจกรรมองค์กร" />
       <EventFeatureCard item={feature} />
       <div className={styles.list}>
         {items.map(item => (
-          <EventListItem key={item.id} item={item} />
+          <EventListItem key={item.id} item={item} joinState={getJoinState(item)} onToggleJoin={() => toggleJoin(item)} />
         ))}
       </div>
       <div className={styles.divider} />

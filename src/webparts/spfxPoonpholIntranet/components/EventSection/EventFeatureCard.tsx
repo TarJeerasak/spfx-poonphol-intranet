@@ -12,19 +12,24 @@ export function EventFeatureCard({ item }: EventFeatureCardProps): React.ReactEl
     <div className={styles.card} style={{ backgroundImage: `url(${item.imageUrl})` }}>
       <div className={styles.content}>
         <h3 className={styles.title}>{item.title}</h3>
+        {item.subtitle && <p className={styles.subtitle}>{item.subtitle}</p>}
         <div className={styles.meta}>
           <span className={styles.metaItem}>
             <Icon name="calendar" size={14} />
             {item.dateDay} {item.dateMonthLabel}
           </span>
-          <span className={styles.metaItem}>
-            <Icon name="clock" size={14} />
-            {item.timeLabel}
-          </span>
-          <span className={styles.metaItem}>
-            <Icon name="location" size={14} />
-            {item.locationLabel}
-          </span>
+          {item.timeLabel && (
+            <span className={styles.metaItem}>
+              <Icon name="clock" size={14} />
+              {item.timeLabel}
+            </span>
+          )}
+          {item.locationLabel && (
+            <span className={styles.metaItem}>
+              <Icon name="location" size={14} />
+              {item.locationLabel}
+            </span>
+          )}
         </div>
       </div>
     </div>

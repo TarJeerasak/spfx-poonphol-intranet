@@ -26,6 +26,15 @@
   font-size: 20px;
 }
 
+.subtitle {
+  margin: 0;
+  font-family: $font-thai;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 1.5;
+  @include line-clamp(2);
+}
+
 .meta {
   display: flex;
   gap: 14px;

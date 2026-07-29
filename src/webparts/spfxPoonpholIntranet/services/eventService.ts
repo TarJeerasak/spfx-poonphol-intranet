@@ -1,9 +1,10 @@
 import { spApi } from '../../../shared/services/api';
 import { EventItem } from '../../../shared/types/content';
 import { formatThaiDayAndMonth } from '../../../shared/utils/formatThaiDayAndMonth';
-import { formatTimeRange } from '../../../shared/utils/formatTimeRange';
 import { parseThumbnailImage } from '../../../shared/utils/parseThumbnailImage';
 import { selectClosestByDate } from '../../../shared/utils/selectClosestByDate';
+import { stripHtml } from '../../../shared/utils/stripHtml';
+import { fetchEventAttendees } from './eventJoinService';
 
 const CALENDAR_LIST_TITLE = 'CalendarList';
 export const MAX_FEATURED_EVENT_COUNT = 4;
@@ -14,21 +15,25 @@ export const MAX_FEATURED_EVENT_COUNT = 4;
 const EVENT_FIELDS = {
   id: 'Id',
   title: 'Title',
+  shortDescription: 'ShortDescription',
   image: 'Image',
-  category: 'Category',
+  location: 'Location',
+  time: 'Time',
   dateFrom: 'DateFrom',
-  dateTo: 'DateTo',
-  active: 'Active'
+  active: 'Active',
+  joinCount: 'JoinCount'
 } as const;
 
 interface ISPCalendarListItem {
   Id: number;
   Title: string;
+  ShortDescription?: string;
   Image?: string;
-  Category?: { Title: string };
+  Location?: string;
+  Time?: string;
   DateFrom?: string;
-  DateTo?: string;
   Active: boolean;
+  JoinCount?: number;
 }
 
 export interface EventFeedResult {
@@ -43,10 +48,11 @@ export function mapToEventItem(raw: ISPCalendarListItem): EventItem {
   return {
     id: String(raw.Id),
     title: raw.Title,
+    subtitle: raw.ShortDescription ? stripHtml(raw.ShortDescription) : '',
     dateDay: day,
     dateMonthLabel: monthLabel,
-    timeLabel: formatTimeRange(raw.DateFrom, raw.DateTo),
-    locationLabel: raw.Category?.Title ?? '',
+    timeLabel: raw.Time ?? '',
+    locationLabel: raw.Location ?? '',
     imageUrl: parseThumbnailImage(raw.Image),
     attendeeAvatarUrls: [],
     overflowCount: 0
@@ -69,13 +75,14 @@ export async function fetchEventFeed(): Promise<EventFeedResult> {
         $select: [
           EVENT_FIELDS.id,
           EVENT_FIELDS.title,
+          EVENT_FIELDS.shortDescription,
           EVENT_FIELDS.image,
-          `${EVENT_FIELDS.category}/Title`,
+          EVENT_FIELDS.location,
+          EVENT_FIELDS.time,
           EVENT_FIELDS.dateFrom,
-          EVENT_FIELDS.dateTo,
-          EVENT_FIELDS.active
+          EVENT_FIELDS.active,
+          EVENT_FIELDS.joinCount
         ].join(','),
-        $expand: EVENT_FIELDS.category,
         $filter: `${EVENT_FIELDS.active} eq 1`,
         $top: 5000
       }
@@ -83,11 +90,24 @@ export async function fetchEventFeed(): Promise<EventFeedResult> {
   );
 
   const activeItems = response.data.value;
-  const topItems = selectEventItemsByClosestDateFrom(activeItems, Date.now()).map(mapToEventItem);
+  const topRawItems = selectEventItemsByClosestDateFrom(activeItems, Date.now());
+  const topItems = topRawItems.map(mapToEventItem);
+
+  const joinCountByEventId: Record<string, number> = {};
+  topRawItems.forEach(raw => {
+    joinCountByEventId[String(raw.Id)] = raw.JoinCount ?? 0;
+  });
+
+  const attendeesByEventId = await fetchEventAttendees(topItems.map(item => item.id), joinCountByEventId);
+  const enrichedItems = topItems.map(item => ({
+    ...item,
+    attendeeAvatarUrls: attendeesByEventId[item.id]?.attendeeAvatarUrls ?? [],
+    overflowCount: attendeesByEventId[item.id]?.overflowCount ?? 0
+  }));
 
   return {
-    feature: topItems[0],
-    items: topItems.slice(1),
+    feature: enrichedItems[0],
+    items: enrichedItems.slice(1),
     totalCount: activeItems.length
   };
 }
