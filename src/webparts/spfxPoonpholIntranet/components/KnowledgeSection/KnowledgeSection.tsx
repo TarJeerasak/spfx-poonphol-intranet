@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { SectionHeader } from '../../../../shared/components/SectionHeader/SectionHeader';
 import { SectionFooter } from '../../../../shared/components/SectionFooter/SectionFooter';
+import { useScrollReveal } from '../../../../shared/hooks/useScrollReveal';
 import { KnowledgeCategory, KnowledgeItem } from '../../../../shared/types/content';
 import { KnowledgeCard } from './KnowledgeCard';
 import kmIcon from '../../assets/home/icons/sections/km.svg';
@@ -14,11 +15,12 @@ export interface KnowledgeSectionProps {
 
 export function KnowledgeSection({ categories, items, totalCount }: KnowledgeSectionProps): React.ReactElement {
   const [activeCategoryId, setActiveCategoryId] = React.useState(categories[0]?.id ?? 'all');
+  const [ref, isVisible] = useScrollReveal<HTMLElement>();
 
   const visibleItems = activeCategoryId === 'all' ? items : items.filter(item => item.categoryId === activeCategoryId);
 
   return (
-    <section className={styles.section}>
+    <section ref={ref} className={`${styles.section} ${isVisible ? styles.isVisible : ''}`}>
       <SectionHeader iconUrl={kmIcon} tintColor="#71b4a0" title="Knowledge Management" subtitle="คลังความรู้" />
       <div className={styles.divider} />
       <div className={styles.tabs}>

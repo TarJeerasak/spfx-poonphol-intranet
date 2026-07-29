@@ -8,6 +8,31 @@
   aspect-ratio: 368 / 276;
   padding: 16px;
   @include gradient-card($radius-sm);
+
+  & {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  &:hover {
+    transform: translateY(-6px);
+    box-shadow: $shadow-elevated;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
+  }
+}
+
+.imageLayer {
+  @include cover-zoom-layer;
+
+  .card:hover & {
+    transform: scale(1.08);
+  }
 }
 
 .content {

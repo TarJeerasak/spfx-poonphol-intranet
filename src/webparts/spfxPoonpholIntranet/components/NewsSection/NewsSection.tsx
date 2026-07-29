@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { SectionHeader } from '../../../../shared/components/SectionHeader/SectionHeader';
 import { SectionFooter } from '../../../../shared/components/SectionFooter/SectionFooter';
+import { useScrollReveal } from '../../../../shared/hooks/useScrollReveal';
 import { NewsItem } from '../../../../shared/types/content';
 import { NewsFeatureCard } from './NewsFeatureCard';
 import { NewsListItem } from './NewsListItem';
@@ -14,8 +15,10 @@ export interface NewsSectionProps {
 }
 
 export function NewsSection({ feature, items, totalCount }: NewsSectionProps): React.ReactElement {
+  const [ref, isVisible] = useScrollReveal<HTMLElement>();
+
   return (
-    <section className={styles.section}>
+    <section ref={ref} className={`${styles.section} ${isVisible ? styles.isVisible : ''}`}>
       <SectionHeader iconUrl={newsIcon} tintColor="#2d464d" title="NEWS" subtitle="ข่าวสารองค์กร" />
       <NewsFeatureCard item={feature} />
       <div className={styles.list}>

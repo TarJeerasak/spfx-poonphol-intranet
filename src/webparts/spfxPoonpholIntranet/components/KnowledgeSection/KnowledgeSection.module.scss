@@ -1,4 +1,5 @@
 @import '../../../../shared/styles/tokens';
+@import '../../../../shared/styles/mixins';
 
 .section {
   display: flex;
@@ -8,6 +9,7 @@
   border-radius: $radius-md;
   box-shadow: $shadow-section;
   padding: 24px;
+  @include scroll-reveal;
 }
 
 .divider {
@@ -34,6 +36,24 @@
   font-size: 14px;
   color: #71b4a0;
   cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: scale(0.96);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover,
+    &:active {
+      transform: none;
+    }
+  }
 }
 
 .tabActive {

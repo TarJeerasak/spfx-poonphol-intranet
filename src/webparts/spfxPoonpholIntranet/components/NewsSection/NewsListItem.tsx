@@ -12,7 +12,9 @@ export interface NewsListItemProps {
 export function NewsListItem({ item }: NewsListItemProps): React.ReactElement {
   return (
     <div className={styles.row}>
-      <div className={styles.thumbnail} style={{ backgroundImage: `url(${item.imageUrl})` }} />
+      <div className={styles.thumbnail}>
+        <div className={styles.thumbnailImage} style={{ backgroundImage: `url(${item.imageUrl})` }} />
+      </div>
       <div className={styles.body}>
         <div className={styles.headerGroup}>
           <Tag label={item.tag} color={item.tagColor} />

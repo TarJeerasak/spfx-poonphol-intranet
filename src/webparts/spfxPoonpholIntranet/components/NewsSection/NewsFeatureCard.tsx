@@ -10,7 +10,8 @@ export interface NewsFeatureCardProps {
 
 export function NewsFeatureCard({ item }: NewsFeatureCardProps): React.ReactElement {
   return (
-    <div className={styles.card} style={{ backgroundImage: `url(${item.imageUrl})` }}>
+    <div className={styles.card}>
+      <div className={styles.imageLayer} style={{ backgroundImage: `url(${item.imageUrl})` }} />
       <div className={styles.content}>
         <Tag label={item.tag} color={item.tagColor} />
         <h3 className={styles.title}>{item.title}</h3>

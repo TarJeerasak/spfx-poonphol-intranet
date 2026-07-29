@@ -15,8 +15,7 @@
   position: relative;
   border-radius: $radius;
   overflow: hidden;
-  background-size: cover;
-  background-position: center;
+  background-color: $color-border;
 
   &::after {
     content: '';
@@ -24,5 +23,72 @@
     inset: 0;
     background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.7) 72%, rgba(0, 0, 0, 0.95) 100%);
     pointer-events: none;
+  }
+}
+
+// Zoom-on-hover for a background-image layer, WITHOUT touching `background-size`.
+// Scaling `background-size` (e.g. to "112%") breaks `cover` fit — it only resizes
+// width, the height falls back to `auto`, so the image stops covering the box and
+// the browser tiles the leftover strip (a visible seam/bar). Instead this mixin
+// scales the whole layer via `transform` while the box above it clips via
+// `overflow: hidden`, so `background-size: cover` always stays intact.
+@mixin cover-zoom-layer($scale: 1.1, $duration: 0.5s) {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: transform $duration ease;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+// Fade + slide-up reveal driven by the `useScrollReveal` hook: apply this
+// mixin to a section root, then toggle the `isVisible` class once the hook's
+// IntersectionObserver reports the node entered the viewport.
+@mixin scroll-reveal($distance: 28px, $duration: $transition-slow) {
+  opacity: 0;
+  transform: translateY($distance);
+  transition: opacity $duration, transform $duration;
+
+  &.isVisible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@mixin hover-lift($lift: 6px, $shadow: $shadow-elevated) {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+  &:hover {
+    transform: translateY(-$lift);
+    box-shadow: $shadow;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
+  }
+}
+
+@mixin press-scale($scale: 0.96) {
+  transition: transform 0.15s ease;
+
+  &:active:not(:disabled) {
+    transform: scale($scale);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
   }
 }

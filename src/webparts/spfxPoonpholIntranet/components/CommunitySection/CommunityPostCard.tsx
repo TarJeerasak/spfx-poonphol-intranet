@@ -38,11 +38,16 @@ export function CommunityPostCard({ post, likeState, onToggleLike }: CommunityPo
           {isExpanded ? 'ย่อข้อความ' : 'ดูเพิ่มเติม'}
         </button>
       )}
-      {visibleImages.length === 1 && <div className={styles.postImage} style={{ backgroundImage: `url(${visibleImages[0]})` }} />}
+      {visibleImages.length === 1 && (
+        <div className={styles.postImage}>
+          <div className={styles.imageZoom} style={{ backgroundImage: `url(${visibleImages[0]})` }} />
+        </div>
+      )}
       {visibleImages.length > 1 && (
         <div className={styles.imageGrid}>
           {visibleImages.map((imageUrl, index) => (
-            <div key={imageUrl} className={styles.imageGridTile} style={{ backgroundImage: `url(${imageUrl})` }}>
+            <div key={imageUrl} className={styles.imageGridTile}>
+              <div className={styles.imageZoom} style={{ backgroundImage: `url(${imageUrl})` }} />
               {index === MAX_VISIBLE_IMAGES - 1 && overflowImageCount > 0 && (
                 <span className={styles.imageGridOverlay}>+{overflowImageCount}</span>
               )}

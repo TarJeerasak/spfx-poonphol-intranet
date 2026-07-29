@@ -27,4 +27,22 @@
   &:hover {
     text-decoration: underline;
   }
+
+  &:hover svg {
+    transform: translateX(3px);
+  }
+
+  svg {
+    transition: transform 0.2s ease;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    svg {
+      transition: none;
+    }
+
+    &:hover svg {
+      transform: none;
+    }
+  }
 }

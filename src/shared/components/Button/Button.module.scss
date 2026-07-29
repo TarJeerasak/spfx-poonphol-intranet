@@ -10,10 +10,22 @@
   font-size: 14px;
   border-radius: $radius-sm;
   cursor: pointer;
-  transition: opacity 0.15s ease;
+  transition: opacity 0.15s ease, transform 0.15s ease;
 
   &:hover {
     opacity: 0.85;
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.96);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: opacity 0.15s ease;
+
+    &:active:not(:disabled) {
+      transform: none;
+    }
   }
 }
 

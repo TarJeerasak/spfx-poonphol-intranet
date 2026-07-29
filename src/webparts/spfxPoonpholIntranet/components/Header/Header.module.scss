@@ -2,7 +2,7 @@
 
 .header {
   background: $color-header-footer-bg;
-  padding: 20px clamp(16px, 5.5vw, 80px);
+  padding: 20px 0;
 }
 
 .inner {
@@ -10,8 +10,9 @@
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  max-width: 1280px;
+  max-width: $content-max-width;
   margin: 0 auto;
+  padding: 0 clamp(16px, 5.5vw, 80px);
   flex-wrap: wrap;
 }
 

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { SectionHeader } from '../../../../shared/components/SectionHeader/SectionHeader';
 import { SectionFooter } from '../../../../shared/components/SectionFooter/SectionFooter';
 import { Button } from '../../../../shared/components/Button/Button';
+import { useScrollReveal } from '../../../../shared/hooks/useScrollReveal';
 import { CommunityPost } from '../../../../shared/types/content';
 import { useCommunityLikes } from '../../hooks/useCommunityLikes';
 import { CommunityPostCard } from './CommunityPostCard';
@@ -14,9 +15,10 @@ export interface CommunitySectionProps {
 
 export function CommunitySection({ posts }: CommunitySectionProps): React.ReactElement {
   const { getLikeState, toggleLike } = useCommunityLikes(posts);
+  const [ref, isVisible] = useScrollReveal<HTMLElement>();
 
   return (
-    <section className={styles.section}>
+    <section ref={ref} className={`${styles.section} ${isVisible ? styles.isVisible : ''}`}>
       <SectionHeader
         iconUrl={communityIcon}
         tintColor="#71b87f"

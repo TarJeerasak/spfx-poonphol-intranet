@@ -9,7 +9,8 @@ export interface EventFeatureCardProps {
 
 export function EventFeatureCard({ item }: EventFeatureCardProps): React.ReactElement {
   return (
-    <div className={styles.card} style={{ backgroundImage: `url(${item.imageUrl})` }}>
+    <div className={styles.card}>
+      <div className={styles.imageLayer} style={{ backgroundImage: `url(${item.imageUrl})` }} />
       <div className={styles.content}>
         <h3 className={styles.title}>{item.title}</h3>
         {item.subtitle && <p className={styles.subtitle}>{item.subtitle}</p>}

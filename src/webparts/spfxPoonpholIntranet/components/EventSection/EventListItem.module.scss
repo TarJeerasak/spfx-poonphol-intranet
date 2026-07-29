@@ -1,4 +1,5 @@
 @import '../../../../shared/styles/tokens';
+@import '../../../../shared/styles/mixins';
 
 .row {
   display: flex;
@@ -6,6 +7,11 @@
   width: 100%;
   padding: 8px;
   border-radius: $radius-sm;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: rgba(49, 111, 100, 0.05);
+  }
 }
 
 .dateBadge {
@@ -31,13 +37,21 @@
 }
 
 .thumbnail {
+  position: relative;
   flex-shrink: 0;
   width: 92px;
   height: 69px;
   border-radius: 4px;
   background-color: $color-border;
-  background-size: cover;
-  background-position: center;
+  overflow: hidden;
+}
+
+.thumbnailImage {
+  @include cover-zoom-layer;
+
+  .row:hover & {
+    transform: scale(1.15);
+  }
 }
 
 .body {

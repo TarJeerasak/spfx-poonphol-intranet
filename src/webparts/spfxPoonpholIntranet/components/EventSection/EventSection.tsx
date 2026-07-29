@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { SectionHeader } from '../../../../shared/components/SectionHeader/SectionHeader';
 import { SectionFooter } from '../../../../shared/components/SectionFooter/SectionFooter';
+import { useScrollReveal } from '../../../../shared/hooks/useScrollReveal';
 import { EventItem } from '../../../../shared/types/content';
 import { useEventJoins } from '../../hooks/useEventJoins';
 import { EventFeatureCard } from './EventFeatureCard';
@@ -16,9 +17,10 @@ export interface EventSectionProps {
 
 export function EventSection({ feature, items, totalCount }: EventSectionProps): React.ReactElement {
   const { getJoinState, toggleJoin } = useEventJoins(items);
+  const [ref, isVisible] = useScrollReveal<HTMLElement>();
 
   return (
-    <section className={styles.section}>
+    <section ref={ref} className={`${styles.section} ${isVisible ? styles.isVisible : ''}`}>
       <SectionHeader iconUrl={eventIcon} tintColor="#316f64" title="Event" subtitle="กิจกรรมองค์กร" />
       <EventFeatureCard item={feature} />
       <div className={styles.list}>

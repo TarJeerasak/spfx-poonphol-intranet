@@ -15,6 +15,8 @@ $color-stroke: #e5e7eb;
 
 $color-header-footer-bg: #123416;
 
+$content-max-width: 1480px;
+
 $font-thai: 'IBM Plex Sans Thai', sans-serif;
 $font-en: 'Inter', sans-serif;
 $font-body: 'Noto Sans', sans-serif;
@@ -27,3 +29,7 @@ $radius-pill: 100px;
 $shadow-card: 0px 4px 20px 0px rgba(0, 0, 0, 0.05);
 $shadow-elevated: 0px 20px 25px -5px rgba(0, 0, 0, 0.1), 0px 8px 10px -6px rgba(0, 0, 0, 0.1);
 $shadow-section: 0px 12px 20px 0px rgba(0, 0, 0, 0.09), 0px 4px 6px 0px rgba(0, 0, 0, 0.05);
+
+$transition-fast: 0.15s ease;
+$transition-base: 0.25s ease;
+$transition-slow: 0.6s cubic-bezier(0.22, 1, 0.36, 1);

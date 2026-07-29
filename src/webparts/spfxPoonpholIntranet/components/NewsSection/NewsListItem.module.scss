@@ -5,17 +5,32 @@
   display: flex;
   gap: 16px;
   width: 100%;
+  padding: 8px;
+  border-radius: $radius-sm;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: rgba(45, 70, 77, 0.04);
+  }
 }
 
 .thumbnail {
+  position: relative;
   flex-shrink: 0;
   width: 320px;
   max-width: 40%;
   height: 180px;
   border-radius: 5px;
   background-color: $color-border;
-  background-size: cover;
-  background-position: center;
+  overflow: hidden;
+}
+
+.thumbnailImage {
+  @include cover-zoom-layer;
+
+  .row:hover & {
+    transform: scale(1.1);
+  }
 }
 
 .body {

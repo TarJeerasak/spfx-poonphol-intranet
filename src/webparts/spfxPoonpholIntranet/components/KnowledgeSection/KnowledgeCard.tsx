@@ -10,7 +10,9 @@ export interface KnowledgeCardProps {
 export function KnowledgeCard({ item }: KnowledgeCardProps): React.ReactElement {
   return (
     <div className={styles.card}>
-      <div className={styles.thumbnail} style={{ backgroundImage: `url(${item.imageUrl})` }} />
+      <div className={styles.thumbnail}>
+        <div className={styles.thumbnailImage} style={{ backgroundImage: `url(${item.imageUrl})` }} />
+      </div>
       <div className={styles.body}>
         <div className={styles.tagGroup}>
           {item.tags.map(tag => (

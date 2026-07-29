@@ -17,7 +17,9 @@ export function EventListItem({ item, joinState, onToggleJoin }: EventListItemPr
         <span className={styles.day}>{item.dateDay}</span>
         <span className={styles.month}>{item.dateMonthLabel}</span>
       </div>
-      <div className={styles.thumbnail} style={{ backgroundImage: `url(${item.imageUrl})` }} />
+      <div className={styles.thumbnail}>
+        <div className={styles.thumbnailImage} style={{ backgroundImage: `url(${item.imageUrl})` }} />
+      </div>
       <div className={styles.body}>
         <p className={styles.title}>{item.title}</p>
         <div className={styles.meta}>

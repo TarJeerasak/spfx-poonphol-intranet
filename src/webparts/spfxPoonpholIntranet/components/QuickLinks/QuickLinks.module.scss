@@ -24,9 +24,37 @@
   gap: 8px;
   text-decoration: none;
   width: 148px;
+  opacity: 0;
+  transform: translateY(16px) scale(0.94);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+
+  .row.isVisible & {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 
   &:hover {
-    opacity: 0.85;
+    transform: translateY(-4px);
+  }
+
+  &:hover > div:first-child {
+    box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.15);
+    transform: scale(1.06);
+  }
+
+  > div:first-child {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    opacity: 1;
+    transform: none;
+    transition: none;
+
+    &:hover,
+    &:hover > div:first-child {
+      transform: none;
+    }
   }
 }
 

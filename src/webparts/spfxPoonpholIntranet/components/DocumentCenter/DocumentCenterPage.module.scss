@@ -7,12 +7,13 @@
 
 .banner {
   background: linear-gradient(135deg, $color-primary 0%, $color-secondary-alt 100%);
-  padding: 56px clamp(16px, 5.5vw, 80px) 96px;
+  padding: 56px 0 96px;
 }
 
 .bannerInner {
-  max-width: 1280px;
+  max-width: $content-max-width;
   margin: 0 auto;
+  padding: 0 clamp(16px, 5.5vw, 80px);
 }
 
 .bannerTitle {
@@ -32,7 +33,7 @@
 }
 
 .container {
-  max-width: 1440px;
+  max-width: $content-max-width;
   width: 100%;
   margin: 0 auto;
   padding: 0 clamp(16px, 5.5vw, 80px) 40px;
