@@ -7,11 +7,17 @@ export type IconName =
   | 'clock'
   | 'location'
   | 'arrowRight'
+  | 'arrowLeft'
   | 'bell'
   | 'document'
   | 'menuBook'
   | 'plus'
-  | 'like';
+  | 'like'
+  | 'shieldCheck'
+  | 'clipboardList'
+  | 'fileEdit'
+  | 'megaphone'
+  | 'download';
 
 export interface IconProps {
   name: IconName;
@@ -46,6 +52,7 @@ const PATHS: Record<IconName, React.ReactNode> = {
     </>
   ),
   arrowRight: <path d="M5 12h14M13 6l6 6-6 6" />,
+  arrowLeft: <path d="M19 12H5M11 6l-6 6 6 6" />,
   bell: (
     <>
       <path d="M6 9a6 6 0 0 1 12 0v5l1.5 3h-15L6 14V9z" />
@@ -67,6 +74,37 @@ const PATHS: Record<IconName, React.ReactNode> = {
   plus: <path d="M12 5v14M5 12h14" />,
   like: (
     <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3v11z" />
+  ),
+  shieldCheck: (
+    <>
+      <path d="M12 3l7 3v6c0 4.5-3 8-7 9-4-1-7-4.5-7-9V6l7-3z" />
+      <path d="M9 12l2 2 4-4" />
+    </>
+  ),
+  clipboardList: (
+    <>
+      <rect x="5" y="4" width="14" height="17" rx="2" />
+      <path d="M9 3h6v3H9z" />
+      <path d="M8 11h8M8 15h8M8 19h5" />
+    </>
+  ),
+  fileEdit: (
+    <>
+      <path d="M6 3h9l4 4v14H6V3z" />
+      <path d="M9.5 15.5l6-6 2 2-6 6H9.5v-2z" />
+    </>
+  ),
+  megaphone: (
+    <>
+      <path d="M3 10v4a1 1 0 0 0 1 1h2l3 6h2l-1-6h3l7 4V5l-7 4H6a1 1 0 0 0-1 1z" />
+      <path d="M9 15v4a2 2 0 0 0 4 0v-2" />
+    </>
+  ),
+  download: (
+    <>
+      <path d="M12 3v12M7 10l5 5 5-5" />
+      <path d="M5 21h14" />
+    </>
   )
 };
 

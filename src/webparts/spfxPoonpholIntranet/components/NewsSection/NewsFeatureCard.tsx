@@ -16,18 +16,24 @@ export function NewsFeatureCard({ item }: NewsFeatureCardProps): React.ReactElem
         <h3 className={styles.title}>{item.title}</h3>
         <p className={styles.excerpt}>{item.excerpt}</p>
         <div className={styles.meta}>
-          <span className={styles.metaItem}>
-            <Icon name="calendar" size={16} />
-            {item.dateLabel}
-          </span>
-          <span className={styles.metaItem}>
-            <Icon name="clock" size={16} />
-            {item.timeLabel}
-          </span>
-          <span className={styles.metaItem}>
-            <Icon name="location" size={16} />
-            {item.locationLabel}
-          </span>
+          {item.dateLabel && (
+            <span className={styles.metaItem}>
+              <Icon name="calendar" size={16} />
+              {item.dateLabel}
+            </span>
+          )}
+          {item.timeLabel && (
+            <span className={styles.metaItem}>
+              <Icon name="clock" size={16} />
+              {item.timeLabel}
+            </span>
+          )}
+          {item.locationLabel && (
+            <span className={styles.metaItem}>
+              <Icon name="location" size={16} />
+              {item.locationLabel}
+            </span>
+          )}
         </div>
       </div>
     </div>

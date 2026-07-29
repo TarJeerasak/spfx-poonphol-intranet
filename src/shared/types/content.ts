@@ -15,6 +15,8 @@ export interface NewsItem {
   timeLabel: string;
   locationLabel: string;
   imageUrl: string;
+  authorName: string;
+  authorAvatarUrl: string;
 }
 
 export interface KnowledgeCategory {
@@ -56,16 +58,42 @@ export interface CommunityPost {
   likeCount: number;
 }
 
+export type DocumentFileType = 'word' | 'excel' | 'pdf' | 'powerpoint';
+
+export type DocumentTypeTag = 'Policy' | 'SOP' | 'Form' | 'Manual' | 'Announcement' | 'Report' | 'Template';
+
+export interface DocumentCategorySummary {
+  id: string;
+  label: string;
+  labelThai: string;
+  count: number;
+  iconName: string;
+  tintColor: string;
+}
+
+export interface DocumentItem {
+  id: string;
+  name: string;
+  nameThai: string;
+  fileType: DocumentFileType;
+  type: DocumentTypeTag;
+  company: string;
+  department: string;
+  lastUpdate: string;
+  fileUrl: string;
+}
+
 export interface QuickLink {
   id: string;
   label: string;
   iconUrl: string;
   backgroundColor: string;
+  to?: string;
 }
 
 export interface NavLink {
   id: string;
   label: string;
   href: string;
-  isActive?: boolean;
+  to?: string;
 }

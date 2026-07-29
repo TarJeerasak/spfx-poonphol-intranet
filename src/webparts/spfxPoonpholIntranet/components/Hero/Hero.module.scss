@@ -2,9 +2,12 @@
 
 .hero {
   position: relative;
+  width: 100%;
   border-radius: $radius-lg;
   overflow: hidden;
+  background-color: $color-header-footer-bg;
   background-size: cover;
+  background-repeat: no-repeat;
   background-position: center;
   min-height: 500px;
 }
@@ -20,13 +23,13 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 24px 0;
+  gap: 48px;
   flex-wrap: wrap;
   padding: 40px;
 }
 
 .welcomeCard {
-  flex: 0 1 702px;
+  flex: 1 1 702px;
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -62,7 +65,7 @@
 }
 
 .tagline {
-  margin: 8px 0 0;
+  margin: 14px 0 0;
   font-family: $font-thai;
   font-weight: 400;
   font-size: clamp(16px, 1.8vw, 24px);

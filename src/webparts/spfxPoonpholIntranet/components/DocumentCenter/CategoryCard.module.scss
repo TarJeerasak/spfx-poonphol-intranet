@@ -1,0 +1,53 @@
+@import '../../../../shared/styles/tokens';
+
+.card {
+  flex: 1 1 220px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  background: $color-surface;
+  border-radius: $radius-md;
+  box-shadow: $shadow-card;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.label {
+  margin: 0;
+  font-family: $font-en;
+  font-weight: 700;
+  font-size: 18px;
+  color: $color-text-primary;
+}
+
+.labelThai {
+  margin: 0;
+  font-family: $font-thai;
+  font-size: 13px;
+  color: $color-text-secondary;
+}
+
+.count {
+  margin: 6px 0 0;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.countNumber {
+  font-family: $font-en;
+  font-weight: 700;
+  font-size: 20px;
+  color: $color-primary;
+}
+
+.countUnit {
+  font-family: $font-thai;
+  font-size: 12px;
+  color: $color-text-secondary;
+}

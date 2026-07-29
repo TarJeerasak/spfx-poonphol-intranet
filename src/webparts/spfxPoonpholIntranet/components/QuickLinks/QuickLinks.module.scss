@@ -6,6 +6,15 @@
   justify-content: space-between;
   gap: 24px;
   padding: 18px 0;
+
+  // Between these widths, 6 items wrap into a 4-and-2 split; flex's per-line
+  // justify-content would spread the trailing 2 items edge-to-edge instead of
+  // keeping them under their columns from the first row, so use a real grid
+  // (shared column tracks across wrapped rows) only in this range.
+  @media (min-width: 747px) and (max-width: 939px) {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 148px);
+  }
 }
 
 .item {

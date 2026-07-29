@@ -1,0 +1,48 @@
+@import '../../../../shared/styles/tokens';
+
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.arrowButton,
+.pageButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: $radius-sm;
+  border: 1px solid $color-stroke;
+  background: $color-surface;
+  color: $color-text-primary;
+  font-family: $font-en;
+  font-size: 13px;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    border-color: $color-primary;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+.pageButtonActive {
+  background: $color-accent;
+  border-color: $color-accent;
+  color: $color-text-primary;
+  font-weight: 700;
+}
+
+.ellipsis {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-text-secondary;
+}

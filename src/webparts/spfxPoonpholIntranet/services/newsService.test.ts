@@ -41,28 +41,45 @@ describe('mapToNewsItem', () => {
     const raw = {
       Id: 42,
       Title: 'Group Orientation',
-      ShortDescription: 'บรรยากาศกิจกรรม',
+      PageContent: '<p>บรรยากาศกิจกรรม</p><p>ภาพรวมงาน</p>',
       ThumbnailImage: JSON.stringify({
         serverUrl: 'https://fusionsoftcompany.sharepoint.com',
         serverRelativeUrl: '/sites/Project-PoonpholIntranetPortal/SiteAssets/news-42.jpg'
       }),
-      Company: { Title: 'Business' },
+      Category: 'Business',
+      Location: 'บริษัท เอส ที เอ็ม เอส จำกัด',
+      Time: '09:00 - 12:00',
       PublishDate: '2026-06-10T00:00:00Z',
       EffectiveDate: '2026-06-10T00:00:00Z',
-      Active: true
+      Active: true,
+      NewsType: 'News',
+      Author: { Title: 'Poonphol Group', EMail: 'poonphol.group@fusionsoftcompany.com' }
     };
 
     expect(mapToNewsItem(raw)).toEqual({
       id: '42',
       title: 'Group Orientation',
-      excerpt: 'บรรยากาศกิจกรรม',
+      excerpt: 'บรรยากาศกิจกรรม\nภาพรวมงาน',
       imageUrl: 'https://fusionsoftcompany.sharepoint.com/sites/Project-PoonpholIntranetPortal/SiteAssets/news-42.jpg',
       tag: 'Business',
       tagColor: '#63b37d',
-      dateLabel: '10 มิถุนายน 2569',
-      timeLabel: '',
-      locationLabel: 'Business'
+      dateLabel: '10 มิ.ย. 2569',
+      timeLabel: '09:00 - 12:00',
+      locationLabel: 'บริษัท เอส ที เอ็ม เอส จำกัด',
+      authorName: 'Poonphol Group',
+      authorAvatarUrl: expect.stringContaining('poonphol.group%40fusionsoftcompany.com')
     });
+  });
+
+  it('falls back to the default tag color for an unrecognized category', () => {
+    const raw = {
+      Id: 43,
+      Title: 'Company Anniversary',
+      Category: 'Activities',
+      Active: true
+    };
+
+    expect(mapToNewsItem(raw).tagColor).toBe('#e2445c');
   });
 
   it('falls back to empty strings when optional fields are missing', () => {
@@ -81,7 +98,9 @@ describe('mapToNewsItem', () => {
       tagColor: '#63b37d',
       dateLabel: '',
       timeLabel: '',
-      locationLabel: ''
+      locationLabel: '',
+      authorName: '',
+      authorAvatarUrl: ''
     });
   });
 });

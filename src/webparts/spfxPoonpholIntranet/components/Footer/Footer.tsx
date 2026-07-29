@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { Logo } from '../../../../shared/components/Logo/Logo';
 import { NavLink } from '../../../../shared/types/content';
 import styles from './Footer.module.scss';
@@ -14,11 +15,17 @@ export function Footer({ navLinks }: FooterProps): React.ReactElement {
         <div className={styles.top}>
           <Logo height={80} />
           <nav className={styles.nav}>
-            {navLinks.map(link => (
-              <a key={link.id} href={link.href} className={styles.navLink}>
-                {link.label}
-              </a>
-            ))}
+            {navLinks.map(link =>
+              link.to ? (
+                <Link key={link.id} to={link.to} className={styles.navLink}>
+                  {link.label}
+                </Link>
+              ) : (
+                <a key={link.id} href={link.href} className={styles.navLink}>
+                  {link.label}
+                </a>
+              )
+            )}
           </nav>
         </div>
         <div className={styles.divider} />

@@ -1,0 +1,33 @@
+@import '../../../../shared/styles/tokens';
+
+.container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 24px clamp(16px, 3vw, 80px) 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.contentGrid {
+  display: flex;
+  align-items: flex-start;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.mainColumn {
+  flex: 3 1 700px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 0;
+}
+
+.sidebarColumn {
+  flex: 1 1 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 0;
+}

@@ -1,0 +1,173 @@
+@import '../../../../shared/styles/tokens';
+
+.page {
+  display: flex;
+  flex-direction: column;
+}
+
+.banner {
+  background: linear-gradient(135deg, $color-primary 0%, $color-secondary-alt 100%);
+  padding: 56px clamp(16px, 5.5vw, 80px) 96px;
+}
+
+.bannerInner {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.bannerTitle {
+  margin: 0;
+  font-family: $font-thai;
+  font-weight: 700;
+  font-size: clamp(28px, 3.2vw, 40px);
+  color: $color-surface;
+}
+
+.bannerSubtitle {
+  margin: 12px 0 0;
+  font-family: $font-thai;
+  font-size: clamp(15px, 1.4vw, 18px);
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 560px;
+}
+
+.container {
+  max-width: 1440px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 clamp(16px, 5.5vw, 80px) 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.categoryRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: -56px;
+}
+
+.contentRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.panel {
+  flex: 1 1 700px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  background: $color-surface;
+  border-radius: $radius-md;
+  box-shadow: $shadow-card;
+}
+
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.panelTitle {
+  margin: 0;
+  font-family: $font-thai;
+  font-weight: 600;
+  font-size: 18px;
+  color: $color-text-primary;
+}
+
+.panelControls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.sortLabel {
+  font-family: $font-thai;
+  font-size: 14px;
+  color: $color-text-secondary;
+  white-space: nowrap;
+}
+
+.sortSelect {
+  height: 36px;
+  padding: 0 12px;
+  border-radius: $radius-sm;
+  border: 1px solid $color-stroke;
+  background: $color-surface;
+  color: $color-text-primary;
+  font-family: $font-thai;
+  font-size: 14px;
+}
+
+.searchForm {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: $radius-sm;
+  border: 1px solid $color-stroke;
+  background: $color-surface;
+}
+
+.searchIcon {
+  display: flex;
+  color: $color-text-secondary;
+}
+
+.searchInput {
+  border: none;
+  outline: none;
+  font-family: $font-thai;
+  font-size: 14px;
+  width: 140px;
+  background: transparent;
+  color: $color-text-primary;
+}
+
+.searchButton {
+  height: 28px;
+  padding: 0 16px;
+  border: none;
+  border-radius: $radius-pill;
+  background: $color-accent;
+  color: $color-text-primary;
+  font-family: $font-thai;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.85;
+  }
+}
+
+.panelDivider {
+  height: 1px;
+  background: $color-stroke;
+  margin: 20px 0;
+}
+
+.panelFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.footerSummary {
+  margin: 0;
+  font-family: $font-thai;
+  font-size: 14px;
+  color: $color-text-secondary;
+}

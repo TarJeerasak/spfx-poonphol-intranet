@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Announcement } from '../../../../shared/types/content';
+import { getFirstName } from '../../../../shared/utils/getFirstName';
 import { Announcements } from '../Announcements/Announcements';
 import searchIcon from '../../assets/home/icons/search.svg';
 import styles from './Hero.module.scss';
@@ -19,7 +20,7 @@ export function Hero({ userDisplayName, backgroundUrl, quickAppSearches, announc
         <div className={styles.welcomeCard}>
           <div className={styles.welcomeText}>
             <p className={styles.greeting}>ยินดีต้อนรับ</p>
-            <p className={styles.userName}>คุณ{userDisplayName}</p>
+            <p className={styles.userName}>คุณ{getFirstName(userDisplayName)}</p>
             <p className={styles.tagline}>
               ร่วมสร้างการเติบโตอย่างยั่งยืน
               <br />
