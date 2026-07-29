@@ -11,7 +11,7 @@
   // justify-content would spread the trailing 2 items edge-to-edge instead of
   // keeping them under their columns from the first row, so use a real grid
   // (shared column tracks across wrapped rows) only in this range.
-  @media (min-width: 747px) and (max-width: 939px) {
+  @media (min-width: 707px) and (max-width: 889px) {
     display: grid;
     grid-template-columns: repeat(auto-fill, 148px);
   }
