@@ -1,7 +1,11 @@
 import * as React from 'react';
 import { Icon } from '../../../../shared/components/Icon/Icon';
 import { CommunityPost } from '../../../../shared/types/content';
-import { shouldClampText } from '../../../../shared/utils/shouldClampText';
+import {
+  shouldClampText,
+  CLAMP_TEXT_THRESHOLD_WITH_IMAGES,
+  CLAMP_TEXT_THRESHOLD_WITHOUT_IMAGES,
+} from '../../../../shared/utils/shouldClampText';
 import { CommunityLikeState } from '../../hooks/useCommunityLikes';
 import styles from './CommunityPostCard.module.scss';
 
@@ -15,7 +19,11 @@ export interface CommunityPostCardProps {
 
 export function CommunityPostCard({ post, likeState, onToggleLike }: CommunityPostCardProps): React.ReactElement {
   const [isExpanded, setIsExpanded] = React.useState(false);
-  const isClampable = shouldClampText(post.text);
+  const hasImages = post.imageUrls.length > 0;
+  const isClampable = shouldClampText(
+    post.text,
+    hasImages ? CLAMP_TEXT_THRESHOLD_WITH_IMAGES : CLAMP_TEXT_THRESHOLD_WITHOUT_IMAGES
+  );
   const visibleImages = post.imageUrls.slice(0, MAX_VISIBLE_IMAGES);
   const overflowImageCount = post.imageUrls.length - MAX_VISIBLE_IMAGES;
 
@@ -32,7 +40,13 @@ export function CommunityPostCard({ post, likeState, onToggleLike }: CommunityPo
           {post.authorRole && <p className={styles.role}>{post.authorRole}</p>}
         </div>
       </div>
-      <p className={`${styles.text} ${isClampable && !isExpanded ? styles.textClamped : ''}`}>{post.text}</p>
+      <p
+        className={`${styles.text} ${
+          isClampable && !isExpanded ? (hasImages ? styles.textClampedWithImages : styles.textClampedWithoutImages) : ''
+        }`}
+      >
+        {post.text}
+      </p>
       {isClampable && (
         <button type="button" className={styles.toggleButton} onClick={() => setIsExpanded(current => !current)}>
           {isExpanded ? 'ย่อข้อความ' : 'ดูเพิ่มเติม'}
@@ -44,7 +58,7 @@ export function CommunityPostCard({ post, likeState, onToggleLike }: CommunityPo
         </div>
       )}
       {visibleImages.length > 1 && (
-        <div className={styles.imageGrid}>
+        <div className={`${styles.imageGrid} ${visibleImages.length === 3 ? styles.imageGridThree : ''}`}>
           {visibleImages.map((imageUrl, index) => (
             <div key={imageUrl} className={styles.imageGridTile}>
               <div className={styles.imageZoom} style={{ backgroundImage: `url(${imageUrl})` }} />
