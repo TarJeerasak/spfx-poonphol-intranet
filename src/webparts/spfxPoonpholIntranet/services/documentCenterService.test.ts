@@ -3,8 +3,14 @@ import {
   DEFAULT_DOCUMENT_FILTERS,
   filterDocuments,
   getDocumentCategorySummaries,
+  getDocumentCompanies,
+  getDocumentDepartments,
   getRecentDocuments,
+  isDocumentEffective,
+  isWithinDateFilter,
+  mapToDocumentItem,
   paginateDocuments,
+  resolveDocumentFileType,
   sortDocuments
 } from './documentCenterService';
 
@@ -22,6 +28,80 @@ function buildDocument(overrides: Partial<DocumentItem>): DocumentItem {
     ...overrides
   };
 }
+
+describe('resolveDocumentFileType', () => {
+  it.each([
+    ['/sites/PPG_UAT/Shared Documents/Admin_GA/policy.docx', 'word'],
+    ['/sites/PPG_UAT/Shared Documents/Admin_GA/report.xlsx', 'excel'],
+    ['/sites/PPG_UAT/Shared Documents/Admin_GA/slides.pptx', 'powerpoint'],
+    ['/sites/PPG_UAT/Shared Documents/Admin_GA/manual.pdf', 'pdf'],
+    ['/sites/PPG_UAT/Shared Documents/Admin_GA/unknown.xyz', 'pdf']
+  ])('maps %s to %s', (fileRef, expected) => {
+    expect(resolveDocumentFileType(fileRef)).toEqual(expected);
+  });
+});
+
+describe('mapToDocumentItem', () => {
+  it('maps a Shared Documents library item to the DocumentItem shape used by the UI', () => {
+    const raw = {
+      Id: 320,
+      FileLeafRef: 'it-security-policy.pdf',
+      FileRef: '/sites/PPG_UAT/Shared Documents/Admin_GA/it-security-policy.pdf',
+      Name_ENG: 'IT Security Policy',
+      Name_TH: 'นโยบายความปลอดภัยของแผนก IT',
+      DocmentType: 'Policy',
+      By_Company: { Title: 'PPC' },
+      By_Department: { Title: 'Digital & Technology' },
+      OData__ModerationStatus: 'Approved',
+      Active: true,
+      PublishDate: '2025-08-20T00:00:00',
+      EffectiveDate: '2025-06-11T00:00:00'
+    };
+
+    expect(mapToDocumentItem(raw)).toEqual({
+      id: '320',
+      name: 'IT Security Policy',
+      nameThai: 'นโยบายความปลอดภัยของแผนก IT',
+      fileType: 'pdf',
+      type: 'Policy',
+      company: 'PPC',
+      department: 'Digital & Technology',
+      lastUpdate: '2025-08-20T00:00:00',
+      fileUrl: '/sites/PPG_UAT/Shared Documents/Admin_GA/it-security-policy.pdf'
+    });
+  });
+
+  it('falls back to the file name when Name_ENG or Name_TH are empty', () => {
+    const raw = {
+      Id: 321,
+      FileLeafRef: 'onboarding-sop.docx',
+      FileRef: '/sites/PPG_UAT/Shared Documents/Admin_GA/onboarding-sop.docx',
+      Active: true
+    };
+
+    const result = mapToDocumentItem(raw);
+    expect(result.name).toEqual('onboarding-sop.docx');
+    expect(result.nameThai).toEqual('onboarding-sop.docx');
+    expect(result.company).toEqual('');
+    expect(result.department).toEqual('');
+  });
+});
+
+describe('isDocumentEffective', () => {
+  const now = new Date(2026, 6, 30).getTime();
+
+  it('is true when Effective Date is in the past', () => {
+    expect(isDocumentEffective({ EffectiveDate: '2026-06-11T00:00:00' }, now)).toBe(true);
+  });
+
+  it('is false when Effective Date is in the future', () => {
+    expect(isDocumentEffective({ EffectiveDate: '2026-08-20T00:00:00' }, now)).toBe(false);
+  });
+
+  it('is false when Effective Date is missing', () => {
+    expect(isDocumentEffective({}, now)).toBe(false);
+  });
+});
 
 describe('filterDocuments', () => {
   const documents = [
@@ -61,6 +141,33 @@ describe('filterDocuments', () => {
   it('combines multiple filters', () => {
     const result = filterDocuments(documents, { ...DEFAULT_DOCUMENT_FILTERS, department: 'Digital & Technology', type: 'SOP' });
     expect(result).toHaveLength(0);
+  });
+
+  it('filters by Publish Date range', () => {
+    const result = filterDocuments(documents, { ...DEFAULT_DOCUMENT_FILTERS, dateFrom: '2025-01-01', dateTo: '2025-01-01' });
+    expect(result.map(doc => doc.id)).toEqual(['doc-1', 'doc-2']);
+
+    expect(filterDocuments(documents, { ...DEFAULT_DOCUMENT_FILTERS, dateFrom: '2025-02-01' })).toHaveLength(0);
+  });
+});
+
+describe('isWithinDateFilter', () => {
+  it('is true when both bounds are empty', () => {
+    expect(isWithinDateFilter('2025-06-01', '', '')).toBe(true);
+  });
+
+  it('excludes dates before dateFrom', () => {
+    expect(isWithinDateFilter('2025-06-01', '2025-06-02', '')).toBe(false);
+    expect(isWithinDateFilter('2025-06-02', '2025-06-02', '')).toBe(true);
+  });
+
+  it('excludes dates after dateTo, inclusive of the whole day', () => {
+    expect(isWithinDateFilter('2025-06-02T23:59:00', '', '2025-06-02')).toBe(true);
+    expect(isWithinDateFilter('2025-06-03T00:00:01', '', '2025-06-02')).toBe(false);
+  });
+
+  it('is false for an unparsable date', () => {
+    expect(isWithinDateFilter('', '', '')).toBe(false);
   });
 });
 
@@ -127,6 +234,36 @@ describe('getDocumentCategorySummaries', () => {
     expect(summaries.find(summary => summary.id === 'policy')?.count).toEqual(2);
     expect(summaries.find(summary => summary.id === 'sop')?.count).toEqual(1);
     expect(summaries.find(summary => summary.id === 'form')?.count).toEqual(0);
+  });
+});
+
+describe('getDocumentCompanies', () => {
+  it('returns the distinct companies visible across the given documents', () => {
+    const documents = [
+      buildDocument({ id: 'doc-1', company: 'Poonphol Co.,Ltd.' }),
+      buildDocument({ id: 'doc-2', company: 'Poonphol Co.,Ltd.' }),
+      buildDocument({ id: 'doc-3', company: 'Poonphol Trading' })
+    ];
+
+    expect(getDocumentCompanies(documents)).toEqual(['Poonphol Co.,Ltd.', 'Poonphol Trading']);
+  });
+
+  it('ignores documents with no company set', () => {
+    const documents = [buildDocument({ id: 'doc-1', company: '' })];
+
+    expect(getDocumentCompanies(documents)).toEqual([]);
+  });
+});
+
+describe('getDocumentDepartments', () => {
+  it('returns the distinct departments visible across the given documents', () => {
+    const documents = [
+      buildDocument({ id: 'doc-1', department: 'Digital and Technology' }),
+      buildDocument({ id: 'doc-2', department: 'Digital and Technology' }),
+      buildDocument({ id: 'doc-3', department: 'Finance' })
+    ];
+
+    expect(getDocumentDepartments(documents)).toEqual(['Digital and Technology', 'Finance']);
   });
 });
 

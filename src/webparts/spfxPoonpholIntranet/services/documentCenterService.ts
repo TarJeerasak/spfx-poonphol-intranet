@@ -1,44 +1,112 @@
-import { DocumentCategorySummary, DocumentItem, DocumentTypeTag } from '../../../shared/types/content';
-
-export const DOCUMENT_COMPANIES = ['PPC', 'PPS', 'PPP', 'VGM'];
-
-export const DOCUMENT_DEPARTMENTS = [
-  'Digital & Technology',
-  'Healthcare & Biotechnology',
-  'Sustainable Energy',
-  'E-commerce & Retail',
-  'Finance & Fintech',
-  'Education & e-Learning',
-  'Travel & Hospitality',
-  'Telecommunications & Networking',
-  'Entertainment & Media',
-  'Real Estate & Proptech'
-];
+import { SitePath } from '../../../shared/config/site';
+import { spApi } from '../../../shared/services/api';
+import { DocumentCategorySummary, DocumentFileType, DocumentItem, DocumentTypeTag } from '../../../shared/types/content';
+import { parseIsoDate } from '../../../shared/utils/isoDate';
 
 export const DOCUMENT_TYPES: DocumentTypeTag[] = ['Policy', 'SOP', 'Form', 'Manual', 'Announcement', 'Report', 'Template'];
 
-const MOCK_DOCUMENTS: DocumentItem[] = [
-  { id: 'doc-1', name: 'IT Security Policy', nameThai: 'นโยบายความปลอดภัยของแผนก IT', fileType: 'word', type: 'Policy', company: 'PPC', department: 'Digital & Technology', lastUpdate: '2025-05-01', fileUrl: '#' },
-  { id: 'doc-2', name: 'Data Privacy Guidelines', nameThai: 'แนวทางการปกป้องข้อมูลส่วนบุคคล', fileType: 'excel', type: 'SOP', company: 'PPS', department: 'Healthcare & Biotechnology', lastUpdate: '2025-04-15', fileUrl: '#' },
-  { id: 'doc-3', name: 'Network Access Control', nameThai: 'การควบคุมการเข้าถึงเครือข่าย', fileType: 'powerpoint', type: 'Form', company: 'PPP', department: 'Sustainable Energy', lastUpdate: '2025-03-30', fileUrl: '#' },
-  { id: 'doc-4', name: 'Incident Response Plan', nameThai: 'แผนตอบสนองต่อเหตุการณ์', fileType: 'pdf', type: 'Manual', company: 'VGM', department: 'E-commerce & Retail', lastUpdate: '2025-02-20', fileUrl: '#' },
-  { id: 'doc-5', name: 'User Authentication Standards', nameThai: 'มาตรฐานการระบุตัวตนผู้ใช้', fileType: 'word', type: 'Announcement', company: 'PPC', department: 'Finance & Fintech', lastUpdate: '2025-01-05', fileUrl: '#' },
-  { id: 'doc-6', name: 'Software Update Policy', nameThai: 'นโยบายการอัปเดตซอฟต์แวร์', fileType: 'excel', type: 'Report', company: 'PPS', department: 'Education & e-Learning', lastUpdate: '2024-12-10', fileUrl: '#' },
-  { id: 'doc-7', name: 'Device Security Protocols', nameThai: 'โปรโตคอลความปลอดภัยของอุปกรณ์', fileType: 'pdf', type: 'Template', company: 'PPP', department: 'Travel & Hospitality', lastUpdate: '2024-11-25', fileUrl: '#' },
-  { id: 'doc-8', name: 'Remote Work Security Guidelines', nameThai: 'แนวทางความปลอดภัยสำหรับการทำงานจากระยะไกล', fileType: 'pdf', type: 'Announcement', company: 'VGM', department: 'Telecommunications & Networking', lastUpdate: '2024-10-12', fileUrl: '#' },
-  { id: 'doc-9', name: 'Access Control Policies', nameThai: 'นโยบายการควบคุมการเข้าถึง', fileType: 'pdf', type: 'Report', company: 'PPC', department: 'Entertainment & Media', lastUpdate: '2024-09-28', fileUrl: '#' },
-  { id: 'doc-10', name: 'Data Encryption Standards', nameThai: 'มาตรฐานการเข้ารหัสข้อมูล', fileType: 'pdf', type: 'Template', company: 'PPS', department: 'Real Estate & Proptech', lastUpdate: '2024-08-14', fileUrl: '#' },
-  { id: 'doc-11', name: 'Password Management Policy', nameThai: 'นโยบายการจัดการรหัสผ่าน', fileType: 'word', type: 'Policy', company: 'PPP', department: 'Digital & Technology', lastUpdate: '2024-07-22', fileUrl: '#' },
-  { id: 'doc-12', name: 'Vendor Onboarding SOP', nameThai: 'ขั้นตอนการรับผู้ขายรายใหม่', fileType: 'excel', type: 'SOP', company: 'VGM', department: 'Finance & Fintech', lastUpdate: '2024-06-18', fileUrl: '#' },
-  { id: 'doc-13', name: 'Leave Request Form', nameThai: 'แบบฟอร์มขอลางาน', fileType: 'word', type: 'Form', company: 'PPC', department: 'Education & e-Learning', lastUpdate: '2024-05-09', fileUrl: '#' },
-  { id: 'doc-14', name: 'Disaster Recovery Manual', nameThai: 'คู่มือการกู้คืนระบบจากภัยพิบัติ', fileType: 'pdf', type: 'Manual', company: 'PPS', department: 'Sustainable Energy', lastUpdate: '2024-04-03', fileUrl: '#' },
-  { id: 'doc-15', name: 'Office Relocation Announcement', nameThai: 'ประกาศการย้ายสำนักงาน', fileType: 'word', type: 'Announcement', company: 'PPP', department: 'Real Estate & Proptech', lastUpdate: '2024-03-11', fileUrl: '#' },
-  { id: 'doc-16', name: 'Quarterly Compliance Report', nameThai: 'รายงานการปฏิบัติตามกฎระเบียบรายไตรมาส', fileType: 'excel', type: 'Report', company: 'VGM', department: 'E-commerce & Retail', lastUpdate: '2024-02-14', fileUrl: '#' },
-  { id: 'doc-17', name: 'Brand Identity Template', nameThai: 'เทมเพลตอัตลักษณ์แบรนด์', fileType: 'powerpoint', type: 'Template', company: 'PPC', department: 'Entertainment & Media', lastUpdate: '2024-01-20', fileUrl: '#' },
-  { id: 'doc-18', name: 'Travel Expense Policy', nameThai: 'นโยบายค่าใช้จ่ายในการเดินทาง', fileType: 'word', type: 'Policy', company: 'PPS', department: 'Travel & Hospitality', lastUpdate: '2023-12-05', fileUrl: '#' },
-  { id: 'doc-19', name: 'New Hire Onboarding SOP', nameThai: 'ขั้นตอนการปฐมนิเทศพนักงานใหม่', fileType: 'pdf', type: 'SOP', company: 'PPP', department: 'Telecommunications & Networking', lastUpdate: '2023-11-16', fileUrl: '#' },
-  { id: 'doc-20', name: 'Expense Reimbursement Form', nameThai: 'แบบฟอร์มขอเบิกค่าใช้จ่าย', fileType: 'excel', type: 'Form', company: 'VGM', department: 'Healthcare & Biotechnology', lastUpdate: '2023-10-01', fileUrl: '#' }
-];
+const DOCUMENT_LIBRARY_SERVER_RELATIVE_URL = `${SitePath}/Shared Documents`;
+const APPROVED_STATUS_VALUE = 'Approved';
+
+// Internal names guessed from the library's display names - verify against
+// `${SiteURL}/_api/web/GetList('${DOCUMENT_LIBRARY_SERVER_RELATIVE_URL}')/fields?$select=Title,InternalName,TypeAsString&$filter=Hidden eq false`
+// and adjust the constants below if the request returns a "field does not exist" error.
+// By_Company/By_Department are Lookup fields - Title is the default shown value on the source list.
+// Approval Status is the library's built-in content-approval status, not a custom column - its
+// internal name starts with an underscore (`_ModerationStatus`), which REST exposes prefixed as
+// `OData__ModerationStatus`.
+const DOCUMENT_FIELDS = {
+  id: 'Id',
+  fileLeafRef: 'FileLeafRef',
+  fileRef: 'FileRef',
+  nameEnglish: 'Name_ENG',
+  nameThai: 'Name_TH',
+  documentType: 'DocmentType',
+  byCompany: 'By_Company',
+  byDepartment: 'By_Department',
+  moderationStatus: 'OData__ModerationStatus',
+  active: 'Active',
+  publishDate: 'PublishDate',
+  effectiveDate: 'EffectiveDate'
+} as const;
+
+interface ISPDocumentLibraryItem {
+  Id: number;
+  FileLeafRef: string;
+  FileRef: string;
+  Name_ENG?: string;
+  Name_TH?: string;
+  DocmentType?: string;
+  By_Company?: { Title?: string };
+  By_Department?: { Title?: string };
+  OData__ModerationStatus?: string;
+  Active: boolean;
+  PublishDate?: string;
+  EffectiveDate?: string;
+}
+
+export function resolveDocumentFileType(fileRef: string): DocumentFileType {
+  const extension = fileRef.split('.').pop()?.toLowerCase() ?? '';
+
+  if (extension === 'doc' || extension === 'docx') {
+    return 'word';
+  }
+  if (extension === 'xls' || extension === 'xlsx') {
+    return 'excel';
+  }
+  if (extension === 'ppt' || extension === 'pptx') {
+    return 'powerpoint';
+  }
+  return 'pdf';
+}
+
+export function mapToDocumentItem(raw: ISPDocumentLibraryItem): DocumentItem {
+  return {
+    id: String(raw.Id),
+    name: raw.Name_ENG || raw.FileLeafRef,
+    nameThai: raw.Name_TH || raw.FileLeafRef,
+    fileType: resolveDocumentFileType(raw.FileRef),
+    type: (raw.DocmentType ?? '') as DocumentTypeTag,
+    company: raw.By_Company?.Title ?? '',
+    department: raw.By_Department?.Title ?? '',
+    lastUpdate: raw.PublishDate ?? '',
+    fileUrl: raw.FileRef
+  };
+}
+
+export function isDocumentEffective(raw: Pick<ISPDocumentLibraryItem, 'EffectiveDate'>, now: number): boolean {
+  return !!raw.EffectiveDate && new Date(raw.EffectiveDate).getTime() < now;
+}
+
+export async function fetchDocuments(): Promise<DocumentItem[]> {
+  const response = await spApi.get<{ value: ISPDocumentLibraryItem[] }>(
+    `/GetList('${DOCUMENT_LIBRARY_SERVER_RELATIVE_URL}')/items`,
+    {
+      params: {
+        $select: [
+          DOCUMENT_FIELDS.id,
+          DOCUMENT_FIELDS.fileLeafRef,
+          DOCUMENT_FIELDS.fileRef,
+          DOCUMENT_FIELDS.nameEnglish,
+          DOCUMENT_FIELDS.nameThai,
+          DOCUMENT_FIELDS.documentType,
+          `${DOCUMENT_FIELDS.byCompany}/Title`,
+          `${DOCUMENT_FIELDS.byDepartment}/Title`,
+          DOCUMENT_FIELDS.moderationStatus,
+          DOCUMENT_FIELDS.active,
+          DOCUMENT_FIELDS.publishDate,
+          DOCUMENT_FIELDS.effectiveDate
+        ].join(','),
+        $expand: [DOCUMENT_FIELDS.byCompany, DOCUMENT_FIELDS.byDepartment].join(','),
+        $filter: `${DOCUMENT_FIELDS.active} eq 1 and ${DOCUMENT_FIELDS.moderationStatus} eq '${APPROVED_STATUS_VALUE}'`,
+        $top: 5000
+      }
+    }
+  );
+
+  const now = Date.now();
+  return response.data.value.filter(item => isDocumentEffective(item, now)).map(mapToDocumentItem);
+}
 
 const CATEGORY_DEFINITIONS: Array<{ id: string; type: DocumentTypeTag; label: string; labelThai: string }> = [
   { id: 'policy', type: 'Policy', label: 'Policy', labelThai: 'นโยบายบริษัท' },
@@ -48,10 +116,6 @@ const CATEGORY_DEFINITIONS: Array<{ id: string; type: DocumentTypeTag; label: st
   { id: 'manual', type: 'Manual', label: 'Manual', labelThai: 'คู่มือการใช้งาน' }
 ];
 
-export function fetchDocuments(): DocumentItem[] {
-  return MOCK_DOCUMENTS;
-}
-
 export function getDocumentCategorySummaries(documents: DocumentItem[]): DocumentCategorySummary[] {
   return CATEGORY_DEFINITIONS.map(definition => ({
     id: definition.id,
@@ -60,6 +124,14 @@ export function getDocumentCategorySummaries(documents: DocumentItem[]): Documen
     labelThai: definition.labelThai,
     count: documents.filter(doc => doc.type === definition.type).length
   }));
+}
+
+export function getDocumentCompanies(documents: DocumentItem[]): string[] {
+  return Array.from(new Set(documents.map(doc => doc.company).filter(Boolean)));
+}
+
+export function getDocumentDepartments(documents: DocumentItem[]): string[] {
+  return Array.from(new Set(documents.map(doc => doc.department).filter(Boolean)));
 }
 
 export function getRecentDocuments(documents: DocumentItem[], count: number): DocumentItem[] {
@@ -73,14 +145,40 @@ export interface DocumentFilters {
   company: string;
   department: string;
   type: string;
+  dateFrom: string;
+  dateTo: string;
 }
 
 export const DEFAULT_DOCUMENT_FILTERS: DocumentFilters = {
   search: '',
   company: 'All',
   department: 'All',
-  type: 'All'
+  type: 'All',
+  dateFrom: '',
+  dateTo: ''
 };
+
+export function isWithinDateFilter(lastUpdate: string, dateFrom: string, dateTo: string): boolean {
+  const updated = new Date(lastUpdate).getTime();
+  if (Number.isNaN(updated)) {
+    return false;
+  }
+
+  const from = parseIsoDate(dateFrom);
+  if (from && updated < from.getTime()) {
+    return false;
+  }
+
+  const to = parseIsoDate(dateTo);
+  if (to) {
+    to.setHours(23, 59, 59, 999);
+    if (updated > to.getTime()) {
+      return false;
+    }
+  }
+
+  return true;
+}
 
 export function filterDocuments(documents: DocumentItem[], filters: DocumentFilters): DocumentItem[] {
   const search = filters.search.trim().toLowerCase();
@@ -90,8 +188,9 @@ export function filterDocuments(documents: DocumentItem[], filters: DocumentFilt
     const matchesCompany = filters.company === 'All' || doc.company === filters.company;
     const matchesDepartment = filters.department === 'All' || doc.department === filters.department;
     const matchesType = filters.type === 'All' || doc.type === filters.type;
+    const matchesDate = isWithinDateFilter(doc.lastUpdate, filters.dateFrom, filters.dateTo);
 
-    return matchesSearch && matchesCompany && matchesDepartment && matchesType;
+    return matchesSearch && matchesCompany && matchesDepartment && matchesType && matchesDate;
   });
 }
 

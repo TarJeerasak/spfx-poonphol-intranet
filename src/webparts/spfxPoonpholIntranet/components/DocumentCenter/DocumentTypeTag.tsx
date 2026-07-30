@@ -2,7 +2,9 @@ import * as React from 'react';
 import { DocumentTypeTag as DocumentTypeTagValue } from '../../../../shared/types/content';
 import styles from './DocumentTypeTag.module.scss';
 
-const TYPE_COLORS: Record<DocumentTypeTagValue, { background: string; color: string }> = {
+const DEFAULT_TYPE_COLORS = { background: '#e4e7eb', color: '#3d4652' };
+
+const TYPE_COLORS: Partial<Record<DocumentTypeTagValue, { background: string; color: string }>> = {
   Policy: { background: '#d8e8ff', color: '#116ffb' },
   SOP: { background: '#e0fff2', color: '#0e5536' },
   Form: { background: '#ffe3d3', color: '#d46628' },
@@ -17,7 +19,7 @@ export interface DocumentTypeTagProps {
 }
 
 export function DocumentTypeTag({ type }: DocumentTypeTagProps): React.ReactElement {
-  const colors = TYPE_COLORS[type];
+  const colors = TYPE_COLORS[type] ?? DEFAULT_TYPE_COLORS;
   return (
     <span className={styles.tag} style={{ backgroundColor: colors.background, borderColor: colors.color, color: colors.color }}>
       {type}

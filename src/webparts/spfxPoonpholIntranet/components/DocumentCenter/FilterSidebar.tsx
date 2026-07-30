@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Icon } from '../../../../shared/components/Icon/Icon';
+import { DateRangeFilter } from './DateRangeFilter';
 import styles from './FilterSidebar.module.scss';
 
 export interface FilterOption {
@@ -43,12 +44,17 @@ export interface FilterSidebarProps {
   company: string;
   department: string;
   type: string;
+  dateFrom: string;
+  dateTo: string;
+  showCompanyFilter?: boolean;
+  showDepartmentFilter?: boolean;
   companyOptions: FilterOption[];
   departmentOptions: FilterOption[];
   typeOptions: FilterOption[];
   onCompanyChange: (value: string) => void;
   onDepartmentChange: (value: string) => void;
   onTypeChange: (value: string) => void;
+  onDateRangeChange: (dateFrom: string, dateTo: string) => void;
   onClearAll: () => void;
 }
 
@@ -56,12 +62,17 @@ export function FilterSidebar({
   company,
   department,
   type,
+  dateFrom,
+  dateTo,
+  showCompanyFilter = true,
+  showDepartmentFilter = true,
   companyOptions,
   departmentOptions,
   typeOptions,
   onCompanyChange,
   onDepartmentChange,
   onTypeChange,
+  onDateRangeChange,
   onClearAll
 }: FilterSidebarProps): React.ReactElement {
   return (
@@ -73,16 +84,14 @@ export function FilterSidebar({
         </button>
       </div>
       <div className={styles.divider} />
-      <FilterSelect label="บริษัท" value={company} options={companyOptions} onChange={onCompanyChange} />
-      <FilterSelect label="แผนก" value={department} options={departmentOptions} onChange={onDepartmentChange} />
+      {showCompanyFilter && (
+        <FilterSelect label="บริษัท" value={company} options={companyOptions} onChange={onCompanyChange} />
+      )}
+      {showDepartmentFilter && (
+        <FilterSelect label="แผนก" value={department} options={departmentOptions} onChange={onDepartmentChange} />
+      )}
       <FilterSelect label="ประเภท" value={type} options={typeOptions} onChange={onTypeChange} />
-      <div className={styles.field}>
-        <span className={styles.fieldLabel}>วันที่</span>
-        <div className={styles.dateBox}>
-          <span className={styles.datePlaceholder}>เลือกช่วงเวลา</span>
-          <Icon name="calendar" size={16} className={styles.dateIcon} />
-        </div>
-      </div>
+      <DateRangeFilter dateFrom={dateFrom} dateTo={dateTo} onChange={onDateRangeChange} />
     </aside>
   );
 }

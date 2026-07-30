@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Icon } from '../../../../shared/components/Icon/Icon';
 import { useDocumentCenterFeed } from '../../hooks/useDocumentCenterFeed';
-import { DOCUMENT_COMPANIES, DOCUMENT_DEPARTMENTS, DOCUMENT_TYPES } from '../../services/documentCenterService';
+import { DOCUMENT_TYPES } from '../../services/documentCenterService';
 import bannerImageUrl from '../../assets/document-center/hero-banner.jpg';
 import { CategoryCard } from './CategoryCard';
 import { DocumentTable } from './DocumentTable';
@@ -11,14 +11,14 @@ import { RecentDocuments } from './RecentDocuments';
 import styles from './DocumentCenterPage.module.scss';
 
 const ALL_OPTION: FilterOption = { value: 'All', label: 'ทั้งหมด' };
-const COMPANY_OPTIONS: FilterOption[] = [ALL_OPTION, ...DOCUMENT_COMPANIES.map(value => ({ value, label: value }))];
-const DEPARTMENT_OPTIONS: FilterOption[] = [ALL_OPTION, ...DOCUMENT_DEPARTMENTS.map(value => ({ value, label: value }))];
 const TYPE_OPTIONS: FilterOption[] = [ALL_OPTION, ...DOCUMENT_TYPES.map(value => ({ value, label: value }))];
 
 export function DocumentCenterPage(): React.ReactElement {
   const {
     categorySummaries,
     recentDocuments,
+    companies,
+    departments,
     items,
     filters,
     sortOrder,
@@ -29,10 +29,14 @@ export function DocumentCenterPage(): React.ReactElement {
     setCompany,
     setDepartment,
     setType,
+    setDateRange,
     setSortOrder,
     setPage,
     clearFilters
   } = useDocumentCenterFeed();
+
+  const companyOptions: FilterOption[] = [ALL_OPTION, ...companies.map(value => ({ value, label: value }))];
+  const departmentOptions: FilterOption[] = [ALL_OPTION, ...departments.map(value => ({ value, label: value }))];
 
   const [searchDraft, setSearchDraft] = React.useState(filters.search);
 
@@ -69,12 +73,17 @@ export function DocumentCenterPage(): React.ReactElement {
               company={filters.company}
               department={filters.department}
               type={filters.type}
-              companyOptions={COMPANY_OPTIONS}
-              departmentOptions={DEPARTMENT_OPTIONS}
+              dateFrom={filters.dateFrom}
+              dateTo={filters.dateTo}
+              showCompanyFilter={companies.length > 1}
+              showDepartmentFilter={departments.length > 1}
+              companyOptions={companyOptions}
+              departmentOptions={departmentOptions}
               typeOptions={TYPE_OPTIONS}
               onCompanyChange={setCompany}
               onDepartmentChange={setDepartment}
               onTypeChange={setType}
+              onDateRangeChange={setDateRange}
               onClearAll={() => {
                 setSearchDraft('');
                 clearFilters();
@@ -100,17 +109,32 @@ export function DocumentCenterPage(): React.ReactElement {
                   <option value="oldest">Oldest update</option>
                 </select>
                 <form className={styles.searchForm} onSubmit={handleSearchSubmit}>
-                  <span className={styles.searchIcon}>
-                    <Icon name="search" size={18} />
+                  <span className={styles.searchBox}>
+                    <span className={styles.searchIcon}>
+                      <Icon name="search" size={18} />
+                    </span>
+                    <input
+                      type="text"
+                      className={styles.searchInput}
+                      placeholder="search"
+                      value={searchDraft}
+                      onChange={event => setSearchDraft(event.target.value)}
+                      aria-label="ค้นหาเอกสาร"
+                    />
+                    {searchDraft.length > 0 && (
+                      <button
+                        type="button"
+                        className={styles.searchClearButton}
+                        onClick={() => {
+                          setSearchDraft('');
+                          setSearch('');
+                        }}
+                        aria-label="ล้างคำค้นหา"
+                      >
+                        <Icon name="close" size={14} />
+                      </button>
+                    )}
                   </span>
-                  <input
-                    type="text"
-                    className={styles.searchInput}
-                    placeholder="search"
-                    value={searchDraft}
-                    onChange={event => setSearchDraft(event.target.value)}
-                    aria-label="ค้นหาเอกสาร"
-                  />
                   <button type="submit" className={styles.searchButton}>
                     Search
                   </button>

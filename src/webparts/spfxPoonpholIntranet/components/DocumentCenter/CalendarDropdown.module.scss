@@ -1,0 +1,72 @@
+@import '../../../../shared/styles/tokens';
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: none;
+  background: none;
+  padding: 2px 4px;
+  border-radius: $radius-sm;
+  font-family: $font-thai;
+  font-weight: 700;
+  font-size: 16px;
+  color: $color-text-primary;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    background: rgba($color-primary, 0.08);
+  }
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.5;
+  }
+}
+
+.chevron {
+  flex-shrink: 0;
+  color: $color-primary;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 4px;
+  max-height: 260px;
+  min-width: 130px;
+  overflow-y: auto;
+}
+
+.option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: none;
+  padding: 8px 12px;
+  border-radius: $radius-sm;
+  font-family: $font-thai;
+  font-size: 14px;
+  color: $color-text-primary;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    background: rgba($color-primary, 0.1);
+  }
+
+  &:disabled {
+    color: $color-text-secondary;
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+.optionSelected {
+  background: $color-primary;
+  color: $color-surface;
+
+  &:hover:not(:disabled) {
+    background: $color-primary;
+  }
+}
