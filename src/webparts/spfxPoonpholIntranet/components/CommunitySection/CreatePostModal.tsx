@@ -118,10 +118,20 @@ export function CreatePostModal({ isOpen, onClose, onCreated }: CreatePostModalP
       title="สร้างโพสต์ใหม่"
       footer={
         <>
-          <Button variant="outline" onClick={handleClose} disabled={isSubmitting}>
+          <Button
+            variant="outline"
+            style={{ minWidth: 112, padding: '10px 20px', fontSize: 14 }}
+            onClick={handleClose}
+            disabled={isSubmitting}
+          >
             ยกเลิก
           </Button>
-          <Button variant="primary" style={{ background: '#71b87f' }} onClick={handleSubmit} disabled={!canSubmit}>
+          <Button
+            variant="primary"
+            style={{ background: '#71b87f', minWidth: 112, padding: '10px 20px' }}
+            onClick={handleSubmit}
+            disabled={!canSubmit}
+          >
             {isSubmitting ? 'กำลังโพสต์...' : 'โพสต์'}
           </Button>
         </>

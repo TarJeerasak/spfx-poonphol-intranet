@@ -112,6 +112,7 @@
   height: 192px;
   border-radius: 10px;
   overflow: hidden;
+  cursor: pointer;
 
   &:hover .imageZoom {
     transform: scale(1.08);
@@ -136,6 +137,7 @@
   aspect-ratio: 1 / 1;
   background-color: $color-surface;
   overflow: hidden;
+  cursor: pointer;
 
   .imageGridThree & {
     aspect-ratio: 2 / 3;

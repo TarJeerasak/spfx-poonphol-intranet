@@ -3,7 +3,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(18, 52, 22, 0.45);
+  background: rgba($color-text-primary, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -15,7 +15,7 @@
 
 .panel {
   width: 100%;
-  max-width: 560px;
+  max-width: 640px;
   background: $color-surface;
   border-radius: $radius-md;
   box-shadow: $shadow-elevated;

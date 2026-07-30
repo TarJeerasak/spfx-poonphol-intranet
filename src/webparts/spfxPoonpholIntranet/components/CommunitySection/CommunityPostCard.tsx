@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Icon } from '../../../../shared/components/Icon/Icon';
+import { Lightbox } from '../../../../shared/components/Lightbox/Lightbox';
 import { CommunityPost } from '../../../../shared/types/content';
 import {
   shouldClampText,
@@ -19,6 +20,7 @@ export interface CommunityPostCardProps {
 
 export function CommunityPostCard({ post, likeState, onToggleLike }: CommunityPostCardProps): React.ReactElement {
   const [isExpanded, setIsExpanded] = React.useState(false);
+  const [lightboxIndex, setLightboxIndex] = React.useState<number | undefined>(undefined);
   const hasImages = post.imageUrls.length > 0;
   const isClampable = shouldClampText(
     post.text,
@@ -53,14 +55,14 @@ export function CommunityPostCard({ post, likeState, onToggleLike }: CommunityPo
         </button>
       )}
       {visibleImages.length === 1 && (
-        <div className={styles.postImage}>
+        <div className={styles.postImage} onClick={() => setLightboxIndex(0)}>
           <div className={styles.imageZoom} style={{ backgroundImage: `url(${visibleImages[0]})` }} />
         </div>
       )}
       {visibleImages.length > 1 && (
         <div className={`${styles.imageGrid} ${visibleImages.length === 3 ? styles.imageGridThree : ''}`}>
           {visibleImages.map((imageUrl, index) => (
-            <div key={imageUrl} className={styles.imageGridTile}>
+            <div key={imageUrl} className={styles.imageGridTile} onClick={() => setLightboxIndex(index)}>
               <div className={styles.imageZoom} style={{ backgroundImage: `url(${imageUrl})` }} />
               {index === MAX_VISIBLE_IMAGES - 1 && overflowImageCount > 0 && (
                 <span className={styles.imageGridOverlay}>+{overflowImageCount}</span>
@@ -68,6 +70,9 @@ export function CommunityPostCard({ post, likeState, onToggleLike }: CommunityPo
             </div>
           ))}
         </div>
+      )}
+      {lightboxIndex !== undefined && (
+        <Lightbox images={post.imageUrls} startIndex={lightboxIndex} onClose={() => setLightboxIndex(undefined)} />
       )}
       <div className={styles.actions}>
         <button
