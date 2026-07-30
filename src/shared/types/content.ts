@@ -83,6 +83,27 @@ export interface DocumentItem {
   fileUrl: string;
 }
 
+export type AppCategoryId = 'human-resources' | 'export' | 'accounting' | 'office' | 'business' | 'dt';
+
+export interface AppCategory {
+  id: AppCategoryId;
+  label: string;
+  backgroundColor: string;
+  textColor: string;
+}
+
+export interface AppItem {
+  id: string;
+  name: string;
+  descriptionThai: string;
+  categoryId: AppCategoryId;
+  company: string;
+  usageCount: number;
+  isNew: boolean;
+  lastUsedAt: string;
+  launchUrl: string;
+}
+
 export interface QuickLink {
   id: string;
   label: string;

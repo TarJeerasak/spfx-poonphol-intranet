@@ -26,5 +26,5 @@ export const quickLinks: QuickLink[] = [
   { id: 'telephone', label: 'Telephone Lists', iconUrl: telephoneListsIcon, backgroundColor: '#72b7a1' },
   { id: 'km', label: 'KM', iconUrl: kmIcon, backgroundColor: '#445a6c' },
   { id: 'gallery', label: 'Gallery', iconUrl: galleryIcon, backgroundColor: '#29444e' },
-  { id: 'more-apps', label: 'More Apps', iconUrl: moreAppsIcon, backgroundColor: '#30705c' }
+  { id: 'more-apps', label: 'More Apps', iconUrl: moreAppsIcon, backgroundColor: '#30705c', to: '/more-apps' }
 ];

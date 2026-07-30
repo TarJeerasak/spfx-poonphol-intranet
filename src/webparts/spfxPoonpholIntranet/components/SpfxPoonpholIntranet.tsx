@@ -7,6 +7,7 @@ import { Header } from './Header/Header';
 import { Footer } from './Footer/Footer';
 import { HomePage } from './HomePage/HomePage';
 import { DocumentCenterPage } from './DocumentCenter/DocumentCenterPage';
+import { MoreAppsPage } from './MoreApps/MoreAppsPage';
 import { navLinks } from './data/mockContent';
 
 const GOOGLE_FONTS_URL =
@@ -22,6 +23,7 @@ export default function SpfxPoonpholIntranet({ hasTeamsContext, userDisplayName 
         <Routes>
           <Route path="/" element={<HomePage userDisplayName={userDisplayName} />} />
           <Route path="/documents" element={<DocumentCenterPage />} />
+          <Route path="/more-apps" element={<MoreAppsPage />} />
         </Routes>
         <Footer navLinks={navLinks} />
       </div>
