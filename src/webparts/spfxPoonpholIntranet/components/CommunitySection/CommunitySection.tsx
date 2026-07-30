@@ -38,16 +38,29 @@ export function CommunitySection({ posts, onPostCreated }: CommunitySectionProps
         }
       />
       <div className={styles.divider} />
-      <div className={styles.list}>
-        {posts.map(post => (
-          <CommunityPostCard
-            key={post.id}
-            post={post}
-            likeState={getLikeState(post)}
-            onToggleLike={() => toggleLike(post)}
-          />
-        ))}
-      </div>
+      {posts.length > 0 ? (
+        <div className={styles.list}>
+          {posts.map(post => (
+            <CommunityPostCard
+              key={post.id}
+              post={post}
+              likeState={getLikeState(post)}
+              onToggleLike={() => toggleLike(post)}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className={styles.empty}>
+          <p className={styles.emptyText}>ยังไม่มีโพสต์ มาเป็นคนแรกที่แบ่งปันเรื่องราวดีๆ กันเถอะ</p>
+          <Button
+            variant="primary"
+            style={{ background: '#71b87f' }}
+            onClick={() => setIsCreateModalOpen(true)}
+          >
+            สร้างโพสต์
+          </Button>
+        </div>
+      )}
       <SectionFooter />
       <CreatePostModal
         isOpen={isCreateModalOpen}

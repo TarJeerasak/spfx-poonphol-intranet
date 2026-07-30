@@ -65,11 +65,10 @@ export type DocumentTypeTag = 'Policy' | 'SOP' | 'Form' | 'Manual' | 'Announceme
 
 export interface DocumentCategorySummary {
   id: string;
+  type: DocumentTypeTag;
   label: string;
   labelThai: string;
   count: number;
-  iconName: string;
-  tintColor: string;
 }
 
 export interface DocumentItem {

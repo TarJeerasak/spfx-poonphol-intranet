@@ -2,19 +2,23 @@ import * as React from 'react';
 import { Icon } from '../../../../shared/components/Icon/Icon';
 import { useDocumentCenterFeed } from '../../hooks/useDocumentCenterFeed';
 import { DOCUMENT_COMPANIES, DOCUMENT_DEPARTMENTS, DOCUMENT_TYPES } from '../../services/documentCenterService';
+import bannerImageUrl from '../../assets/document-center/hero-banner.jpg';
 import { CategoryCard } from './CategoryCard';
 import { DocumentTable } from './DocumentTable';
-import { FilterSidebar } from './FilterSidebar';
+import { FilterOption, FilterSidebar } from './FilterSidebar';
 import { Pagination } from './Pagination';
+import { RecentDocuments } from './RecentDocuments';
 import styles from './DocumentCenterPage.module.scss';
 
-const COMPANY_OPTIONS = ['All', ...DOCUMENT_COMPANIES];
-const DEPARTMENT_OPTIONS = ['All', ...DOCUMENT_DEPARTMENTS];
-const TYPE_OPTIONS = ['All', ...DOCUMENT_TYPES];
+const ALL_OPTION: FilterOption = { value: 'All', label: 'ทั้งหมด' };
+const COMPANY_OPTIONS: FilterOption[] = [ALL_OPTION, ...DOCUMENT_COMPANIES.map(value => ({ value, label: value }))];
+const DEPARTMENT_OPTIONS: FilterOption[] = [ALL_OPTION, ...DOCUMENT_DEPARTMENTS.map(value => ({ value, label: value }))];
+const TYPE_OPTIONS: FilterOption[] = [ALL_OPTION, ...DOCUMENT_TYPES.map(value => ({ value, label: value }))];
 
 export function DocumentCenterPage(): React.ReactElement {
   const {
     categorySummaries,
+    recentDocuments,
     items,
     filters,
     sortOrder,
@@ -39,40 +43,49 @@ export function DocumentCenterPage(): React.ReactElement {
 
   return (
     <div className={styles.page}>
-      <section className={styles.banner}>
+      <section className={styles.banner} style={{ backgroundImage: `url(${bannerImageUrl})` }}>
+        <div className={styles.bannerFade} />
         <div className={styles.bannerInner}>
           <h1 className={styles.bannerTitle}>Document Center</h1>
-          <p className={styles.bannerSubtitle}>ค้นหาเอกสาร นโยบาย แบบฟอร์ม SOP ทุกอย่างของ Poonphol Group</p>
+          <p className={styles.bannerSubtitle}>ค้นหาเอกสารของกลุ่มพูลผล</p>
         </div>
       </section>
 
       <div className={styles.container}>
         <div className={styles.categoryRow}>
           {categorySummaries.map(summary => (
-            <CategoryCard key={summary.id} summary={summary} />
+            <CategoryCard
+              key={summary.id}
+              summary={summary}
+              isActive={filters.type === summary.type}
+              onSelect={() => setType(filters.type === summary.type ? 'All' : summary.type)}
+            />
           ))}
         </div>
 
         <div className={styles.contentRow}>
-          <FilterSidebar
-            company={filters.company}
-            department={filters.department}
-            type={filters.type}
-            companyOptions={COMPANY_OPTIONS}
-            departmentOptions={DEPARTMENT_OPTIONS}
-            typeOptions={TYPE_OPTIONS}
-            onCompanyChange={setCompany}
-            onDepartmentChange={setDepartment}
-            onTypeChange={setType}
-            onClearAll={() => {
-              setSearchDraft('');
-              clearFilters();
-            }}
-          />
+          <div className={styles.sidebarColumn}>
+            <FilterSidebar
+              company={filters.company}
+              department={filters.department}
+              type={filters.type}
+              companyOptions={COMPANY_OPTIONS}
+              departmentOptions={DEPARTMENT_OPTIONS}
+              typeOptions={TYPE_OPTIONS}
+              onCompanyChange={setCompany}
+              onDepartmentChange={setDepartment}
+              onTypeChange={setType}
+              onClearAll={() => {
+                setSearchDraft('');
+                clearFilters();
+              }}
+            />
+            <RecentDocuments documents={recentDocuments} />
+          </div>
 
           <div className={styles.panel}>
             <div className={styles.panelHeader}>
-              <p className={styles.panelTitle}>Document ({filteredCount})</p>
+              <p className={styles.panelTitle}>เอกสาร ({filteredCount})</p>
               <div className={styles.panelControls}>
                 <label className={styles.sortLabel} htmlFor="document-sort">
                   Sort by:
@@ -88,7 +101,7 @@ export function DocumentCenterPage(): React.ReactElement {
                 </select>
                 <form className={styles.searchForm} onSubmit={handleSearchSubmit}>
                   <span className={styles.searchIcon}>
-                    <Icon name="search" size={16} />
+                    <Icon name="search" size={18} />
                   </span>
                   <input
                     type="text"

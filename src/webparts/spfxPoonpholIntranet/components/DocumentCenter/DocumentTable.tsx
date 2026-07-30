@@ -15,11 +15,11 @@ export function DocumentTable({ documents }: DocumentTableProps): React.ReactEle
   return (
     <div className={styles.table}>
       <div className={styles.headerRow}>
-        <div className={styles.cellIcon} />
-        <div className={styles.cellName}>Document Name</div>
-        <div className={styles.cellType}>Type</div>
-        <div className={styles.cellDepartment}>Department</div>
-        <div className={styles.cellDate}>Last Update</div>
+        <div className={styles.cellName}>เอกสาร</div>
+        <div className={styles.cellType}>ประเภท</div>
+        <div className={styles.cellCompany}>บริษัท</div>
+        <div className={styles.cellDepartment}>แผนก</div>
+        <div className={styles.cellDate}>อัปเดตล่าสุด</div>
         <div className={styles.cellDownload} />
       </div>
       <div className={styles.body}>

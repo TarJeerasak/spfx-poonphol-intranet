@@ -6,11 +6,26 @@
 }
 
 .banner {
-  background: linear-gradient(135deg, $color-primary 0%, $color-secondary-alt 100%);
-  padding: 56px 0 96px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 420px;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  padding: 64px 0 104px;
+}
+
+.bannerFade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to left, rgba(245, 247, 244, 0) 50%, #f5f7f4 78.437%);
 }
 
 .bannerInner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
   max-width: $content-max-width;
   margin: 0 auto;
   padding: 0 clamp(16px, 5.5vw, 80px);
@@ -20,19 +35,21 @@
   margin: 0;
   font-family: $font-thai;
   font-weight: 700;
-  font-size: clamp(28px, 3.2vw, 40px);
-  color: $color-surface;
+  font-size: clamp(32px, 3.6vw, 48px);
+  color: #163634;
 }
 
 .bannerSubtitle {
-  margin: 12px 0 0;
+  margin: 10px 0 0;
   font-family: $font-thai;
   font-size: clamp(15px, 1.4vw, 18px);
-  color: rgba(255, 255, 255, 0.85);
+  color: #5f7a78;
   max-width: 560px;
 }
 
 .container {
+  position: relative;
+  z-index: 1;
   max-width: $content-max-width;
   width: 100%;
   margin: 0 auto;
@@ -45,15 +62,22 @@
 .categoryRow {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 10px;
   margin-top: -56px;
 }
 
 .contentRow {
   display: flex;
   align-items: flex-start;
-  gap: 24px;
+  gap: 16px;
   flex-wrap: wrap;
+}
+
+.sidebarColumn {
+  flex: 0 0 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .panel {
@@ -63,8 +87,9 @@
   flex-direction: column;
   padding: 24px;
   background: $color-surface;
+  border: 1px solid $color-border;
   border-radius: $radius-md;
-  box-shadow: $shadow-card;
+  box-shadow: $shadow-section;
 }
 
 .panelHeader {
@@ -78,8 +103,8 @@
 .panelTitle {
   margin: 0;
   font-family: $font-thai;
-  font-weight: 600;
-  font-size: 18px;
+  font-weight: 500;
+  font-size: 16px;
   color: $color-text-primary;
 }
 
@@ -92,17 +117,18 @@
 
 .sortLabel {
   font-family: $font-thai;
+  font-weight: 500;
   font-size: 14px;
-  color: $color-text-secondary;
+  color: $color-text-primary;
   white-space: nowrap;
 }
 
 .sortSelect {
   height: 36px;
-  padding: 0 12px;
-  border-radius: $radius-sm;
-  border: 1px solid $color-stroke;
-  background: $color-surface;
+  padding: 0 8px;
+  border-radius: 12px;
+  border: 1px solid $color-border;
+  background: $color-surface-elevated;
   color: $color-text-primary;
   font-family: $font-thai;
   font-size: 14px;
@@ -113,10 +139,10 @@
   align-items: center;
   gap: 8px;
   height: 36px;
-  padding: 0 12px;
-  border-radius: $radius-sm;
-  border: 1px solid $color-stroke;
-  background: $color-surface;
+  padding: 0 17px;
+  border-radius: 12px;
+  border: 1px solid $color-border;
+  background: $color-surface-elevated;
 }
 
 .searchIcon {
@@ -128,22 +154,26 @@
   border: none;
   outline: none;
   font-family: $font-thai;
-  font-size: 14px;
+  font-size: 16px;
   width: 140px;
   background: transparent;
   color: $color-text-primary;
+
+  &::placeholder {
+    color: #9ca3af;
+  }
 }
 
 .searchButton {
-  height: 28px;
-  padding: 0 16px;
+  height: 36px;
+  padding: 0 24px;
   border: none;
-  border-radius: $radius-pill;
-  background: $color-accent;
-  color: $color-text-primary;
+  border-radius: $radius-sm;
+  background: #d8b66a;
+  color: $color-surface-elevated;
   font-family: $font-thai;
-  font-weight: 600;
-  font-size: 13px;
+  font-weight: 500;
+  font-size: 14px;
   cursor: pointer;
 
   &:hover {
@@ -153,7 +183,7 @@
 
 .panelDivider {
   height: 1px;
-  background: $color-stroke;
+  background: $color-border;
   margin: 20px 0;
 }
 

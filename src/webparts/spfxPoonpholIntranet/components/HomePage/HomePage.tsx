@@ -46,9 +46,7 @@ export function HomePage({ userDisplayName }: HomePageProps): React.ReactElement
           {eventFeed.feature && (
             <EventSection feature={eventFeed.feature} items={eventFeed.items} totalCount={eventFeed.totalCount} />
           )}
-          {communityFeed.posts.length > 0 && (
-            <CommunitySection posts={communityFeed.posts} onPostCreated={communityFeed.refetch} />
-          )}
+          <CommunitySection posts={communityFeed.posts} onPostCreated={communityFeed.refetch} />
         </div>
       </div>
     </div>

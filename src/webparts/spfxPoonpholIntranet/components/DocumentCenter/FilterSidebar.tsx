@@ -2,10 +2,15 @@ import * as React from 'react';
 import { Icon } from '../../../../shared/components/Icon/Icon';
 import styles from './FilterSidebar.module.scss';
 
+export interface FilterOption {
+  value: string;
+  label: string;
+}
+
 export interface FilterSelectProps {
   label: string;
   value: string;
-  options: string[];
+  options: FilterOption[];
   onChange: (value: string) => void;
 }
 
@@ -23,8 +28,8 @@ function FilterSelect({ label, value, options, onChange }: FilterSelectProps): R
           onChange={event => onChange(event.target.value)}
         >
           {options.map(option => (
-            <option key={option} value={option}>
-              {option}
+            <option key={option.value} value={option.value}>
+              {option.label}
             </option>
           ))}
         </select>
@@ -38,9 +43,9 @@ export interface FilterSidebarProps {
   company: string;
   department: string;
   type: string;
-  companyOptions: string[];
-  departmentOptions: string[];
-  typeOptions: string[];
+  companyOptions: FilterOption[];
+  departmentOptions: FilterOption[];
+  typeOptions: FilterOption[];
   onCompanyChange: (value: string) => void;
   onDepartmentChange: (value: string) => void;
   onTypeChange: (value: string) => void;
@@ -62,17 +67,17 @@ export function FilterSidebar({
   return (
     <aside className={styles.sidebar}>
       <div className={styles.headerRow}>
-        <span className={styles.title}>Filter</span>
+        <span className={styles.title}>ตัวกรอง</span>
         <button type="button" className={styles.clearButton} onClick={onClearAll}>
-          Clear All
+          ลบตัวกรอง
         </button>
       </div>
       <div className={styles.divider} />
-      <FilterSelect label="Company" value={company} options={companyOptions} onChange={onCompanyChange} />
-      <FilterSelect label="Department" value={department} options={departmentOptions} onChange={onDepartmentChange} />
-      <FilterSelect label="Document Type" value={type} options={typeOptions} onChange={onTypeChange} />
+      <FilterSelect label="บริษัท" value={company} options={companyOptions} onChange={onCompanyChange} />
+      <FilterSelect label="แผนก" value={department} options={departmentOptions} onChange={onDepartmentChange} />
+      <FilterSelect label="ประเภท" value={type} options={typeOptions} onChange={onTypeChange} />
       <div className={styles.field}>
-        <span className={styles.fieldLabel}>Date</span>
+        <span className={styles.fieldLabel}>วันที่</span>
         <div className={styles.dateBox}>
           <span className={styles.datePlaceholder}>เลือกช่วงเวลา</span>
           <Icon name="calendar" size={16} className={styles.dateIcon} />

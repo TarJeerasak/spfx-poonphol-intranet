@@ -1,4 +1,9 @@
-import { buildKnowledgeCategories, mapToKnowledgeItem, selectKnowledgeItemsByClosestPublishDate } from './knowledgeService';
+import {
+  buildKnowledgeCategories,
+  mapToKnowledgeItem,
+  resolveKnowledgeListTitle,
+  selectKnowledgeItemsByClosestPublishDate
+} from './knowledgeService';
 
 const NOW = new Date(2026, 6, 24).getTime();
 
@@ -101,6 +106,18 @@ describe('mapToKnowledgeItem', () => {
       locationLabel: '',
       imageUrl: ''
     });
+  });
+});
+
+describe('resolveKnowledgeListTitle', () => {
+  it('uses KnowledgeManagementList1 for the PPG_UAT site', () => {
+    expect(resolveKnowledgeListTitle('https://poonphol.sharepoint.com/sites/PPG_UAT')).toBe('KnowledgeManagementList1');
+  });
+
+  it('falls back to KnowledgeManagementList for any other site', () => {
+    expect(resolveKnowledgeListTitle('https://fusionsoftcompany.sharepoint.com/sites/Project-PoonpholIntranetPortal')).toBe(
+      'KnowledgeManagementList'
+    );
   });
 });
 

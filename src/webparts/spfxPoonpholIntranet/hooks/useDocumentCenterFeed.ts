@@ -7,14 +7,17 @@ import {
   fetchDocuments,
   filterDocuments,
   getDocumentCategorySummaries,
+  getRecentDocuments,
   paginateDocuments,
   sortDocuments
 } from '../services/documentCenterService';
 
 const PAGE_SIZE = 10;
+const RECENT_DOCUMENTS_COUNT = 4;
 
 export interface UseDocumentCenterFeedResult {
   categorySummaries: DocumentCategorySummary[];
+  recentDocuments: DocumentItem[];
   items: DocumentItem[];
   filters: DocumentFilters;
   sortOrder: DocumentSortOrder;
@@ -33,6 +36,7 @@ export interface UseDocumentCenterFeedResult {
 export function useDocumentCenterFeed(): UseDocumentCenterFeedResult {
   const allDocuments = useMemo(() => fetchDocuments(), []);
   const categorySummaries = useMemo(() => getDocumentCategorySummaries(allDocuments), [allDocuments]);
+  const recentDocuments = useMemo(() => getRecentDocuments(allDocuments, RECENT_DOCUMENTS_COUNT), [allDocuments]);
 
   const [filters, setFilters] = useState<DocumentFilters>(DEFAULT_DOCUMENT_FILTERS);
   const [sortOrder, setSortOrder] = useState<DocumentSortOrder>('latest');
@@ -55,6 +59,7 @@ export function useDocumentCenterFeed(): UseDocumentCenterFeedResult {
 
   return {
     categorySummaries,
+    recentDocuments,
     items,
     filters,
     sortOrder,

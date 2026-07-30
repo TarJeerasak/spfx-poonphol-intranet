@@ -1,6 +1,6 @@
 @import '../../../../shared/styles/tokens';
 
-$grid-columns: 48px minmax(160px, 2fr) 110px minmax(140px, 1.6fr) 90px 48px;
+$grid-columns: minmax(140px, 1fr) 110px minmax(90px, 1fr) minmax(140px, 1fr) 90px 40px;
 
 .table {
   display: flex;
@@ -13,16 +13,17 @@ $grid-columns: 48px minmax(160px, 2fr) 110px minmax(140px, 1.6fr) 90px 48px;
   align-items: center;
   gap: 8px;
   padding: 12px 8px;
-  border-bottom: 1px solid $color-stroke;
+  background: $color-surface-elevated;
   font-family: $font-thai;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 14px;
-  color: $color-text-primary;
+  color: #454545;
 }
 
 .body {
   display: flex;
   flex-direction: column;
+  gap: 4px;
 }
 
 .row {
@@ -30,12 +31,7 @@ $grid-columns: 48px minmax(160px, 2fr) 110px minmax(140px, 1.6fr) 90px 48px;
   grid-template-columns: $grid-columns;
   align-items: center;
   gap: 8px;
-  padding: 10px 8px;
-  border-bottom: 1px solid $color-stroke;
-}
-
-.cellIcon {
-  display: flex;
+  padding: 6px 8px;
 }
 
 .cellName {
@@ -44,9 +40,9 @@ $grid-columns: 48px minmax(160px, 2fr) 110px minmax(140px, 1.6fr) 90px 48px;
 
 .name {
   margin: 0;
-  font-family: $font-en;
-  font-weight: 600;
-  font-size: 14px;
+  font-family: $font-thai;
+  font-weight: 500;
+  font-size: 12px;
   color: $color-text-primary;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -67,9 +63,20 @@ $grid-columns: 48px minmax(160px, 2fr) 110px minmax(140px, 1.6fr) 90px 48px;
   min-width: 0;
 }
 
+.cellCompany {
+  font-family: $font-thai;
+  font-weight: 500;
+  font-size: 12px;
+  color: $color-text-primary;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .cellDepartment {
   font-family: $font-thai;
-  font-size: 13px;
+  font-weight: 500;
+  font-size: 12px;
   color: $color-text-primary;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -77,15 +84,16 @@ $grid-columns: 48px minmax(160px, 2fr) 110px minmax(140px, 1.6fr) 90px 48px;
 }
 
 .cellDate {
-  font-family: $font-en;
-  font-size: 13px;
-  color: $color-text-secondary;
+  font-family: $font-thai;
+  font-weight: 500;
+  font-size: 12px;
+  color: $color-text-primary;
   white-space: nowrap;
 }
 
 .cellDownload {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
 }
 
 .downloadButton {
@@ -95,7 +103,7 @@ $grid-columns: 48px minmax(160px, 2fr) 110px minmax(140px, 1.6fr) 90px 48px;
   width: 32px;
   height: 32px;
   border-radius: $radius-sm;
-  color: $color-primary;
+  color: #163634;
 
   &:hover {
     background: $color-surface-elevated;

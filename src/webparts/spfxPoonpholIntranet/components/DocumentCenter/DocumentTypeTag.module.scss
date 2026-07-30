@@ -4,10 +4,10 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 4px 12px;
+  padding: 4px 8px;
+  border: 1px solid;
   border-radius: $radius-pill;
-  font-family: $font-en;
-  font-weight: 600;
+  font-family: $font-thai;
   font-size: 12px;
   white-space: nowrap;
 }

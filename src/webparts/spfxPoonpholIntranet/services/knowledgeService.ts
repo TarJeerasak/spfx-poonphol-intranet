@@ -1,4 +1,5 @@
 import { spApi } from '../../../shared/services/api';
+import { SiteURL } from '../../../shared/config/site';
 import { KnowledgeCategory, KnowledgeItem } from '../../../shared/types/content';
 import { parseMultiChoiceValue } from '../../../shared/utils/parseMultiChoiceValue';
 import { parseThumbnailImage } from '../../../shared/utils/parseThumbnailImage';
@@ -6,9 +7,15 @@ import { IAttachmentFile, resolveListItemImageUrl } from '../../../shared/utils/
 import { selectClosestByDate } from '../../../shared/utils/selectClosestByDate';
 
 const KNOWLEDGE_LIST_TITLE = 'KnowledgeManagementList';
+const KNOWLEDGE_LIST_TITLE_UAT = 'KnowledgeManagementList1';
+const UAT_SITE_URL = 'https://poonphol.sharepoint.com/sites/PPG_UAT';
 export const MAX_FEATURED_KNOWLEDGE_COUNT = 3;
 const ALL_CATEGORY_ID = 'all';
 const ALL_CATEGORY_LABEL = 'ดูทั้งหมด';
+
+export function resolveKnowledgeListTitle(siteUrl: string): string {
+  return siteUrl === UAT_SITE_URL ? KNOWLEDGE_LIST_TITLE_UAT : KNOWLEDGE_LIST_TITLE;
+}
 
 // Internal names guessed from the list's display names - verify against
 // `${SiteURL}/_api/web/lists/getbytitle('KnowledgeManagementList')/fields?$select=Title,InternalName,TypeAsString&$filter=Hidden eq false`
@@ -71,8 +78,9 @@ export function selectKnowledgeItemsByClosestPublishDate(
 }
 
 export async function fetchKnowledgeFeed(): Promise<KnowledgeFeedResult> {
+  const listTitle = resolveKnowledgeListTitle(SiteURL);
   const response = await spApi.get<{ value: ISPKnowledgeListItem[] }>(
-    `/lists/getbytitle('${KNOWLEDGE_LIST_TITLE}')/items`,
+    `/lists/getbytitle('${listTitle}')/items`,
     {
       params: {
         $select: [

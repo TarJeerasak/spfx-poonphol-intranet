@@ -3,6 +3,7 @@ import {
   DEFAULT_DOCUMENT_FILTERS,
   filterDocuments,
   getDocumentCategorySummaries,
+  getRecentDocuments,
   paginateDocuments,
   sortDocuments
 } from './documentCenterService';
@@ -126,5 +127,23 @@ describe('getDocumentCategorySummaries', () => {
     expect(summaries.find(summary => summary.id === 'policy')?.count).toEqual(2);
     expect(summaries.find(summary => summary.id === 'sop')?.count).toEqual(1);
     expect(summaries.find(summary => summary.id === 'form')?.count).toEqual(0);
+  });
+});
+
+describe('getRecentDocuments', () => {
+  const documents = [
+    buildDocument({ id: 'doc-old', lastUpdate: '2023-01-01' }),
+    buildDocument({ id: 'doc-new', lastUpdate: '2025-06-01' }),
+    buildDocument({ id: 'doc-mid', lastUpdate: '2024-03-15' })
+  ];
+
+  it('returns the most recently updated documents first', () => {
+    expect(getRecentDocuments(documents, 2).map(doc => doc.id)).toEqual(['doc-new', 'doc-mid']);
+  });
+
+  it('does not mutate the input array', () => {
+    const original = [...documents];
+    getRecentDocuments(documents, 2);
+    expect(documents).toEqual(original);
   });
 });
