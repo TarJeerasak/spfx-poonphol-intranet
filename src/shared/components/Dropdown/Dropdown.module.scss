@@ -1,0 +1,89 @@
+@import '../../styles/tokens';
+@import '../../styles/mixins';
+
+.root {
+  position: relative;
+  display: inline-flex;
+}
+
+.trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: $radius-sm;
+  border: 1px solid $color-border;
+  background: $color-surface;
+  color: $color-text-primary;
+  font-family: $font-thai;
+  font-weight: 500;
+  font-size: 14px;
+  white-space: nowrap;
+  cursor: pointer;
+  @include press-scale;
+
+  &:hover {
+    border-color: $color-primary;
+  }
+}
+
+.triggerLabel {
+  pointer-events: none;
+}
+
+.chevron {
+  flex-shrink: 0;
+  color: $color-text-secondary;
+  transition: transform $transition-fast;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.menu {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 100%;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  box-shadow: $shadow-elevated;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.option {
+  display: block;
+  width: 100%;
+  padding: 10px 14px;
+  border: none;
+  border-radius: $radius-sm;
+  background: none;
+  color: $color-text-primary;
+  font-family: $font-thai;
+  font-size: 14px;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &:hover {
+    background: $color-border;
+  }
+}
+
+.optionSelected {
+  background: $color-primary;
+  color: $color-surface;
+  font-weight: 500;
+
+  &:hover {
+    background: $color-primary;
+  }
+}

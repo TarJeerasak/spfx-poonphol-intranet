@@ -1,12 +1,20 @@
 import { AppItem } from '../../../shared/types/content';
-import { DEFAULT_APP_FILTERS, filterApps, getAppCategory, sortAppsForTab } from './moreAppsService';
+import {
+  DEFAULT_APP_FILTERS,
+  filterApps,
+  getAppCategories,
+  getAppCategory,
+  getAppCompanies,
+  mapToAppItem,
+  sortAppsForTab
+} from './moreAppsService';
 
 function buildApp(overrides: Partial<AppItem>): AppItem {
   return {
     id: 'app-1',
     name: 'Sample App',
     descriptionThai: 'แอปตัวอย่าง',
-    categoryId: 'office',
+    categoryId: 'Office',
     company: 'PPC',
     usageCount: 0,
     isNew: false,
@@ -16,10 +24,96 @@ function buildApp(overrides: Partial<AppItem>): AppItem {
   };
 }
 
+describe('mapToAppItem', () => {
+  it('maps an Inter-ApplList item to the AppItem shape used by the UI', () => {
+    const raw = {
+      Id: 12,
+      Title: 'HR Portal',
+      Description: 'ระบบบริหารทรัพยากรบุคคลครบวงจร',
+      URL: 'https://poonphol.sharepoint.com/sites/PPG_UAT/hr-portal',
+      Department: { Title: 'Human Resources' },
+      Company: { Title: 'PPC' },
+      Active: true
+    };
+
+    expect(mapToAppItem(raw)).toEqual({
+      id: '12',
+      name: 'HR Portal',
+      descriptionThai: 'ระบบบริหารทรัพยากรบุคคลครบวงจร',
+      categoryId: 'Human Resources',
+      company: 'PPC',
+      usageCount: 0,
+      isNew: false,
+      lastUsedAt: '',
+      launchUrl: 'https://poonphol.sharepoint.com/sites/PPG_UAT/hr-portal'
+    });
+  });
+
+  it('falls back to empty strings when Description, Department, Company, or URL are missing', () => {
+    const raw = { Id: 13, Title: 'Minimal App', Active: true };
+
+    const result = mapToAppItem(raw);
+    expect(result.descriptionThai).toEqual('');
+    expect(result.categoryId).toEqual('');
+    expect(result.company).toEqual('');
+    expect(result.launchUrl).toEqual('#');
+  });
+
+  it('strips HTML from a rich-text Description', () => {
+    const raw = { Id: 14, Title: 'App', Description: '<p>Line one</p><p>Line two</p>', Active: true };
+
+    expect(mapToAppItem(raw).descriptionThai).toEqual('Line one\nLine two');
+  });
+});
+
+describe('getAppCategories', () => {
+  it('derives one category per distinct Department value', () => {
+    const apps = [
+      buildApp({ id: 'app-1', categoryId: 'Human Resources' }),
+      buildApp({ id: 'app-2', categoryId: 'Human Resources' }),
+      buildApp({ id: 'app-3', categoryId: 'Accounting' })
+    ];
+
+    const categories = getAppCategories(apps);
+    expect(categories.map(category => category.id)).toEqual(['Human Resources', 'Accounting']);
+    expect(categories[0].label).toEqual('Human Resources');
+  });
+
+  it('ignores apps with no Department set', () => {
+    const apps = [buildApp({ id: 'app-1', categoryId: '' })];
+    expect(getAppCategories(apps)).toEqual([]);
+  });
+});
+
+describe('getAppCompanies', () => {
+  it('returns the distinct companies visible across the given apps', () => {
+    const apps = [
+      buildApp({ id: 'app-1', company: 'PPC' }),
+      buildApp({ id: 'app-2', company: 'PPC' }),
+      buildApp({ id: 'app-3', company: 'VGM' })
+    ];
+
+    expect(getAppCompanies(apps)).toEqual(['PPC', 'VGM']);
+  });
+});
+
+describe('getAppCategory', () => {
+  it('returns the matching category definition', () => {
+    const categories = getAppCategories([buildApp({ categoryId: 'Accounting' })]);
+    expect(getAppCategory(categories, 'Accounting').label).toEqual('Accounting');
+  });
+
+  it('falls back to a neutral category when the id is not found', () => {
+    const category = getAppCategory([], 'Unknown');
+    expect(category.id).toEqual('Unknown');
+    expect(category.label).toEqual('Unknown');
+  });
+});
+
 describe('filterApps', () => {
   const apps = [
-    buildApp({ id: 'app-1', name: 'HR Portal', descriptionThai: 'ระบบบริหารทรัพยากรบุคคล', categoryId: 'human-resources', company: 'PPC' }),
-    buildApp({ id: 'app-2', name: 'CRM System', descriptionThai: 'ระบบบริหารความสัมพันธ์ลูกค้า', categoryId: 'dt', company: 'VGM' })
+    buildApp({ id: 'app-1', name: 'HR Portal', descriptionThai: 'ระบบบริหารทรัพยากรบุคคล', categoryId: 'Human Resources', company: 'PPC' }),
+    buildApp({ id: 'app-2', name: 'CRM System', descriptionThai: 'ระบบบริหารความสัมพันธ์ลูกค้า', categoryId: 'DT', company: 'VGM' })
   ];
 
   it('returns all apps when filters are left at defaults', () => {
@@ -42,7 +136,7 @@ describe('filterApps', () => {
   });
 
   it('filters by category', () => {
-    const result = filterApps(apps, { ...DEFAULT_APP_FILTERS, categoryId: 'human-resources' }, new Set());
+    const result = filterApps(apps, { ...DEFAULT_APP_FILTERS, categoryId: 'Human Resources' }, new Set());
     expect(result.map(app => app.id)).toEqual(['app-1']);
   });
 
@@ -52,7 +146,7 @@ describe('filterApps', () => {
   });
 
   it('combines multiple filters', () => {
-    const result = filterApps(apps, { ...DEFAULT_APP_FILTERS, company: 'PPC', categoryId: 'dt' }, new Set());
+    const result = filterApps(apps, { ...DEFAULT_APP_FILTERS, company: 'PPC', categoryId: 'DT' }, new Set());
     expect(result).toHaveLength(0);
   });
 });
@@ -72,6 +166,13 @@ describe('sortAppsForTab', () => {
     expect(sortAppsForTab(apps, 'frequent').map(app => app.id)).toEqual(['app-new', 'app-mid', 'app-old']);
   });
 
+  it('excludes apps the user has never opened from the recent and frequent tabs', () => {
+    const withUnused = [...apps, buildApp({ id: 'app-unused', lastUsedAt: '', usageCount: 0 })];
+
+    expect(sortAppsForTab(withUnused, 'recent').map(app => app.id)).not.toContain('app-unused');
+    expect(sortAppsForTab(withUnused, 'frequent').map(app => app.id)).not.toContain('app-unused');
+  });
+
   it('keeps only new apps for the new tab', () => {
     expect(sortAppsForTab(apps, 'new').map(app => app.id)).toEqual(['app-new']);
   });
@@ -84,11 +185,5 @@ describe('sortAppsForTab', () => {
 
   it('returns apps unchanged for the all tab', () => {
     expect(sortAppsForTab(apps, 'all')).toEqual(apps);
-  });
-});
-
-describe('getAppCategory', () => {
-  it('returns the matching category definition', () => {
-    expect(getAppCategory('accounting').label).toEqual('Accounting');
   });
 });

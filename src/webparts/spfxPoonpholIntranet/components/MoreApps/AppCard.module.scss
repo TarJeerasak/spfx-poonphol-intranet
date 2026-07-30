@@ -5,12 +5,14 @@
   display: flex;
   align-items: flex-start;
   gap: 16px;
-  height: 130px;
+  height: 138px;
   padding: 16px;
   background: $color-surface-elevated;
   border: 1px solid $color-border;
   border-radius: $radius-md;
   backdrop-filter: blur(6px);
+  color: inherit;
+  text-decoration: none;
 }
 
 .iconTile {
@@ -33,17 +35,21 @@
 }
 
 .name {
+  flex-shrink: 0;
   margin: 0;
+  height: 24px;
   font-family: $font-thai;
   font-weight: 500;
   font-size: 16px;
   line-height: 24px;
   color: $color-text-primary;
+  @include line-clamp(1);
 }
 
 .description {
+  flex-shrink: 0;
   margin: 0;
-  flex: 1 1 auto;
+  height: 44px;
   font-family: $font-thai;
   font-size: 14px;
   line-height: 22px;
@@ -52,6 +58,7 @@
 }
 
 .tag {
+  flex-shrink: 0;
   align-self: flex-start;
   display: inline-flex;
   align-items: center;

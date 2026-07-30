@@ -18,8 +18,6 @@ export const navLinks: NavLink[] = [
   { id: 'about', label: 'เกี่ยวกับเรา', href: '#' }
 ];
 
-export const quickAppSearches: string[] = ['Microsoft Word', 'Microsoft Excel', 'Adobe Photoshop'];
-
 export const quickLinks: QuickLink[] = [
   { id: 'document', label: 'Document', iconUrl: documentIcon, backgroundColor: '#30705c', to: '/documents' },
   { id: 'dt-helpdesk', label: 'DT Helpdesk', iconUrl: dtHelpdeskIcon, backgroundColor: '#80b835' },

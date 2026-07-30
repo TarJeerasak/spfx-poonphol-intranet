@@ -1,43 +1,104 @@
+import { spApi } from '../../../shared/services/api';
 import { AppCategory, AppCategoryId, AppItem } from '../../../shared/types/content';
+import { stripHtml } from '../../../shared/utils/stripHtml';
 
-export const APP_COMPANIES = ['PPC', 'PPS', 'PPP', 'VGM'];
+const APP_LIST_TITLE = 'Inter-ApplList';
+const ACTIVE_FILTER_VALUE = 1;
 
-export const APP_CATEGORIES: AppCategory[] = [
-  { id: 'human-resources', label: 'Human Resources', backgroundColor: '#dff7e5', textColor: '#00582a' },
-  { id: 'export', label: 'Export', backgroundColor: '#fff2d6', textColor: '#946b00' },
-  { id: 'accounting', label: 'Accounting', backgroundColor: '#e8b5ff', textColor: '#4b0869' },
-  { id: 'office', label: 'Office', backgroundColor: '#dbebfc', textColor: '#1a57db' },
-  { id: 'business', label: 'Business', backgroundColor: '#ffedd6', textColor: '#c2400d' },
-  { id: 'dt', label: 'DT', backgroundColor: '#fdffc9', textColor: '#57590f' }
-];
+// Internal names guessed from the list's display names - verify against
+// `${SiteURL}/_api/web/lists/getbytitle('Inter-ApplList')/fields?$select=Title,InternalName,TypeAsString&$filter=Hidden eq false`
+// and adjust the constants below if the request returns a "field does not exist" error.
+// Department/Company are Lookup fields - Title is the default shown value on the source list.
+const APP_FIELDS = {
+  id: 'Id',
+  title: 'Title',
+  description: 'Description',
+  url: 'URL',
+  department: 'Department',
+  company: 'Company',
+  active: 'Active'
+} as const;
 
-export const INITIAL_FAVORITE_APP_IDS = ['hr-portal', 'employee-directory'];
-
-const MOCK_APPS: AppItem[] = [
-  { id: 'hr-portal', name: 'HR Portal', descriptionThai: 'ระบบบริหารทรัพยากรบุคคลครบวงจร', categoryId: 'human-resources', company: 'PPC', usageCount: 482, isNew: false, lastUsedAt: '2026-07-29', launchUrl: '#' },
-  { id: 'employee-directory', name: 'Employee Directory', descriptionThai: 'ฐานข้อมูลพนักงานที่เข้าถึงได้ง่าย', categoryId: 'human-resources', company: 'PPC', usageCount: 401, isNew: false, lastUsedAt: '2026-07-28', launchUrl: '#' },
-  { id: 'leave-management', name: 'Leave Management', descriptionThai: 'ระบบจัดการวันลาและสิทธิ์พนักงาน', categoryId: 'human-resources', company: 'PPS', usageCount: 355, isNew: false, lastUsedAt: '2026-07-20', launchUrl: '#' },
-  { id: 'performance-review', name: 'Performance Review', descriptionThai: 'การประเมินผลการทำงานอย่างต่อเนื่อง', categoryId: 'human-resources', company: 'PPS', usageCount: 210, isNew: false, lastUsedAt: '2026-06-30', launchUrl: '#' },
-  { id: 'payroll-system', name: 'Payroll System', descriptionThai: 'ระบบจ่ายเงินเดือนอัตโนมัติที่แม่นยำ', categoryId: 'export', company: 'PPP', usageCount: 300, isNew: false, lastUsedAt: '2026-07-15', launchUrl: '#' },
-  { id: 'budget-planning', name: 'Budget Planning', descriptionThai: 'การวางแผนงบประมาณอย่างมีประสิทธิภาพ', categoryId: 'export', company: 'PPP', usageCount: 180, isNew: false, lastUsedAt: '2026-07-10', launchUrl: '#' },
-  { id: 'expense-tracking', name: 'Expense Tracking', descriptionThai: 'ระบบติดตามค่าใช้จ่ายแบบเรียลไทม์', categoryId: 'accounting', company: 'VGM', usageCount: 265, isNew: false, lastUsedAt: '2026-07-22', launchUrl: '#' },
-  { id: 'accounting-reports', name: 'Accounting Reports', descriptionThai: 'รายงานทางการเงินที่ครบถ้วนและโปร่งใส', categoryId: 'accounting', company: 'VGM', usageCount: 190, isNew: false, lastUsedAt: '2026-07-05', launchUrl: '#' },
-  { id: 'help-desk', name: 'Help Desk', descriptionThai: 'ระบบแจ้งปัญหาและติดตามการแก้ไข', categoryId: 'office', company: 'PPC', usageCount: 520, isNew: false, lastUsedAt: '2026-07-29', launchUrl: '#' },
-  { id: 'network-monitor', name: 'Network Monitor', descriptionThai: 'ระบบตรวจสอบเครือข่ายตลอด 24 ชม.', categoryId: 'office', company: 'PPC', usageCount: 140, isNew: true, lastUsedAt: '2026-07-27', launchUrl: '#' },
-  { id: 'asset-management', name: 'Asset Management', descriptionThai: 'ระบบจัดการทรัพย์สินด้าน IT', categoryId: 'office', company: 'PPS', usageCount: 95, isNew: true, lastUsedAt: '2026-07-18', launchUrl: '#' },
-  { id: 'security-center', name: 'Security Center', descriptionThai: 'ศูนย์รักษาความปลอดภัยทางไซเบอร์', categoryId: 'office', company: 'PPS', usageCount: 88, isNew: true, lastUsedAt: '2026-07-12', launchUrl: '#' },
-  { id: 'lead-management', name: 'Lead Management', descriptionThai: 'ระบบจัดการลูกค้าเป้าหมาย', categoryId: 'business', company: 'PPP', usageCount: 120, isNew: false, lastUsedAt: '2026-06-25', launchUrl: '#' },
-  { id: 'campaign-tracker', name: 'Campaign Tracker', descriptionThai: 'ติดตามแคมเปญการตลาดแบบเรียลไทม์', categoryId: 'business', company: 'PPP', usageCount: 75, isNew: true, lastUsedAt: '2026-07-01', launchUrl: '#' },
-  { id: 'sales-analytics', name: 'Sales Analytics', descriptionThai: 'วิเคราะห์ข้อมูลการขายเชิงลึก', categoryId: 'dt', company: 'VGM', usageCount: 160, isNew: true, lastUsedAt: '2026-07-24', launchUrl: '#' },
-  { id: 'crm-system', name: 'CRM System', descriptionThai: 'ระบบบริหารความสัมพันธ์ลูกค้า', categoryId: 'dt', company: 'VGM', usageCount: 210, isNew: false, lastUsedAt: '2026-07-19', launchUrl: '#' }
-];
-
-export function fetchApps(): AppItem[] {
-  return MOCK_APPS;
+interface ISPAppListItem {
+  Id: number;
+  Title: string;
+  Description?: string;
+  URL?: string;
+  Department?: { Title?: string };
+  Company?: { Title?: string };
+  Active: boolean;
 }
 
-export function getAppCategory(categoryId: AppCategoryId): AppCategory {
-  return APP_CATEGORIES.find(category => category.id === categoryId) ?? APP_CATEGORIES[0];
+const CATEGORY_COLOR_PALETTE: Array<{ backgroundColor: string; textColor: string }> = [
+  { backgroundColor: '#dff7e5', textColor: '#00582a' },
+  { backgroundColor: '#fff2d6', textColor: '#946b00' },
+  { backgroundColor: '#e8b5ff', textColor: '#4b0869' },
+  { backgroundColor: '#dbebfc', textColor: '#1a57db' },
+  { backgroundColor: '#ffedd6', textColor: '#c2400d' },
+  { backgroundColor: '#fdffc9', textColor: '#57590f' }
+];
+
+const DEFAULT_CATEGORY_COLOR = { backgroundColor: '#e5e7eb', textColor: '#374151' };
+
+// usageCount/lastUsedAt are per-user and come from the History_App_Usage list
+// (see appUsageService/useMoreAppsFeed) - they default to unused here.
+export function mapToAppItem(raw: ISPAppListItem): AppItem {
+  return {
+    id: String(raw.Id),
+    name: raw.Title,
+    descriptionThai: raw.Description ? stripHtml(raw.Description) : '',
+    categoryId: raw.Department?.Title ?? '',
+    company: raw.Company?.Title ?? '',
+    usageCount: 0,
+    isNew: false,
+    lastUsedAt: '',
+    launchUrl: raw.URL ?? '#'
+  };
+}
+
+export async function fetchApps(): Promise<AppItem[]> {
+  const response = await spApi.get<{ value: ISPAppListItem[] }>(`/lists/getbytitle('${APP_LIST_TITLE}')/items`, {
+    params: {
+      $select: [
+        APP_FIELDS.id,
+        APP_FIELDS.title,
+        APP_FIELDS.description,
+        APP_FIELDS.url,
+        `${APP_FIELDS.department}/Title`,
+        `${APP_FIELDS.company}/Title`,
+        APP_FIELDS.active
+      ].join(','),
+      $expand: [APP_FIELDS.department, APP_FIELDS.company].join(','),
+      $filter: `${APP_FIELDS.active} eq ${ACTIVE_FILTER_VALUE}`,
+      $top: 5000
+    }
+  });
+
+  return response.data.value.map(mapToAppItem);
+}
+
+export function getAppCategories(apps: AppItem[]): AppCategory[] {
+  const uniqueCategoryIds = Array.from(new Set(apps.map(app => app.categoryId).filter(Boolean)));
+
+  return uniqueCategoryIds.map((categoryId, index) => ({
+    id: categoryId,
+    label: categoryId,
+    ...CATEGORY_COLOR_PALETTE[index % CATEGORY_COLOR_PALETTE.length]
+  }));
+}
+
+export function getAppCompanies(apps: AppItem[]): string[] {
+  return Array.from(new Set(apps.map(app => app.company).filter(Boolean)));
+}
+
+export function getAppCategory(categories: AppCategory[], categoryId: AppCategoryId): AppCategory {
+  return (
+    categories.find(category => category.id === categoryId) ?? {
+      id: categoryId,
+      label: categoryId,
+      ...DEFAULT_CATEGORY_COLOR
+    }
+  );
 }
 
 export type AppTab = 'all' | 'favorites' | 'recent' | 'frequent' | 'new';
@@ -71,10 +132,10 @@ export function filterApps(apps: AppItem[], filters: AppFilters, favoriteIds: Re
 
 export function sortAppsForTab(apps: AppItem[], tab: AppTab): AppItem[] {
   if (tab === 'recent') {
-    return [...apps].sort((a, b) => new Date(b.lastUsedAt).getTime() - new Date(a.lastUsedAt).getTime());
+    return apps.filter(app => !!app.lastUsedAt).sort((a, b) => new Date(b.lastUsedAt).getTime() - new Date(a.lastUsedAt).getTime());
   }
   if (tab === 'frequent') {
-    return [...apps].sort((a, b) => b.usageCount - a.usageCount);
+    return apps.filter(app => app.usageCount > 0).sort((a, b) => b.usageCount - a.usageCount);
   }
   if (tab === 'new') {
     return apps.filter(app => app.isNew);

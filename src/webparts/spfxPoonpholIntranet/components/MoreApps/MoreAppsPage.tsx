@@ -1,8 +1,9 @@
 import * as React from 'react';
+import { Dropdown } from '../../../../shared/components/Dropdown/Dropdown';
 import { Icon } from '../../../../shared/components/Icon/Icon';
 import { useScrollReveal } from '../../../../shared/hooks/useScrollReveal';
 import { useMoreAppsFeed } from '../../hooks/useMoreAppsFeed';
-import { APP_CATEGORIES, APP_COMPANIES, AppTab, getAppCategory } from '../../services/moreAppsService';
+import { AppTab, getAppCategory } from '../../services/moreAppsService';
 import heroIllustration from '../../assets/more-apps/hero-illustration.png';
 import { AppCard } from './AppCard';
 import styles from './MoreAppsPage.module.scss';
@@ -20,16 +21,11 @@ const TABS: TabDefinition[] = [
   { id: 'new', label: 'แอปพลิเคชันใหม่' }
 ];
 
-const COMPANY_OPTIONS = [{ value: 'All', label: 'ทุกบริษัท' }, ...APP_COMPANIES.map(value => ({ value, label: value }))];
-
-const CATEGORY_OPTIONS = [
-  { value: 'All', label: 'ทุกหมวดหมู่' },
-  ...APP_CATEGORIES.map(category => ({ value: category.id, label: category.label }))
-];
-
 export function MoreAppsPage(): React.ReactElement {
   const {
     items,
+    categories,
+    companies,
     filteredCount,
     filters,
     favoriteIds,
@@ -40,8 +36,15 @@ export function MoreAppsPage(): React.ReactElement {
     setCategory,
     setTab,
     toggleFavorite,
+    recordUsage,
     toggleExpanded
   } = useMoreAppsFeed();
+
+  const companyOptions = [{ value: 'All', label: 'ทุกบริษัท' }, ...companies.map(value => ({ value, label: value }))];
+  const categoryOptions = [
+    { value: 'All', label: 'ทุกหมวดหมู่' },
+    ...categories.map(category => ({ value: category.id, label: category.label }))
+  ];
 
   const [searchDraft, setSearchDraft] = React.useState(filters.search);
   const [gridRef, isGridVisible] = useScrollReveal<HTMLDivElement>();
@@ -104,28 +107,8 @@ export function MoreAppsPage(): React.ReactElement {
           <div className={styles.panelHeader}>
             <p className={styles.panelTitle}>แอปพลิเคชันทั้งหมด</p>
             <div className={styles.panelControls}>
-              <label className={styles.selectWrap}>
-                <span className={styles.visuallyHidden}>กรองตามบริษัท</span>
-                <select className={styles.select} value={filters.company} onChange={event => setCompany(event.target.value)}>
-                  {COMPANY_OPTIONS.map(option => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-                <Icon name="chevronDown" size={16} className={styles.chevron} />
-              </label>
-              <label className={styles.selectWrap}>
-                <span className={styles.visuallyHidden}>กรองตามหมวดหมู่</span>
-                <select className={styles.select} value={filters.categoryId} onChange={event => setCategory(event.target.value)}>
-                  {CATEGORY_OPTIONS.map(option => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-                <Icon name="chevronDown" size={16} className={styles.chevron} />
-              </label>
+              <Dropdown label="กรองตามบริษัท" value={filters.company} options={companyOptions} onChange={setCompany} />
+              <Dropdown label="กรองตามหมวดหมู่" value={filters.categoryId} options={categoryOptions} onChange={setCategory} />
             </div>
           </div>
           <div className={styles.panelDivider} />
@@ -138,9 +121,10 @@ export function MoreAppsPage(): React.ReactElement {
                 <AppCard
                   key={app.id}
                   app={app}
-                  category={getAppCategory(app.categoryId)}
+                  category={getAppCategory(categories, app.categoryId)}
                   isFavorite={favoriteIds.has(app.id)}
                   onToggleFavorite={() => toggleFavorite(app.id)}
+                  onOpen={() => recordUsage(app.id)}
                 />
               ))}
             </div>

@@ -10,7 +10,8 @@ import { useEventFeed } from '../../hooks/useEventFeed';
 import { useKnowledgeFeed } from '../../hooks/useKnowledgeFeed';
 import { useCommunityFeed } from '../../hooks/useCommunityFeed';
 import { useAnnouncementFeed } from '../../hooks/useAnnouncementFeed';
-import { heroBackgroundUrl, quickAppSearches, quickLinks } from '../data/mockContent';
+import { useFavoriteAppsFeed } from '../../hooks/useFavoriteAppsFeed';
+import { heroBackgroundUrl, quickLinks } from '../data/mockContent';
 import styles from './HomePage.module.scss';
 
 export interface HomePageProps {
@@ -23,14 +24,16 @@ export function HomePage({ userDisplayName }: HomePageProps): React.ReactElement
   const knowledgeFeed = useKnowledgeFeed();
   const communityFeed = useCommunityFeed();
   const announcementFeed = useAnnouncementFeed();
+  const favoriteAppsFeed = useFavoriteAppsFeed();
 
   return (
     <div className={styles.container}>
       <Hero
         userDisplayName={userDisplayName}
         backgroundUrl={heroBackgroundUrl}
-        quickAppSearches={quickAppSearches}
+        favoriteApps={favoriteAppsFeed.items}
         announcements={announcementFeed.items}
+        onOpenApp={favoriteAppsFeed.recordUsage}
       />
       <QuickLinks items={quickLinks} />
       <div className={styles.contentGrid}>

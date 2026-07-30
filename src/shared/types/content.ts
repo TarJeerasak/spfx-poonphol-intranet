@@ -83,7 +83,7 @@ export interface DocumentItem {
   fileUrl: string;
 }
 
-export type AppCategoryId = 'human-resources' | 'export' | 'accounting' | 'office' | 'business' | 'dt';
+export type AppCategoryId = string;
 
 export interface AppCategory {
   id: AppCategoryId;
@@ -101,6 +101,12 @@ export interface AppItem {
   usageCount: number;
   isNew: boolean;
   lastUsedAt: string;
+  launchUrl: string;
+}
+
+export interface FavoriteAppLink {
+  id: string;
+  name: string;
   launchUrl: string;
 }
 

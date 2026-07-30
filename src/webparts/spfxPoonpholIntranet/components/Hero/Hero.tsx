@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Announcement } from '../../../../shared/types/content';
+import { Announcement, FavoriteAppLink } from '../../../../shared/types/content';
 import { getFirstName } from '../../../../shared/utils/getFirstName';
 import { Announcements } from '../Announcements/Announcements';
 import searchIcon from '../../assets/home/icons/search.svg';
@@ -8,11 +8,12 @@ import styles from './Hero.module.scss';
 export interface HeroProps {
   userDisplayName: string;
   backgroundUrl: string;
-  quickAppSearches: string[];
+  favoriteApps: FavoriteAppLink[];
   announcements: Announcement[];
+  onOpenApp: (app: FavoriteAppLink) => void;
 }
 
-export function Hero({ userDisplayName, backgroundUrl, quickAppSearches, announcements }: HeroProps): React.ReactElement {
+export function Hero({ userDisplayName, backgroundUrl, favoriteApps, announcements, onOpenApp }: HeroProps): React.ReactElement {
   return (
     <section className={styles.hero} style={{ backgroundImage: `url(${backgroundUrl})` }}>
       <div className={styles.overlay} />
@@ -32,10 +33,17 @@ export function Hero({ userDisplayName, backgroundUrl, quickAppSearches, announc
             <span>search</span>
           </div>
           <div className={styles.quickApps}>
-            {quickAppSearches.map(app => (
-              <button key={app} type="button" className={styles.quickAppButton}>
-                {app}
-              </button>
+            {favoriteApps.map(app => (
+              <a
+                key={app.id}
+                href={app.launchUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.quickAppButton}
+                onClick={() => onOpenApp(app)}
+              >
+                {app.name}
+              </a>
             ))}
           </div>
         </div>

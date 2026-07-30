@@ -141,6 +141,9 @@
 }
 
 .quickAppButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   height: 38px;
   padding: 10px 28px;
   border-radius: $radius-pill;
@@ -150,6 +153,7 @@
   font-family: $font-thai;
   font-weight: 600;
   font-size: 14px;
+  text-decoration: none;
   cursor: pointer;
   transition: opacity 0.15s ease, transform 0.2s ease, box-shadow 0.2s ease;
   animation: fadeSlideUp 0.5s ease both;

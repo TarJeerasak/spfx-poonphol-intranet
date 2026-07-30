@@ -10,27 +10,32 @@ import starFilledIcon from '../../assets/more-apps/icons/star-filled.svg';
 import starOutlineIcon from '../../assets/more-apps/icons/star-outline.svg';
 import styles from './AppCard.module.scss';
 
-const CATEGORY_ICON_BY_ID: Record<string, string> = {
-  'human-resources': humanResourcesIcon,
-  export: exportIcon,
-  accounting: accountingIcon,
-  office: officeIcon,
-  business: businessIcon,
-  dt: dtIcon
-};
+const CATEGORY_ICONS: string[] = [humanResourcesIcon, exportIcon, accountingIcon, officeIcon, businessIcon, dtIcon];
+
+function getCategoryIcon(categoryId: string): string {
+  const hash = Array.from(categoryId).reduce((sum, char) => sum + char.charCodeAt(0), 0);
+  return CATEGORY_ICONS[hash % CATEGORY_ICONS.length];
+}
 
 export interface AppCardProps {
   app: AppItem;
   category: AppCategory;
   isFavorite: boolean;
   onToggleFavorite: () => void;
+  onOpen: () => void;
 }
 
-export function AppCard({ app, category, isFavorite, onToggleFavorite }: AppCardProps): React.ReactElement {
+export function AppCard({ app, category, isFavorite, onToggleFavorite, onOpen }: AppCardProps): React.ReactElement {
+  const handleFavoriteClick = (event: React.MouseEvent): void => {
+    event.preventDefault();
+    event.stopPropagation();
+    onToggleFavorite();
+  };
+
   return (
-    <div className={styles.card}>
+    <a href={app.launchUrl} target="_blank" rel="noopener noreferrer" className={styles.card} onClick={onOpen}>
       <div className={styles.iconTile} style={{ backgroundColor: category.backgroundColor }}>
-        <img src={CATEGORY_ICON_BY_ID[app.categoryId]} alt="" width={20} height={20} />
+        <img src={getCategoryIcon(app.categoryId)} alt="" width={20} height={20} />
       </div>
       <div className={styles.body}>
         <p className={styles.name}>{app.name}</p>
@@ -45,12 +50,12 @@ export function AppCard({ app, category, isFavorite, onToggleFavorite }: AppCard
       <button
         type="button"
         className={styles.favoriteButton}
-        onClick={onToggleFavorite}
+        onClick={handleFavoriteClick}
         aria-pressed={isFavorite}
         aria-label={isFavorite ? `นำ ${app.name} ออกจากรายการโปรด` : `เพิ่ม ${app.name} เป็นรายการโปรด`}
       >
         <img src={isFavorite ? starFilledIcon : starOutlineIcon} alt="" width={20} height={20} />
       </button>
-    </div>
+    </a>
   );
 }
