@@ -10,14 +10,17 @@ import styles from './KnowledgeSection.module.scss';
 export interface KnowledgeSectionProps {
   categories: KnowledgeCategory[];
   items: KnowledgeItem[];
+  featuredItems: KnowledgeItem[];
   totalCount: number;
+  onRead: (itemId: string) => void;
 }
 
-export function KnowledgeSection({ categories, items, totalCount }: KnowledgeSectionProps): React.ReactElement {
+export function KnowledgeSection({ categories, items, featuredItems, totalCount, onRead }: KnowledgeSectionProps): React.ReactElement {
   const [activeCategoryId, setActiveCategoryId] = React.useState(categories[0]?.id ?? 'all');
   const [ref, isVisible] = useScrollReveal<HTMLElement>();
 
-  const visibleItems = activeCategoryId === 'all' ? items : items.filter(item => item.categoryId === activeCategoryId);
+  const visibleItems =
+    activeCategoryId === 'all' ? featuredItems : items.filter(item => item.categoryId === activeCategoryId);
 
   return (
     <section ref={ref} className={`${styles.section} ${isVisible ? styles.isVisible : ''}`}>
@@ -37,7 +40,7 @@ export function KnowledgeSection({ categories, items, totalCount }: KnowledgeSec
       </div>
       <div className={styles.cards}>
         {visibleItems.map(item => (
-          <KnowledgeCard key={item.id} item={item} />
+          <KnowledgeCard key={item.id} item={item} onRead={() => onRead(item.id)} />
         ))}
       </div>
       <SectionFooter shownCount={visibleItems.length} totalCount={totalCount} />

@@ -29,10 +29,8 @@ export interface KnowledgeItem {
   categoryId: string;
   tags: string[];
   title: string;
-  progressLabel: string;
-  progressPercent: number;
-  locationLabel: string;
   imageUrl: string;
+  readCount: number;
 }
 
 export interface EventItem {

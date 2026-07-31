@@ -42,7 +42,13 @@ export function HomePage({ userDisplayName }: HomePageProps): React.ReactElement
             <NewsSection feature={newsFeed.feature} items={newsFeed.items} totalCount={newsFeed.totalCount} />
           )}
           {knowledgeFeed.items.length > 0 && (
-            <KnowledgeSection categories={knowledgeFeed.categories} items={knowledgeFeed.items} totalCount={knowledgeFeed.totalCount} />
+            <KnowledgeSection
+              categories={knowledgeFeed.categories}
+              items={knowledgeFeed.items}
+              featuredItems={knowledgeFeed.featuredItems}
+              totalCount={knowledgeFeed.totalCount}
+              onRead={knowledgeFeed.recordRead}
+            />
           )}
         </div>
         <div className={styles.sidebarColumn}>

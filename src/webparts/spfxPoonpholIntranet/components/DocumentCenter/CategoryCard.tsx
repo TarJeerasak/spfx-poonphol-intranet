@@ -30,7 +30,7 @@ export function CategoryCard({ summary, isActive, onSelect }: CategoryCardProps)
       onClick={onSelect}
       aria-pressed={isActive}
     >
-      <IconTile shape="circle" size={63} iconSize={42} iconUrl={CATEGORY_ICON_BY_ID[summary.id]} backgroundColor="#d8e6e3" />
+      <IconTile shape="circle" size={63} iconSize={42} iconUrl={CATEGORY_ICON_BY_ID[summary.id]} backgroundColor="#ddebe4" />
       <div className={styles.text}>
         <p className={styles.label}>{summary.label}</p>
         <p className={styles.labelThai}>{summary.labelThai}</p>

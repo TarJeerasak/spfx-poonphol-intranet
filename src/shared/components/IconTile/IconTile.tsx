@@ -31,7 +31,11 @@ export function IconTile({
       className={`${styles.tile} ${shapeClass}`}
       style={{ width: width ?? size, height: height ?? size, backgroundColor, color: iconColor }}
     >
-      {iconUrl ? <img src={iconUrl} alt="" width={iconSize} height={iconSize} /> : iconName ? <Icon name={iconName} size={iconSize} /> : null}
+      {iconUrl ? (
+        <img src={iconUrl} alt="" style={{ maxWidth: iconSize, maxHeight: iconSize, width: 'auto', height: 'auto' }} />
+      ) : iconName ? (
+        <Icon name={iconName} size={iconSize} />
+      ) : null}
     </div>
   );
 }

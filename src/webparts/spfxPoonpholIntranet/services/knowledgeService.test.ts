@@ -58,7 +58,8 @@ describe('mapToKnowledgeItem', () => {
       }),
       PublishDate: '2026-06-10T00:00:00',
       Category: 'Mindset',
-      Active: true
+      Active: true,
+      ReadCount: 12
     };
 
     expect(mapToKnowledgeItem(raw)).toEqual({
@@ -66,10 +67,8 @@ describe('mapToKnowledgeItem', () => {
       categoryId: 'Mindset',
       tags: ['Keyword', 'Test'],
       title: 'ETHICS MATTERS EP.1-4',
-      progressLabel: '',
-      progressPercent: 0,
-      locationLabel: '',
-      imageUrl: 'https://fusionsoftcompany.sharepoint.com/sites/Project-PoonpholIntranetPortal/SiteAssets/km-5.jpg'
+      imageUrl: 'https://fusionsoftcompany.sharepoint.com/sites/Project-PoonpholIntranetPortal/SiteAssets/km-5.jpg',
+      readCount: 12
     });
   });
 
@@ -101,10 +100,8 @@ describe('mapToKnowledgeItem', () => {
       categoryId: '',
       tags: [],
       title: 'No category yet',
-      progressLabel: '',
-      progressPercent: 0,
-      locationLabel: '',
-      imageUrl: ''
+      imageUrl: '',
+      readCount: 0
     });
   });
 });
@@ -124,9 +121,9 @@ describe('resolveKnowledgeListTitle', () => {
 describe('buildKnowledgeCategories', () => {
   it('prefixes an "all" tab followed by the distinct categories found in the items', () => {
     const items = [
-      { id: '1', categoryId: 'Mindset', tags: [], title: '', progressLabel: '', progressPercent: 0, locationLabel: '', imageUrl: '' },
-      { id: '2', categoryId: 'Learning', tags: [], title: '', progressLabel: '', progressPercent: 0, locationLabel: '', imageUrl: '' },
-      { id: '3', categoryId: 'Mindset', tags: [], title: '', progressLabel: '', progressPercent: 0, locationLabel: '', imageUrl: '' }
+      { id: '1', categoryId: 'Mindset', tags: [], title: '', imageUrl: '', readCount: 0 },
+      { id: '2', categoryId: 'Learning', tags: [], title: '', imageUrl: '', readCount: 0 },
+      { id: '3', categoryId: 'Mindset', tags: [], title: '', imageUrl: '', readCount: 0 }
     ];
 
     expect(buildKnowledgeCategories(items)).toEqual([
@@ -137,7 +134,7 @@ describe('buildKnowledgeCategories', () => {
   });
 
   it('ignores items without a category', () => {
-    const items = [{ id: '1', categoryId: '', tags: [], title: '', progressLabel: '', progressPercent: 0, locationLabel: '', imageUrl: '' }];
+    const items = [{ id: '1', categoryId: '', tags: [], title: '', imageUrl: '', readCount: 0 }];
 
     expect(buildKnowledgeCategories(items)).toEqual([{ id: 'all', label: 'ดูทั้งหมด' }]);
   });

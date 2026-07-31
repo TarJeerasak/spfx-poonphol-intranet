@@ -27,7 +27,8 @@ const KNOWLEDGE_FIELDS = {
   thumbnailImage: 'ThumbnailImage',
   publishDate: 'PublishDate',
   category: 'Category',
-  active: 'Active'
+  active: 'Active',
+  readCount: 'ReadCount'
 } as const;
 
 interface ISPKnowledgeListItem {
@@ -39,10 +40,12 @@ interface ISPKnowledgeListItem {
   PublishDate?: string;
   Category?: string;
   Active: boolean;
+  ReadCount?: number;
 }
 
 export interface KnowledgeFeedResult {
   items: KnowledgeItem[];
+  featuredItems: KnowledgeItem[];
   categories: KnowledgeCategory[];
   totalCount: number;
 }
@@ -53,10 +56,8 @@ export function mapToKnowledgeItem(raw: ISPKnowledgeListItem): KnowledgeItem {
     categoryId: raw.Category ?? '',
     tags: parseMultiChoiceValue(raw.Tag),
     title: raw.Title,
-    progressLabel: '',
-    progressPercent: 0,
-    locationLabel: '',
-    imageUrl: resolveListItemImageUrl(parseThumbnailImage(raw.ThumbnailImage), raw.AttachmentFiles)
+    imageUrl: resolveListItemImageUrl(parseThumbnailImage(raw.ThumbnailImage), raw.AttachmentFiles),
+    readCount: raw.ReadCount ?? 0
   };
 }
 
@@ -91,7 +92,8 @@ export async function fetchKnowledgeFeed(): Promise<KnowledgeFeedResult> {
           'AttachmentFiles/ServerRelativeUrl',
           KNOWLEDGE_FIELDS.publishDate,
           KNOWLEDGE_FIELDS.category,
-          KNOWLEDGE_FIELDS.active
+          KNOWLEDGE_FIELDS.active,
+          KNOWLEDGE_FIELDS.readCount
         ].join(','),
         $expand: 'AttachmentFiles',
         $filter: `${KNOWLEDGE_FIELDS.active} eq 1`,
@@ -101,10 +103,12 @@ export async function fetchKnowledgeFeed(): Promise<KnowledgeFeedResult> {
   );
 
   const activeItems = response.data.value;
-  const items = selectKnowledgeItemsByClosestPublishDate(activeItems, Date.now()).map(mapToKnowledgeItem);
+  const items = activeItems.map(mapToKnowledgeItem);
+  const featuredItems = selectKnowledgeItemsByClosestPublishDate(activeItems, Date.now()).map(mapToKnowledgeItem);
 
   return {
     items,
+    featuredItems,
     categories: buildKnowledgeCategories(items),
     totalCount: activeItems.length
   };

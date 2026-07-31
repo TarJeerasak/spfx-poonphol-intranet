@@ -1,15 +1,17 @@
 import * as React from 'react';
 import { Tag } from '../../../../shared/components/Tag/Tag';
 import { KnowledgeItem } from '../../../../shared/types/content';
+import { formatReadCountLabel } from '../../../../shared/utils/formatReadCountLabel';
 import styles from './KnowledgeCard.module.scss';
 
 export interface KnowledgeCardProps {
   item: KnowledgeItem;
+  onRead: () => void;
 }
 
-export function KnowledgeCard({ item }: KnowledgeCardProps): React.ReactElement {
+export function KnowledgeCard({ item, onRead }: KnowledgeCardProps): React.ReactElement {
   return (
-    <div className={styles.card}>
+    <button type="button" className={styles.card} onClick={onRead}>
       <div className={styles.thumbnail}>
         <div className={styles.thumbnailImage} style={{ backgroundImage: `url(${item.imageUrl})` }} />
       </div>
@@ -21,13 +23,9 @@ export function KnowledgeCard({ item }: KnowledgeCardProps): React.ReactElement 
         </div>
         <div className={styles.textGroup}>
           <p className={styles.title}>{item.title}</p>
-          <p className={styles.progressLabel}>{item.progressLabel}</p>
-          <div className={styles.progressTrack}>
-            <div className={styles.progressFill} style={{ width: `${item.progressPercent}%` }} />
-          </div>
-          <p className={styles.location}>{item.locationLabel}</p>
+          <p className={styles.readCountLabel}>{formatReadCountLabel(item.readCount)}</p>
         </div>
       </div>
-    </div>
+    </button>
   );
 }
