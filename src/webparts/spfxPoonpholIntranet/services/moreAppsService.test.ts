@@ -24,6 +24,8 @@ function buildApp(overrides: Partial<AppItem>): AppItem {
   };
 }
 
+const NOW = new Date(2026, 6, 24);
+
 describe('mapToAppItem', () => {
   it('maps an Inter-ApplList item to the AppItem shape used by the UI', () => {
     const raw = {
@@ -36,7 +38,7 @@ describe('mapToAppItem', () => {
       Active: true
     };
 
-    expect(mapToAppItem(raw)).toEqual({
+    expect(mapToAppItem(raw, NOW)).toEqual({
       id: '12',
       name: 'HR Portal',
       descriptionThai: 'ระบบบริหารทรัพยากรบุคคลครบวงจร',
@@ -52,7 +54,7 @@ describe('mapToAppItem', () => {
   it('falls back to empty strings when Description, Department, Company, or URL are missing', () => {
     const raw = { Id: 13, Title: 'Minimal App', Active: true };
 
-    const result = mapToAppItem(raw);
+    const result = mapToAppItem(raw, NOW);
     expect(result.descriptionThai).toEqual('');
     expect(result.categoryId).toEqual('');
     expect(result.company).toEqual('');
@@ -62,7 +64,33 @@ describe('mapToAppItem', () => {
   it('strips HTML from a rich-text Description', () => {
     const raw = { Id: 14, Title: 'App', Description: '<p>Line one</p><p>Line two</p>', Active: true };
 
-    expect(mapToAppItem(raw).descriptionThai).toEqual('Line one\nLine two');
+    expect(mapToAppItem(raw, NOW).descriptionThai).toEqual('Line one\nLine two');
+  });
+
+  const DAY_IN_MS = 24 * 60 * 60 * 1000;
+
+  it('marks an app created within the last 30 days as new', () => {
+    const raw = { Id: 15, Title: 'App', Active: true, Created: new Date(NOW.getTime() - 10 * DAY_IN_MS).toISOString() };
+
+    expect(mapToAppItem(raw, NOW).isNew).toBe(true);
+  });
+
+  it('treats exactly 30 days ago as still new', () => {
+    const raw = { Id: 16, Title: 'App', Active: true, Created: new Date(NOW.getTime() - 30 * DAY_IN_MS).toISOString() };
+
+    expect(mapToAppItem(raw, NOW).isNew).toBe(true);
+  });
+
+  it('does not mark an app created more than 30 days ago as new', () => {
+    const raw = { Id: 17, Title: 'App', Active: true, Created: new Date(NOW.getTime() - 31 * DAY_IN_MS).toISOString() };
+
+    expect(mapToAppItem(raw, NOW).isNew).toBe(false);
+  });
+
+  it('does not mark an app with no Created date as new', () => {
+    const raw = { Id: 18, Title: 'App', Active: true };
+
+    expect(mapToAppItem(raw, NOW).isNew).toBe(false);
   });
 });
 

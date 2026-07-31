@@ -41,4 +41,16 @@
   [id*='searchBoxInactive'] {
     display: none !important;
   }
+
+  // Office UI Fabric Core (loaded ambiently by the SharePoint page shell) sets
+  // `.ms-Fabric[lang^="th"]` to "Leelawadee UI Web" (a looped Thai font) and
+  // separately makes `.ms-Fabric button/input/textarea` inherit font-family
+  // from it. That inherit rule (0,1,1 specificity) outranks this project's
+  // single-class button/dropdown styles (0,1,0), so buttons render in the
+  // looped font while <p> text - which has no competing Fabric rule - renders
+  // in $font-thai as intended. Force the ancestor back to $font-thai so
+  // inheritance resolves correctly everywhere.
+  .ms-Fabric {
+    font-family: $font-thai !important;
+  }
 }

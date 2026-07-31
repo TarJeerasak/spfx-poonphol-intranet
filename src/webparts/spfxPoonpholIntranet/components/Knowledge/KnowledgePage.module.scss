@@ -1,0 +1,260 @@
+@import '../../../../shared/styles/tokens';
+@import '../../../../shared/styles/mixins';
+
+.page {
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.banner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 420px;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  padding: 64px 0;
+}
+
+.bannerFade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to left, rgba(245, 247, 244, 0) 50%, #f5f7f4 78.437%);
+}
+
+.bannerInner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: $content-max-width;
+  margin: 0 auto;
+  padding: 0 clamp(16px, 5.5vw, 80px);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.bannerTitle {
+  margin: 0;
+  font-family: $font-thai;
+  font-weight: 600;
+  font-size: clamp(32px, 4vw, 56px);
+  line-height: 1.14;
+  letter-spacing: -0.56px;
+  color: $color-text-primary;
+  animation: fadeSlideUp 0.6s ease both;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+.bannerSubtitle {
+  margin: 0;
+  font-family: $font-thai;
+  font-size: clamp(15px, 1.4vw, 18px);
+  line-height: 1.65;
+  color: $color-text-secondary;
+  max-width: 640px;
+  animation: fadeSlideUp 0.6s ease both;
+  animation-delay: 0.12s;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+.searchForm {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 640px;
+  animation: fadeSlideUp 0.6s ease both;
+  animation-delay: 0.2s;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+
+  @media (max-width: 480px) {
+    flex-wrap: wrap;
+  }
+}
+
+.searchBox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1 1 auto;
+  height: 48px;
+  padding: 0 18px;
+  border-radius: $radius-sm;
+  border: 1px solid $color-stroke;
+  background: $color-surface;
+  transition: border-color $transition-fast, box-shadow $transition-fast;
+
+  &:focus-within {
+    border-color: $color-nav-active;
+    box-shadow: 0 0 0 3px rgba(128, 182, 16, 0.15);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+.searchIcon {
+  display: flex;
+  flex-shrink: 0;
+  color: $color-text-secondary;
+}
+
+.searchInput {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: none;
+  outline: none;
+  font-family: $font-thai;
+  font-size: 16px;
+  background: transparent;
+  color: $color-text-primary;
+
+  &::placeholder {
+    color: #a1aca8;
+  }
+}
+
+.searchButton {
+  flex-shrink: 0;
+  height: 48px;
+  padding: 0 24px;
+  border: none;
+  border-radius: $radius-sm;
+  background: $color-accent;
+  color: $color-text-primary;
+  font-family: $font-thai;
+  font-weight: 500;
+  font-size: 16px;
+  cursor: pointer;
+  transition: opacity $transition-fast;
+  @include press-scale;
+
+  &:hover {
+    opacity: 0.85;
+  }
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: $content-max-width;
+  width: 100%;
+  margin: 0 auto;
+  padding: 40px clamp(16px, 5.5vw, 80px) 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  box-shadow: $shadow-section;
+  animation: fadeSlideUp 0.55s ease both;
+  animation-delay: 0.2s;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.panelTitle {
+  margin: 0;
+  flex: 1 1 auto;
+  font-family: $font-thai;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 32px;
+  color: $color-text-primary;
+}
+
+.panelDivider {
+  height: 1px;
+  background: $color-border;
+}
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 560px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.emptyMessage {
+  margin: 0;
+  padding: 32px 0;
+  text-align: center;
+  font-family: $font-thai;
+  font-size: 14px;
+  color: $color-text-secondary;
+}
+
+.viewMoreRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.viewMoreButton {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 48px;
+  padding: 4px 24px;
+  border: 1px solid $color-accent;
+  border-radius: $radius-pill;
+  background: transparent;
+  color: $color-accent;
+  font-family: $font-thai;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color $transition-fast, color $transition-fast;
+  @include press-scale;
+
+  &:hover {
+    background: $color-accent;
+    color: $color-text-primary;
+  }
+}

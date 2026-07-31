@@ -1,0 +1,41 @@
+@import '../../../../shared/styles/tokens';
+@import '../../../../shared/styles/mixins';
+
+.page {
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  max-width: $content-max-width;
+  width: 100%;
+  margin: 0 auto;
+  padding: 48px clamp(16px, 5.5vw, 80px) 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.title {
+  margin: 0;
+  font-family: $font-thai;
+  font-weight: 600;
+  font-size: clamp(32px, 4vw, 56px);
+  line-height: 1.14;
+  color: $color-text-primary;
+  letter-spacing: -0.56px;
+}
+
+.subtitle {
+  margin: 0;
+  font-family: $font-thai;
+  font-size: 18px;
+  line-height: 30px;
+  color: $color-text-secondary;
+}

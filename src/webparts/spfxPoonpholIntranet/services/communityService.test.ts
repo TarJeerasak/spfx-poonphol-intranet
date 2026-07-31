@@ -1,4 +1,4 @@
-import { mapToCommunityPost, selectCommunityItemsByClosestCreatedDate } from './communityService';
+import { getAttachmentFileName, mapToCommunityPost, selectCommunityItemsByClosestCreatedDate } from './communityService';
 
 const NOW = new Date(2026, 6, 24).getTime();
 
@@ -59,6 +59,7 @@ describe('mapToCommunityPost', () => {
     expect(mapToCommunityPost(raw, NOW)).toEqual({
       id: '12',
       authorName: 'Michael Chen',
+      authorEmail: 'michael.chen@fusionsoftcompany.com',
       authorRole: 'Operations Manager',
       postedAtLabel: '10 มิ.ย. 2569',
       authorAvatarUrl:
@@ -101,6 +102,7 @@ describe('mapToCommunityPost', () => {
     expect(mapToCommunityPost(raw, NOW)).toEqual({
       id: '3',
       authorName: '',
+      authorEmail: '',
       authorRole: '',
       postedAtLabel: '',
       authorAvatarUrl: '',
@@ -108,5 +110,19 @@ describe('mapToCommunityPost', () => {
       imageUrls: [],
       likeCount: 0
     });
+  });
+});
+
+describe('getAttachmentFileName', () => {
+  it('extracts the file name from an attachment URL', () => {
+    expect(
+      getAttachmentFileName(
+        'https://fusionsoftcompany.sharepoint.com/sites/Project-PoonpholIntranetPortal/Lists/Poonphol_Community/Attachments/12/photo1.jpg'
+      )
+    ).toEqual('photo1.jpg');
+  });
+
+  it('returns an empty string for a URL with no path segments', () => {
+    expect(getAttachmentFileName('')).toEqual('');
   });
 });

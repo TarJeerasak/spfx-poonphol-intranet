@@ -51,6 +51,7 @@ export function mapToCommunityPost(raw: ISPCommunityListItem, now: number): Comm
   return {
     id: String(raw.Id),
     authorName: raw.Author?.Title ?? '',
+    authorEmail: raw.Author?.EMail ?? '',
     // JobTitle comes from the User Information List entry synced from the user's profile -
     // often empty unless a profile sync has run, but costs nothing extra to try.
     authorRole: raw.Author?.JobTitle ?? '',
@@ -141,4 +142,49 @@ export async function createCommunityPost(description: string, createdByUserId: 
   }
 
   return itemId;
+}
+
+export function getAttachmentFileName(attachmentUrl: string): string {
+  return attachmentUrl.split('/').pop() ?? '';
+}
+
+async function deleteCommunityAttachment(itemId: number, fileName: string, digest: string): Promise<void> {
+  await spApi.post(
+    `/lists/getbytitle('${COMMUNITY_LIST_TITLE}')/items(${itemId})/AttachmentFiles/getByFileName('${encodeURIComponent(fileName)}')`,
+    undefined,
+    { headers: { 'X-RequestDigest': digest, 'X-HTTP-Method': 'DELETE', 'IF-MATCH': '*' } }
+  );
+}
+
+export async function updateCommunityPost(
+  itemId: number,
+  description: string,
+  filesToAdd: File[],
+  attachmentFileNamesToRemove: string[]
+): Promise<void> {
+  const digest = await fetchRequestDigest();
+
+  await spApi.post(
+    `/lists/getbytitle('${COMMUNITY_LIST_TITLE}')/items(${itemId})`,
+    { [COMMUNITY_FIELDS.description]: description },
+    { headers: { 'X-RequestDigest': digest, 'X-HTTP-Method': 'MERGE', 'IF-MATCH': '*' } }
+  );
+
+  // Sequential for the same reason as create: a shared digest can't service parallel writes.
+  for (const fileName of attachmentFileNamesToRemove) {
+    await deleteCommunityAttachment(itemId, fileName, digest);
+  }
+  for (const file of filesToAdd) {
+    await uploadCommunityAttachment(itemId, file, digest);
+  }
+}
+
+export async function deactivateCommunityPost(itemId: number): Promise<void> {
+  const digest = await fetchRequestDigest();
+
+  await spApi.post(
+    `/lists/getbytitle('${COMMUNITY_LIST_TITLE}')/items(${itemId})`,
+    { [COMMUNITY_FIELDS.active]: false },
+    { headers: { 'X-RequestDigest': digest, 'X-HTTP-Method': 'MERGE', 'IF-MATCH': '*' } }
+  );
 }

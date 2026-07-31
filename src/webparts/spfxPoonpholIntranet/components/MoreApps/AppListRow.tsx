@@ -16,6 +16,8 @@ export interface AppListRowProps {
 }
 
 export function AppListRow({ app, category, isFavorite, isVisible, revealDelay, onToggleFavorite, onOpen }: AppListRowProps): React.ReactElement {
+  const iconUrl = getCategoryIcon(app.categoryId);
+
   const handleFavoriteClick = (event: React.MouseEvent): void => {
     event.preventDefault();
     event.stopPropagation();
@@ -29,14 +31,19 @@ export function AppListRow({ app, category, isFavorite, isVisible, revealDelay, 
       rel="noopener noreferrer"
       className={`${styles.row} ${isVisible ? styles.isVisible : ''}`}
       style={{ transitionDelay: isVisible ? `${revealDelay}ms` : '0ms' }}
+      title={app.name}
       onClick={onOpen}
     >
       <div className={styles.iconTile} style={{ backgroundColor: category.backgroundColor }}>
-        <img src={getCategoryIcon(app.categoryId)} alt="" width={20} height={20} />
+        <span
+          className={styles.iconGlyph}
+          style={{ backgroundColor: category.textColor, maskImage: `url(${iconUrl})`, WebkitMaskImage: `url(${iconUrl})` }}
+          aria-hidden="true"
+        />
       </div>
       <div className={styles.body}>
         <p className={styles.name}>{app.name}</p>
-        <p className={styles.description}>{app.descriptionThai}</p>
+        <p className={styles.description}>{app.descriptionThai || '-'}</p>
       </div>
       <span
         className={styles.tag}

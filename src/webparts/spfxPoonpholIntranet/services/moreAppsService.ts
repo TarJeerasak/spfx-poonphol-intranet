@@ -16,7 +16,8 @@ const APP_FIELDS = {
   url: 'URL',
   department: 'Department',
   company: 'Company',
-  active: 'Active'
+  active: 'Active',
+  created: 'Created'
 } as const;
 
 interface ISPAppListItem {
@@ -27,6 +28,19 @@ interface ISPAppListItem {
   Department?: { Title?: string };
   Company?: { Title?: string };
   Active: boolean;
+  Created?: string;
+}
+
+const NEW_APP_WINDOW_DAYS = 30;
+const MS_PER_DAY = 24 * 60 * 60 * 1000;
+
+function isRecentlyCreated(created: string | undefined, now: Date): boolean {
+  if (!created) {
+    return false;
+  }
+
+  const daysSinceCreated = (now.getTime() - new Date(created).getTime()) / MS_PER_DAY;
+  return daysSinceCreated >= 0 && daysSinceCreated <= NEW_APP_WINDOW_DAYS;
 }
 
 const CATEGORY_COLOR_PALETTE: Array<{ backgroundColor: string; textColor: string }> = [
@@ -42,7 +56,7 @@ const DEFAULT_CATEGORY_COLOR = { backgroundColor: '#e5e7eb', textColor: '#374151
 
 // usageCount/lastUsedAt are per-user and come from the History_App_Usage list
 // (see appUsageService/useMoreAppsFeed) - they default to unused here.
-export function mapToAppItem(raw: ISPAppListItem): AppItem {
+export function mapToAppItem(raw: ISPAppListItem, now: Date): AppItem {
   return {
     id: String(raw.Id),
     name: raw.Title,
@@ -50,7 +64,7 @@ export function mapToAppItem(raw: ISPAppListItem): AppItem {
     categoryId: raw.Department?.Title ?? '',
     company: raw.Company?.Title ?? '',
     usageCount: 0,
-    isNew: false,
+    isNew: isRecentlyCreated(raw.Created, now),
     lastUsedAt: '',
     launchUrl: raw.URL ?? '#'
   };
@@ -66,7 +80,8 @@ export async function fetchApps(): Promise<AppItem[]> {
         APP_FIELDS.url,
         `${APP_FIELDS.department}/Title`,
         `${APP_FIELDS.company}/Title`,
-        APP_FIELDS.active
+        APP_FIELDS.active,
+        APP_FIELDS.created
       ].join(','),
       $expand: [APP_FIELDS.department, APP_FIELDS.company].join(','),
       $filter: `${APP_FIELDS.active} eq ${ACTIVE_FILTER_VALUE}`,
@@ -74,7 +89,8 @@ export async function fetchApps(): Promise<AppItem[]> {
     }
   });
 
-  return response.data.value.map(mapToAppItem);
+  const now = new Date();
+  return response.data.value.map(item => mapToAppItem(item, now));
 }
 
 export function getAppCategories(apps: AppItem[]): AppCategory[] {

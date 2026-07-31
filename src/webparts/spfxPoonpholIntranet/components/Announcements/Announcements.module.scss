@@ -97,7 +97,7 @@
 
 .itemTitle {
   margin: 0;
-  font-family: $font-en;
+  font-family: $font-thai;
   font-weight: 500;
   font-size: 14px;
   color: #010101;
@@ -106,7 +106,7 @@
 
 .itemDescription {
   margin: 0;
-  font-family: $font-en;
+  font-family: $font-thai;
   font-size: 12px;
   color: #010101;
   @include line-clamp(2);
@@ -116,7 +116,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: $font-en;
+  font-family: $font-thai;
   font-size: 12px;
   color: #010101;
 }

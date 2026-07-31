@@ -10,6 +10,7 @@ export interface CommunityLikeState {
 }
 
 export interface UseCommunityLikesResult {
+  currentUserEmail: string | undefined;
   getLikeState: (post: CommunityPost) => CommunityLikeState;
   toggleLike: (post: CommunityPost) => void;
 }
@@ -106,5 +107,5 @@ export function useCommunityLikes(posts: CommunityPost[]): UseCommunityLikesResu
     }
   }
 
-  return { getLikeState, toggleLike };
+  return { currentUserEmail, getLikeState, toggleLike };
 }

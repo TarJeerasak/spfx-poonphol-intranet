@@ -55,6 +55,7 @@ export interface EventItem {
 export interface CommunityPost {
   id: string;
   authorName: string;
+  authorEmail: string;
   authorRole: string;
   postedAtLabel: string;
   authorAvatarUrl: string;
@@ -127,4 +128,23 @@ export interface NavLink {
   label: string;
   href: string;
   to?: string;
+}
+
+export interface CompanyPhoneEntry {
+  id: string;
+  company: string;
+  branch: string;
+  phoneNumber: string;
+  extension: string;
+  location: string;
+  note: string;
+}
+
+export interface InternalExtensionEntry {
+  id: string;
+  contactName: string;
+  department: string;
+  location: string;
+  deskNumber: string;
+  phoneNumber: string;
 }

@@ -15,12 +15,17 @@ const MAX_VISIBLE_IMAGES = 4;
 export interface CommunityPostCardProps {
   post: CommunityPost;
   likeState: CommunityLikeState;
+  canManage: boolean;
   onToggleLike: () => void;
+  onEdit: () => void;
+  onDelete: () => void;
 }
 
-export function CommunityPostCard({ post, likeState, onToggleLike }: CommunityPostCardProps): React.ReactElement {
+export function CommunityPostCard({ post, likeState, canManage, onToggleLike, onEdit, onDelete }: CommunityPostCardProps): React.ReactElement {
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [lightboxIndex, setLightboxIndex] = React.useState<number | undefined>(undefined);
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const menuRef = React.useRef<HTMLDivElement>(null);
   const hasImages = post.imageUrls.length > 0;
   const isClampable = shouldClampText(
     post.text,
@@ -28,6 +33,21 @@ export function CommunityPostCard({ post, likeState, onToggleLike }: CommunityPo
   );
   const visibleImages = post.imageUrls.slice(0, MAX_VISIBLE_IMAGES);
   const overflowImageCount = post.imageUrls.length - MAX_VISIBLE_IMAGES;
+
+  React.useEffect(() => {
+    if (!isMenuOpen) {
+      return undefined;
+    }
+
+    const handleOutsideClick = (event: MouseEvent): void => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleOutsideClick);
+    return () => document.removeEventListener('mousedown', handleOutsideClick);
+  }, [isMenuOpen]);
 
   return (
     <div className={styles.card}>
@@ -41,6 +61,52 @@ export function CommunityPostCard({ post, likeState, onToggleLike }: CommunityPo
           </div>
           {post.authorRole && <p className={styles.role}>{post.authorRole}</p>}
         </div>
+        {canManage && (
+          <div ref={menuRef} className={styles.optionsMenu}>
+            <button
+              type="button"
+              className={styles.optionsTrigger}
+              onClick={() => setIsMenuOpen(current => !current)}
+              aria-haspopup="menu"
+              aria-expanded={isMenuOpen}
+              aria-label="ตัวเลือกโพสต์"
+            >
+              <Icon name="moreHorizontal" size={18} />
+            </button>
+            {isMenuOpen && (
+              <ul className={styles.optionsList} role="menu">
+                <li>
+                  <button
+                    type="button"
+                    role="menuitem"
+                    className={styles.optionsItem}
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      onEdit();
+                    }}
+                  >
+                    <Icon name="edit" size={16} />
+                    แก้ไขโพสต์
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    role="menuitem"
+                    className={`${styles.optionsItem} ${styles.optionsItemDanger}`}
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      onDelete();
+                    }}
+                  >
+                    <Icon name="trash" size={16} />
+                    ลบโพสต์
+                  </button>
+                </li>
+              </ul>
+            )}
+          </div>
+        )}
       </div>
       <p
         className={`${styles.text} ${

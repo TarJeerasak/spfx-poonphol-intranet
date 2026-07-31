@@ -37,3 +37,18 @@
   color: $color-text-secondary;
   font-size: 14px;
 }
+
+.deleteConfirmMessage {
+  margin: 0;
+  font-family: $font-thai;
+  font-size: 15px;
+  line-height: 24px;
+  color: $color-text-secondary;
+}
+
+.deleteErrorMessage {
+  margin: 12px 0 0;
+  font-family: $font-thai;
+  font-size: 13px;
+  color: #d64545;
+}

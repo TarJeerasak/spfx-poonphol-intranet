@@ -12,7 +12,7 @@ export const heroBackgroundUrl = heroBg;
 
 export const navLinks: NavLink[] = [
   { id: 'home', label: 'หน้าหลัก', href: '#', to: '/' },
-  { id: 'knowledge', label: 'ความรู้', href: '#' },
+  { id: 'knowledge', label: 'ความรู้', href: '#', to: '/knowledge' },
   { id: 'documents', label: 'เอกสาร', href: '#', to: '/documents' },
   { id: 'gallery', label: 'แกลเลอรี่', href: '#' },
   { id: 'about', label: 'เกี่ยวกับเรา', href: '#' }
@@ -21,7 +21,7 @@ export const navLinks: NavLink[] = [
 export const quickLinks: QuickLink[] = [
   { id: 'document', label: 'Document', iconUrl: documentIcon, backgroundColor: '#30705c', to: '/documents' },
   { id: 'dt-helpdesk', label: 'DT Helpdesk', iconUrl: dtHelpdeskIcon, backgroundColor: '#80b835' },
-  { id: 'telephone', label: 'Telephone Lists', iconUrl: telephoneListsIcon, backgroundColor: '#72b7a1' },
+  { id: 'telephone', label: 'Telephone Lists', iconUrl: telephoneListsIcon, backgroundColor: '#72b7a1', to: '/telephone-list' },
   { id: 'km', label: 'KM', iconUrl: kmIcon, backgroundColor: '#445a6c' },
   { id: 'gallery', label: 'Gallery', iconUrl: galleryIcon, backgroundColor: '#29444e' },
   { id: 'more-apps', label: 'More Apps', iconUrl: moreAppsIcon, backgroundColor: '#30705c', to: '/more-apps' }

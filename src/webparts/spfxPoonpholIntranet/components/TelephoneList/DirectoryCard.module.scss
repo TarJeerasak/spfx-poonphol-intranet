@@ -1,0 +1,253 @@
+@import '../../../../shared/styles/tokens';
+@import '../../../../shared/styles/mixins';
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 24px;
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  box-shadow: $shadow-section;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.title {
+  flex-shrink: 0;
+  margin: 0;
+  font-family: $font-thai;
+  font-weight: 500;
+  font-size: 16px;
+  color: $color-text-primary;
+  white-space: nowrap;
+}
+
+.filters {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.exportButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: $radius-sm;
+  border: 1px solid $color-accent;
+  background: $color-surface;
+  color: $color-secondary;
+  font-family: $font-thai;
+  font-weight: 500;
+  font-size: 14px;
+  white-space: nowrap;
+  cursor: pointer;
+  @include press-scale;
+
+  &:hover {
+    background: rgba($color-accent, 0.15);
+  }
+}
+
+.searchForm {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 10px;
+}
+
+.searchBox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 300px;
+  height: 40px;
+  padding: 0 17px;
+  border-radius: $radius-md;
+  border: 1.26px solid $color-border;
+  background: $color-surface-elevated;
+  transition: border-color 0.2s ease;
+
+  &:focus-within {
+    border-color: $color-accent;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+.searchIcon {
+  display: flex;
+  flex-shrink: 0;
+  color: $color-text-secondary;
+}
+
+.searchInput {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: none;
+  outline: none;
+  font-family: $font-thai;
+  font-size: 16px;
+  background: transparent;
+  color: $color-text-primary;
+
+  &::placeholder {
+    color: $color-text-secondary;
+  }
+}
+
+.searchButton {
+  flex-shrink: 0;
+  height: 40px;
+  padding: 0 28px;
+  border: 1px solid $color-border;
+  border-radius: $radius-sm;
+  background: $color-accent;
+  color: $color-text-primary;
+  font-family: $font-thai;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  @include press-scale;
+
+  &:hover {
+    opacity: 0.85;
+  }
+}
+
+.divider {
+  height: 1px;
+  background: $color-border;
+}
+
+.table {
+  display: flex;
+  flex-direction: column;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: $color-border transparent;
+
+  &::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $color-border;
+    border-radius: $radius-pill;
+  }
+}
+
+.headerRow {
+  display: grid;
+  align-items: center;
+  min-width: fit-content;
+  height: 48px;
+  background: $color-surface-elevated;
+}
+
+.headerCell {
+  padding: 0 8px;
+  font-family: $font-thai;
+  font-weight: 500;
+  font-size: 14px;
+  color: #454545;
+  white-space: nowrap;
+}
+
+.body {
+  display: grid;
+  row-gap: 4px;
+  min-width: fit-content;
+}
+
+.bodyCell {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 48px;
+  padding: 8px;
+  overflow: hidden;
+
+  &.bodyCellWrap {
+    height: auto;
+    min-height: 48px;
+  }
+}
+
+.cellPrimary {
+  margin: 0;
+  font-family: $font-thai;
+  font-weight: 500;
+  font-size: 12px;
+  color: $color-text-primary;
+  letter-spacing: 0.06px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cellSecondary {
+  margin: 0;
+  font-family: $font-thai;
+  font-size: 12px;
+  color: $color-text-secondary;
+  letter-spacing: 0.12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cellWrapText {
+  margin: 0;
+  font-family: $font-thai;
+  font-weight: 500;
+  font-size: 12px;
+  color: $color-text-primary;
+  letter-spacing: 0.06px;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.empty {
+  margin: 0;
+  padding: 48px 0;
+  text-align: center;
+  font-family: $font-thai;
+  font-size: 14px;
+  color: $color-text-secondary;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.summary {
+  margin: 0;
+  flex: 1 1 auto;
+  font-family: $font-thai;
+  font-weight: 500;
+  font-size: 14px;
+  color: #6b7280;
+}
