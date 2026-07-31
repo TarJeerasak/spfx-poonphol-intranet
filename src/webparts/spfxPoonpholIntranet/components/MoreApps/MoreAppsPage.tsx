@@ -1,11 +1,15 @@
 import * as React from 'react';
+import { Button } from '../../../../shared/components/Button/Button';
 import { Dropdown } from '../../../../shared/components/Dropdown/Dropdown';
 import { Icon } from '../../../../shared/components/Icon/Icon';
+import { Modal } from '../../../../shared/components/Modal/Modal';
 import { useScrollReveal } from '../../../../shared/hooks/useScrollReveal';
 import { useMoreAppsFeed } from '../../hooks/useMoreAppsFeed';
+import { MAX_FAVORITE_APPS_PER_USER } from '../../services/favoriteAppsService';
 import { AppTab, getAppCategory } from '../../services/moreAppsService';
 import heroIllustration from '../../assets/more-apps/hero-illustration.png';
 import { AppCard } from './AppCard';
+import { AppListRow } from './AppListRow';
 import styles from './MoreAppsPage.module.scss';
 
 interface TabDefinition {
@@ -21,26 +25,29 @@ const TABS: TabDefinition[] = [
   { id: 'new', label: 'แอปพลิเคชันใหม่' }
 ];
 
+// Below this count the 4-column card grid leaves the row looking sparse, so the
+// design switches to a full-width list layout (see Figma node 53365:37825) instead.
+const LIST_LAYOUT_MAX_ITEMS = 3;
+
 export function MoreAppsPage(): React.ReactElement {
   const {
     items,
     categories,
-    companies,
     filteredCount,
     filters,
     favoriteIds,
     canExpand,
     isExpanded,
+    isFavoriteLimitReached,
     setSearch,
-    setCompany,
     setCategory,
     setTab,
     toggleFavorite,
     recordUsage,
-    toggleExpanded
+    toggleExpanded,
+    dismissFavoriteLimitNotice
   } = useMoreAppsFeed();
 
-  const companyOptions = [{ value: 'All', label: 'ทุกบริษัท' }, ...companies.map(value => ({ value, label: value }))];
   const categoryOptions = [
     { value: 'All', label: 'ทุกหมวดหมู่' },
     ...categories.map(category => ({ value: category.id, label: category.label }))
@@ -107,7 +114,6 @@ export function MoreAppsPage(): React.ReactElement {
           <div className={styles.panelHeader}>
             <p className={styles.panelTitle}>แอปพลิเคชันทั้งหมด</p>
             <div className={styles.panelControls}>
-              <Dropdown label="กรองตามบริษัท" value={filters.company} options={companyOptions} onChange={setCompany} />
               <Dropdown label="กรองตามหมวดหมู่" value={filters.categoryId} options={categoryOptions} onChange={setCategory} />
             </div>
           </div>
@@ -115,6 +121,21 @@ export function MoreAppsPage(): React.ReactElement {
 
           {items.length === 0 ? (
             <p className={styles.emptyState}>ไม่พบแอปพลิเคชันที่ตรงกับเงื่อนไข</p>
+          ) : items.length <= LIST_LAYOUT_MAX_ITEMS ? (
+            <div ref={gridRef} className={`${styles.list} ${isGridVisible ? styles.isVisible : ''}`}>
+              {items.map((app, index) => (
+                <AppListRow
+                  key={app.id}
+                  app={app}
+                  category={getAppCategory(categories, app.categoryId)}
+                  isFavorite={favoriteIds.has(app.id)}
+                  isVisible={isGridVisible}
+                  revealDelay={index * 45}
+                  onToggleFavorite={() => toggleFavorite(app.id)}
+                  onOpen={() => recordUsage(app.id)}
+                />
+              ))}
+            </div>
           ) : (
             <div ref={gridRef} className={`${styles.grid} ${isGridVisible ? styles.isVisible : ''}`}>
               {items.map((app, index) => (
@@ -140,6 +161,21 @@ export function MoreAppsPage(): React.ReactElement {
           )}
         </div>
       </div>
+
+      <Modal
+        isOpen={isFavoriteLimitReached}
+        onClose={dismissFavoriteLimitNotice}
+        title="เพิ่มรายการโปรดไม่ได้"
+        footer={
+          <Button variant="primary" style={{ minWidth: 112, padding: '10px 20px' }} onClick={dismissFavoriteLimitNotice}>
+            เข้าใจแล้ว
+          </Button>
+        }
+      >
+        <p className={styles.favoriteLimitMessage}>
+          คุณเลือกแอปพลิเคชันโปรดไว้ครบ {MAX_FAVORITE_APPS_PER_USER} รายการแล้ว กรุณานำรายการเดิมออกก่อนเพิ่มรายการใหม่
+        </p>
+      </Modal>
     </div>
   );
 }

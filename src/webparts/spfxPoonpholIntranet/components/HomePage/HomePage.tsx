@@ -11,6 +11,7 @@ import { useKnowledgeFeed } from '../../hooks/useKnowledgeFeed';
 import { useCommunityFeed } from '../../hooks/useCommunityFeed';
 import { useAnnouncementFeed } from '../../hooks/useAnnouncementFeed';
 import { useFavoriteAppsFeed } from '../../hooks/useFavoriteAppsFeed';
+import { useBannerFeed } from '../../hooks/useBannerFeed';
 import { heroBackgroundUrl, quickLinks } from '../data/mockContent';
 import styles from './HomePage.module.scss';
 
@@ -25,12 +26,13 @@ export function HomePage({ userDisplayName }: HomePageProps): React.ReactElement
   const communityFeed = useCommunityFeed();
   const announcementFeed = useAnnouncementFeed();
   const favoriteAppsFeed = useFavoriteAppsFeed();
+  const bannerFeed = useBannerFeed();
 
   return (
     <div className={styles.container}>
       <Hero
         userDisplayName={userDisplayName}
-        backgroundUrl={heroBackgroundUrl}
+        backgroundUrl={bannerFeed.banner?.imageUrl || heroBackgroundUrl}
         favoriteApps={favoriteAppsFeed.items}
         announcements={announcementFeed.items}
         onOpenApp={favoriteAppsFeed.recordUsage}

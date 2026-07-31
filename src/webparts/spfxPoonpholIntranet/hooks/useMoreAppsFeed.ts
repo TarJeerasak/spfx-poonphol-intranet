@@ -7,7 +7,6 @@ import {
   buildFavoriteAppMap,
   fetchFavoriteApps,
   FavoriteAppRecord,
-  findOldestFavorite,
   MAX_FAVORITE_APPS_PER_USER,
   removeFavoriteApp
 } from '../services/favoriteAppsService';
@@ -35,6 +34,7 @@ export interface UseMoreAppsFeedResult {
   isExpanded: boolean;
   isLoading: boolean;
   error: Error | undefined;
+  isFavoriteLimitReached: boolean;
   setSearch: (value: string) => void;
   setCompany: (value: string) => void;
   setCategory: (value: string) => void;
@@ -42,6 +42,7 @@ export interface UseMoreAppsFeedResult {
   toggleFavorite: (appId: string) => void;
   recordUsage: (appId: string) => void;
   toggleExpanded: () => void;
+  dismissFavoriteLimitNotice: () => void;
 }
 
 export function useMoreAppsFeed(): UseMoreAppsFeedResult {
@@ -80,6 +81,7 @@ export function useMoreAppsFeed(): UseMoreAppsFeedResult {
   const [favoriteRecords, setFavoriteRecords] = useState<FavoriteAppRecord[]>([]);
   const [savingAppIds, setSavingAppIds] = useState<Record<string, boolean>>({});
   const [usageRecords, setUsageRecords] = useState<AppUsageRecord[]>([]);
+  const [isFavoriteLimitReached, setIsFavoriteLimitReached] = useState(false);
 
   useEffect(() => {
     let isCancelled = false;
@@ -169,22 +171,18 @@ export function useMoreAppsFeed(): UseMoreAppsFeedResult {
         return;
       }
 
+      if (favoriteRecords.length >= MAX_FAVORITE_APPS_PER_USER) {
+        setIsFavoriteLimitReached(true);
+        return;
+      }
+
       const app = allApps.find(candidate => candidate.id === appId);
       if (!app) {
         return;
       }
 
-      let remainingRecords = favoriteRecords;
-      if (remainingRecords.length >= MAX_FAVORITE_APPS_PER_USER) {
-        const oldest = findOldestFavorite(remainingRecords);
-        if (oldest) {
-          await removeFavoriteApp(oldest.Id);
-          remainingRecords = remainingRecords.filter(record => record.Id !== oldest.Id);
-        }
-      }
-
       const newItemId = await addFavoriteApp(app, currentUserEmail);
-      setFavoriteRecords([...remainingRecords, { Id: newItemId, App_ID: Number(appId) }]);
+      setFavoriteRecords([...favoriteRecords, { Id: newItemId, App_ID: Number(appId) }]);
     } finally {
       setSavingAppIds(current => {
         const next = { ...current };
@@ -223,6 +221,7 @@ export function useMoreAppsFeed(): UseMoreAppsFeedResult {
     isExpanded,
     isLoading,
     error,
+    isFavoriteLimitReached,
     setSearch: value => updateFilters({ search: value }),
     setCompany: value => updateFilters({ company: value }),
     setCategory: value => updateFilters({ categoryId: value }),
@@ -237,6 +236,7 @@ export function useMoreAppsFeed(): UseMoreAppsFeedResult {
         // Usage tracking is best-effort and must never block opening the app.
       });
     },
-    toggleExpanded: () => setIsExpanded(current => !current)
+    toggleExpanded: () => setIsExpanded(current => !current),
+    dismissFavoriteLimitNotice: () => setIsFavoriteLimitReached(false)
   };
 }

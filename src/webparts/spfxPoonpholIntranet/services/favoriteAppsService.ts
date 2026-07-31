@@ -21,10 +21,6 @@ export function buildFavoriteAppMap(records: FavoriteAppRecord[]): FavoriteAppMa
   return map;
 }
 
-export function findOldestFavorite(records: FavoriteAppRecord[]): FavoriteAppRecord | undefined {
-  return records.reduce<FavoriteAppRecord | undefined>((oldest, record) => (!oldest || record.Id < oldest.Id ? record : oldest), undefined);
-}
-
 export function mapToFavoriteAppLink(record: FavoriteAppRecord): FavoriteAppLink {
   return {
     id: String(record.App_ID),

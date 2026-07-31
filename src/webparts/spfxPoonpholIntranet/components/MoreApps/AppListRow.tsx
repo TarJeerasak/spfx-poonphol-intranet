@@ -3,9 +3,9 @@ import { AppCategory, AppItem } from '../../../../shared/types/content';
 import starFilledIcon from '../../assets/more-apps/icons/star-filled.svg';
 import starOutlineIcon from '../../assets/more-apps/icons/star-outline.svg';
 import { getCategoryIcon } from './getCategoryIcon';
-import styles from './AppCard.module.scss';
+import styles from './AppListRow.module.scss';
 
-export interface AppCardProps {
+export interface AppListRowProps {
   app: AppItem;
   category: AppCategory;
   isFavorite: boolean;
@@ -15,7 +15,7 @@ export interface AppCardProps {
   onOpen: () => void;
 }
 
-export function AppCard({ app, category, isFavorite, isVisible, revealDelay, onToggleFavorite, onOpen }: AppCardProps): React.ReactElement {
+export function AppListRow({ app, category, isFavorite, isVisible, revealDelay, onToggleFavorite, onOpen }: AppListRowProps): React.ReactElement {
   const handleFavoriteClick = (event: React.MouseEvent): void => {
     event.preventDefault();
     event.stopPropagation();
@@ -27,7 +27,7 @@ export function AppCard({ app, category, isFavorite, isVisible, revealDelay, onT
       href={app.launchUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className={`${styles.card} ${isVisible ? styles.isVisible : ''}`}
+      className={`${styles.row} ${isVisible ? styles.isVisible : ''}`}
       style={{ transitionDelay: isVisible ? `${revealDelay}ms` : '0ms' }}
       onClick={onOpen}
     >
@@ -37,13 +37,13 @@ export function AppCard({ app, category, isFavorite, isVisible, revealDelay, onT
       <div className={styles.body}>
         <p className={styles.name}>{app.name}</p>
         <p className={styles.description}>{app.descriptionThai}</p>
-        <span
-          className={styles.tag}
-          style={{ backgroundColor: category.backgroundColor, borderColor: category.textColor, color: category.textColor }}
-        >
-          {category.label}
-        </span>
       </div>
+      <span
+        className={styles.tag}
+        style={{ backgroundColor: category.backgroundColor, borderColor: category.textColor, color: category.textColor }}
+      >
+        {category.label}
+      </span>
       <button
         type="button"
         className={`${styles.favoriteButton} ${isFavorite ? styles.favoriteButtonActive : ''}`}

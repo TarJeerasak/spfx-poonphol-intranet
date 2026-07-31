@@ -1,11 +1,11 @@
 @import '../../../../shared/styles/tokens';
 @import '../../../../shared/styles/mixins';
 
-.card {
+.row {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 16px;
-  height: 138px;
+  width: 100%;
   padding: 16px;
   background: $color-surface-elevated;
   border: 1px solid $color-border;
@@ -25,7 +25,6 @@
   &.isVisible:hover {
     border-color: #d8b66a;
     box-shadow: $shadow-card;
-    transform: translateY(-4px);
   }
 
   &:hover .iconTile {
@@ -36,10 +35,6 @@
     opacity: 1;
     transform: none;
     transition: box-shadow 0.25s ease, border-color 0.25s ease;
-
-    &.isVisible:hover {
-      transform: none;
-    }
 
     &:hover .iconTile {
       transform: none;
@@ -62,15 +57,12 @@
   display: flex;
   flex: 1 1 auto;
   min-width: 0;
-  height: 100%;
   flex-direction: column;
   gap: 4px;
 }
 
 .name {
-  flex-shrink: 0;
   margin: 0;
-  height: 24px;
   font-family: $font-thai;
   font-weight: 500;
   font-size: 16px;
@@ -80,19 +72,16 @@
 }
 
 .description {
-  flex-shrink: 0;
   margin: 0;
-  height: 44px;
   font-family: $font-thai;
   font-size: 14px;
   line-height: 22px;
   color: $color-text-secondary;
-  @include line-clamp(2);
+  @include line-clamp(1);
 }
 
 .tag {
   flex-shrink: 0;
-  align-self: flex-start;
   display: inline-flex;
   align-items: center;
   justify-content: center;

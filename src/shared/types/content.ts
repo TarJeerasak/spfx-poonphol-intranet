@@ -1,3 +1,9 @@
+export interface HeroBanner {
+  id: string;
+  title: string;
+  imageUrl: string;
+}
+
 export interface Announcement {
   id: string;
   title: string;
