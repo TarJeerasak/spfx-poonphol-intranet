@@ -1,4 +1,5 @@
 @import '../../../../shared/styles/tokens';
+@import '../../../../shared/styles/mixins';
 
 .card {
   flex: 1 1 220px;
@@ -12,10 +13,52 @@
   font: inherit;
   text-align: left;
   cursor: pointer;
-  transition: background $transition-fast, border-color $transition-fast;
+  transition: background $transition-fast, border-color $transition-fast, transform 0.2s ease, box-shadow 0.2s ease;
+  animation: fadeSlideUp 0.5s ease both;
+  @include press-scale(0.97);
+
+  @for $i from 1 through 6 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{0.1 + $i * 0.08}s;
+    }
+  }
 
   &:hover {
     border-color: #005e5a;
+    transform: translateY(-4px);
+    box-shadow: $shadow-card;
+  }
+
+  > div:first-child {
+    transition: transform 0.25s ease;
+  }
+
+  &:hover > div:first-child {
+    transform: scale(1.08);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+    transition: background $transition-fast, border-color $transition-fast;
+
+    &:hover {
+      transform: none;
+    }
+
+    &:hover > div:first-child {
+      transform: none;
+    }
+  }
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 

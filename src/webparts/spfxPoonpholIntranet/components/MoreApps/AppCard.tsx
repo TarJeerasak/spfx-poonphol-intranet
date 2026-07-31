@@ -21,11 +21,13 @@ export interface AppCardProps {
   app: AppItem;
   category: AppCategory;
   isFavorite: boolean;
+  isVisible: boolean;
+  revealDelay: number;
   onToggleFavorite: () => void;
   onOpen: () => void;
 }
 
-export function AppCard({ app, category, isFavorite, onToggleFavorite, onOpen }: AppCardProps): React.ReactElement {
+export function AppCard({ app, category, isFavorite, isVisible, revealDelay, onToggleFavorite, onOpen }: AppCardProps): React.ReactElement {
   const handleFavoriteClick = (event: React.MouseEvent): void => {
     event.preventDefault();
     event.stopPropagation();
@@ -33,7 +35,14 @@ export function AppCard({ app, category, isFavorite, onToggleFavorite, onOpen }:
   };
 
   return (
-    <a href={app.launchUrl} target="_blank" rel="noopener noreferrer" className={styles.card} onClick={onOpen}>
+    <a
+      href={app.launchUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`${styles.card} ${isVisible ? styles.isVisible : ''}`}
+      style={{ transitionDelay: isVisible ? `${revealDelay}ms` : '0ms' }}
+      onClick={onOpen}
+    >
       <div className={styles.iconTile} style={{ backgroundColor: category.backgroundColor }}>
         <img src={getCategoryIcon(app.categoryId)} alt="" width={20} height={20} />
       </div>
@@ -49,7 +58,7 @@ export function AppCard({ app, category, isFavorite, onToggleFavorite, onOpen }:
       </div>
       <button
         type="button"
-        className={styles.favoriteButton}
+        className={`${styles.favoriteButton} ${isFavorite ? styles.favoriteButtonActive : ''}`}
         onClick={handleFavoriteClick}
         aria-pressed={isFavorite}
         aria-label={isFavorite ? `นำ ${app.name} ออกจากรายการโปรด` : `เพิ่ม ${app.name} เป็นรายการโปรด`}

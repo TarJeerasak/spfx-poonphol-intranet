@@ -34,9 +34,14 @@
   font-size: 14px;
   color: $color-text-primary;
   cursor: pointer;
+  transition: color 0.15s ease;
 
   &:hover {
     color: $color-primary;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
   }
 }
 
@@ -74,6 +79,16 @@
   font-size: 14px;
   appearance: none;
   cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover,
+  &:focus-visible {
+    border-color: #d8b66a;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
 }
 
 .chevron {

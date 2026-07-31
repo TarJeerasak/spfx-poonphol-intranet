@@ -1,8 +1,20 @@
 @import '../../../../shared/styles/tokens';
+@import '../../../../shared/styles/mixins';
 
 .page {
   display: flex;
   flex-direction: column;
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .banner {
@@ -37,6 +49,11 @@
   font-weight: 700;
   font-size: clamp(32px, 3.6vw, 48px);
   color: #163634;
+  animation: fadeSlideUp 0.6s ease both;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
 }
 
 .bannerSubtitle {
@@ -45,6 +62,12 @@
   font-size: clamp(15px, 1.4vw, 18px);
   color: #5f7a78;
   max-width: 560px;
+  animation: fadeSlideUp 0.6s ease both;
+  animation-delay: 0.12s;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
 }
 
 .container {
@@ -78,6 +101,12 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  animation: fadeSlideUp 0.55s ease both;
+  animation-delay: 0.3s;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
 }
 
 .panel {
@@ -90,6 +119,12 @@
   border: 1px solid $color-border;
   border-radius: $radius-md;
   box-shadow: $shadow-section;
+  animation: fadeSlideUp 0.55s ease both;
+  animation-delay: 0.38s;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
 }
 
 .panelHeader {
@@ -132,6 +167,16 @@
   color: $color-text-primary;
   font-family: $font-thai;
   font-size: 14px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover,
+  &:focus-visible {
+    border-color: #d8b66a;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
 }
 
 .searchForm {
@@ -150,6 +195,16 @@
   border-radius: 12px;
   border: 1px solid $color-border;
   background: $color-surface-elevated;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:focus-within {
+    border-color: #d8b66a;
+    box-shadow: 0 0 0 3px rgba(216, 182, 106, 0.2);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
 }
 
 .searchIcon {
@@ -186,10 +241,20 @@
   background: transparent;
   color: $color-text-secondary;
   cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease, transform 0.15s ease;
 
   &:hover {
     color: $color-text-primary;
     background: $color-border;
+    transform: scale(1.1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: color 0.15s ease, background 0.15s ease;
+
+    &:hover {
+      transform: none;
+    }
   }
 }
 
@@ -205,6 +270,8 @@
   font-weight: 500;
   font-size: 14px;
   cursor: pointer;
+  transition: opacity 0.15s ease;
+  @include press-scale;
 
   &:hover {
     opacity: 0.85;

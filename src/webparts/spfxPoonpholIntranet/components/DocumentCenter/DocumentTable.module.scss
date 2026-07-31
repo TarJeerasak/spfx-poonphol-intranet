@@ -1,10 +1,28 @@
 @import '../../../../shared/styles/tokens';
+@import '../../../../shared/styles/mixins';
 
 $grid-columns: minmax(140px, 1fr) 110px minmax(90px, 1fr) minmax(140px, 1fr) 90px 40px;
 
 .table {
   display: flex;
   flex-direction: column;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: $color-border transparent;
+
+  &::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $color-border;
+    border-radius: $radius-pill;
+  }
 }
 
 .headerRow {
@@ -13,17 +31,20 @@ $grid-columns: minmax(140px, 1fr) 110px minmax(90px, 1fr) minmax(140px, 1fr) 90p
   align-items: center;
   gap: 8px;
   padding: 12px 8px;
+  min-width: fit-content;
   background: $color-surface-elevated;
   font-family: $font-thai;
   font-weight: 500;
   font-size: 14px;
   color: #454545;
+  white-space: nowrap;
 }
 
 .body {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  min-width: fit-content;
 }
 
 .row {
@@ -32,6 +53,26 @@ $grid-columns: minmax(140px, 1fr) 110px minmax(90px, 1fr) minmax(140px, 1fr) 90p
   align-items: center;
   gap: 8px;
   padding: 6px 8px;
+  min-width: fit-content;
+  border-radius: $radius-sm;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.4s ease, transform 0.4s ease, background 0.15s ease;
+
+  &.isVisible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  &:hover {
+    background: rgba($color-primary, 0.09);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    opacity: 1;
+    transform: none;
+    transition: background 0.15s ease;
+  }
 }
 
 .cellName {
@@ -104,9 +145,20 @@ $grid-columns: minmax(140px, 1fr) 110px minmax(90px, 1fr) minmax(140px, 1fr) 90p
   height: 32px;
   border-radius: $radius-sm;
   color: #163634;
+  transition: background 0.15s ease, transform 0.15s ease;
+  @include press-scale;
 
   &:hover {
-    background: $color-surface-elevated;
+    background: rgba($color-primary, 0.16);
+    transform: translateY(-2px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: background 0.15s ease;
+
+    &:hover {
+      transform: none;
+    }
   }
 }
 

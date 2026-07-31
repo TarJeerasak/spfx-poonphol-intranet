@@ -117,12 +117,14 @@ export function MoreAppsPage(): React.ReactElement {
             <p className={styles.emptyState}>ไม่พบแอปพลิเคชันที่ตรงกับเงื่อนไข</p>
           ) : (
             <div ref={gridRef} className={`${styles.grid} ${isGridVisible ? styles.isVisible : ''}`}>
-              {items.map(app => (
+              {items.map((app, index) => (
                 <AppCard
                   key={app.id}
                   app={app}
                   category={getAppCategory(categories, app.categoryId)}
                   isFavorite={favoriteIds.has(app.id)}
+                  isVisible={isGridVisible}
+                  revealDelay={Math.min(index, 11) * 45}
                   onToggleFavorite={() => toggleFavorite(app.id)}
                   onOpen={() => recordUsage(app.id)}
                 />
@@ -133,7 +135,7 @@ export function MoreAppsPage(): React.ReactElement {
           {canExpand && (
             <button type="button" className={styles.viewAllButton} onClick={toggleExpanded}>
               {isExpanded ? 'แสดงน้อยลง' : `ดูทั้งหมด (${filteredCount})`}
-              <Icon name="chevronDown" size={16} className={isExpanded ? styles.chevronUp : ''} />
+              <Icon name="chevronDown" size={16} className={`${styles.chevronIcon} ${isExpanded ? styles.chevronUp : ''}`} />
             </button>
           )}
         </div>

@@ -7,11 +7,16 @@ import styles from './DocumentTable.module.scss';
 
 export interface DocumentTableRowProps {
   document: DocumentItem;
+  isVisible: boolean;
+  revealDelay: number;
 }
 
-export function DocumentTableRow({ document }: DocumentTableRowProps): React.ReactElement {
+export function DocumentTableRow({ document, isVisible, revealDelay }: DocumentTableRowProps): React.ReactElement {
   return (
-    <div className={styles.row}>
+    <div
+      className={`${styles.row} ${isVisible ? styles.isVisible : ''}`}
+      style={{ transitionDelay: isVisible ? `${revealDelay}ms` : '0ms' }}
+    >
       <div className={styles.cellName}>
         <p className={styles.name}>{document.name}</p>
         <p className={styles.nameThai}>{document.nameThai}</p>
