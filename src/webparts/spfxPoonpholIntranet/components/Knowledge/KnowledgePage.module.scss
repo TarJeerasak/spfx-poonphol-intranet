@@ -40,7 +40,7 @@
   width: 100%;
   max-width: $content-max-width;
   margin: 0 auto;
-  padding: 0 clamp(16px, 5.5vw, 80px);
+  padding: 0 $content-horizontal-padding;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -162,7 +162,7 @@
   max-width: $content-max-width;
   width: 100%;
   margin: 0 auto;
-  padding: 40px clamp(16px, 5.5vw, 80px) 40px;
+  padding: 40px $content-horizontal-padding 40px;
   display: flex;
   flex-direction: column;
   gap: 20px;

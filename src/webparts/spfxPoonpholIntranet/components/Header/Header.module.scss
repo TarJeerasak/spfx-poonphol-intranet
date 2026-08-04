@@ -3,6 +3,16 @@
 .header {
   background: $color-header-footer-bg;
   padding: 20px 0;
+  // SharePoint's page container already starts below the suite bar, so adding
+  // the suite bar height here would create a second 48px top offset.
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  // Forces its own compositing layer so Chromium/Edge repaints it correctly
+  // while scrolling past the Hero's continuous background animation +
+  // backdrop-filter below — without this, a stale frame of the Hero can
+  // stay painted in the gap above the sticky header.
+  will-change: transform;
 }
 
 .inner {
@@ -12,7 +22,7 @@
   gap: 24px;
   max-width: $content-max-width;
   margin: 0 auto;
-  padding: 0 clamp(16px, 5.5vw, 80px);
+  padding: 0 $content-horizontal-padding;
   flex-wrap: wrap;
 }
 

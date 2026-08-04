@@ -3,7 +3,7 @@
 .container {
   max-width: $content-max-width;
   margin: 0 auto;
-  padding: 24px clamp(16px, 3vw, 80px) 40px;
+  padding: 24px $content-horizontal-padding 40px;
   display: flex;
   flex-direction: column;
   gap: 24px;

@@ -16,6 +16,7 @@ $color-stroke: #e5e7eb;
 $color-header-footer-bg: #123416;
 
 $content-max-width: 1480px;
+$content-horizontal-padding: clamp(16px, 3vw, 80px);
 
 $font-thai: 'IBM Plex Sans Thai', sans-serif;
 $font-en: 'Inter', sans-serif;

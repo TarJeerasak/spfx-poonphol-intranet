@@ -21,11 +21,11 @@ export function Hero({ userDisplayName, backgroundUrl, favoriteApps, announcemen
         <div className={styles.welcomeCard}>
           <div className={styles.welcomeText}>
             <p className={styles.greeting}>ยินดีต้อนรับ</p>
-            <p className={styles.userName}>คุณ{getFirstName(userDisplayName)}</p>
+            <p className={styles.userName}>{getFirstName(userDisplayName)}</p>
             <p className={styles.tagline}>
               ร่วมสร้างการเติบโตอย่างยั่งยืน
               <br />
-              ไปด้วยกันกับ Poonphol Group
+              ไปด้วยกันกับกลุ่มพูลผล
             </p>
           </div>
           <div className={styles.searchBox}>
