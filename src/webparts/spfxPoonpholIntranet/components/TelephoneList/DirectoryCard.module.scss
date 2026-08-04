@@ -1,6 +1,8 @@
 @import '../../../../shared/styles/tokens';
 @import '../../../../shared/styles/mixins';
 
+$directory-accent: #d8b66a;
+
 .card {
   display: flex;
   flex-direction: column;
@@ -45,9 +47,9 @@
   height: 40px;
   padding: 0 12px;
   border-radius: $radius-sm;
-  border: 1px solid $color-accent;
+  border: 1px solid $directory-accent;
   background: $color-surface;
-  color: $color-secondary;
+  color: $directory-accent;
   font-family: $font-thai;
   font-weight: 500;
   font-size: 14px;
@@ -56,7 +58,7 @@
   @include press-scale;
 
   &:hover {
-    background: rgba($color-accent, 0.15);
+    background: rgba($directory-accent, 0.15);
   }
 }
 
@@ -80,7 +82,7 @@
   transition: border-color 0.2s ease;
 
   &:focus-within {
-    border-color: $color-accent;
+    border-color: $directory-accent;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -115,8 +117,8 @@
   padding: 0 28px;
   border: 1px solid $color-border;
   border-radius: $radius-sm;
-  background: $color-accent;
-  color: $color-text-primary;
+  background: $directory-accent;
+  color: $color-surface;
   font-family: $font-thai;
   font-weight: 500;
   font-size: 14px;

@@ -6,6 +6,7 @@ export interface PaginationProps {
   page: number;
   pageCount: number;
   onPageChange: (page: number) => void;
+  activeVariant?: 'gold' | 'accent';
 }
 
 function buildPageNumbers(page: number, pageCount: number): Array<number | 'ellipsis'> {
@@ -29,8 +30,9 @@ function buildPageNumbers(page: number, pageCount: number): Array<number | 'elli
   return result;
 }
 
-export function Pagination({ page, pageCount, onPageChange }: PaginationProps): React.ReactElement {
+export function Pagination({ page, pageCount, onPageChange, activeVariant = 'gold' }: PaginationProps): React.ReactElement {
   const pageNumbers = buildPageNumbers(page, pageCount);
+  const activeClassName = activeVariant === 'accent' ? styles.pageButtonActiveAccent : styles.pageButtonActive;
 
   return (
     <div className={styles.pagination}>
@@ -52,7 +54,7 @@ export function Pagination({ page, pageCount, onPageChange }: PaginationProps): 
           <button
             key={value}
             type="button"
-            className={`${styles.pageButton} ${value === page ? styles.pageButtonActive : ''}`}
+            className={`${styles.pageButton} ${value === page ? activeClassName : ''}`}
             onClick={() => onPageChange(value)}
           >
             {value}

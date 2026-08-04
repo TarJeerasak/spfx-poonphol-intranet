@@ -19,7 +19,7 @@ export function KnowledgeGridCard({ item, onRead }: KnowledgeGridCardProps): Rea
       <div className={styles.body}>
         <div className={styles.topRow}>
           {item.tags[0] && <Tag label={item.tags[0]} color="#cadfff" textColor="#062b62" borderColor="#062b62" />}
-          <Icon name="star" size={20} className={styles.starIcon} />
+          <Icon name="heart" size={20} className={styles.heartIcon} />
         </div>
         <div className={styles.textGroup}>
           <p className={styles.title}>{item.title}</p>

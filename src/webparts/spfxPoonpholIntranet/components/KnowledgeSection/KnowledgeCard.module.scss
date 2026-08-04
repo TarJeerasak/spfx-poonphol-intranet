@@ -58,10 +58,23 @@
   width: 100%;
 }
 
+.topRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+}
+
 .tagGroup {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
+}
+
+.heartIcon {
+  flex-shrink: 0;
+  color: $color-text-secondary;
 }
 
 .textGroup {

@@ -133,7 +133,7 @@ export function DirectoryCard<T>({
         <p className={styles.summary}>
           แสดง {rows.length} จาก {totalCount} รายการ
         </p>
-        <Pagination page={page} pageCount={pageCount} onPageChange={onPageChange} />
+        <Pagination page={page} pageCount={pageCount} onPageChange={onPageChange} activeVariant="gold" />
       </div>
     </div>
   );

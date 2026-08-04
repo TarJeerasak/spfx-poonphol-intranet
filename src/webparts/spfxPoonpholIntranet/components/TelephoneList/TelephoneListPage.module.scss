@@ -6,23 +6,44 @@
   flex-direction: column;
 }
 
-.container {
-  max-width: $content-max-width;
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.banner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 420px;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+  padding: 64px 0 104px;
+}
+
+.bannerFade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to left, rgba(245, 247, 244, 0) 50%, #f5f7f4 78.437%);
+}
+
+.bannerInner {
+  position: relative;
+  z-index: 1;
   width: 100%;
+  max-width: $content-max-width;
   margin: 0 auto;
-  padding: 48px $content-horizontal-padding 40px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  padding: 0 $content-horizontal-padding;
 }
 
-.heading {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.title {
+.bannerTitle {
   margin: 0;
   font-family: $font-thai;
   font-weight: 600;
@@ -30,12 +51,39 @@
   line-height: 1.14;
   color: $color-text-primary;
   letter-spacing: -0.56px;
+  animation: fadeSlideUp 0.6s ease both;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
 }
 
-.subtitle {
-  margin: 0;
+.bannerSubtitle {
+  margin: 6px 0 0;
   font-family: $font-thai;
   font-size: 18px;
   line-height: 30px;
   color: $color-text-secondary;
+  animation: fadeSlideUp 0.6s ease both;
+  animation-delay: 0.12s;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: $content-max-width;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 $content-horizontal-padding 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  > :first-child {
+    margin-top: -80px;
+  }
 }

@@ -16,7 +16,7 @@ export type IconName =
   | 'download'
   | 'close'
   | 'image'
-  | 'star'
+  | 'heart'
   | 'moreHorizontal'
   | 'edit'
   | 'trash';
@@ -91,7 +91,9 @@ const PATHS: Record<IconName, React.ReactNode> = {
       <path d="M21 16l-5.5-5.5L6 19" />
     </>
   ),
-  star: <path d="M12 3.5l2.55 5.5 5.95.72-4.4 4.13 1.18 5.95L12 16.9l-5.28 2.9 1.18-5.95-4.4-4.13 5.95-.72L12 3.5z" />,
+  heart: (
+    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+  ),
   moreHorizontal: (
     <>
       <circle cx="5" cy="12" r="1.5" fill="currentColor" stroke="none" />

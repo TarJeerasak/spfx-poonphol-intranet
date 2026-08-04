@@ -52,6 +52,14 @@
   box-shadow: none;
 }
 
+.pageButtonActiveAccent {
+  background: $color-accent;
+  border-color: $color-accent;
+  color: $color-text-primary;
+  font-weight: 500;
+  box-shadow: none;
+}
+
 .ellipsis {
   width: 32px;
   height: 32px;
