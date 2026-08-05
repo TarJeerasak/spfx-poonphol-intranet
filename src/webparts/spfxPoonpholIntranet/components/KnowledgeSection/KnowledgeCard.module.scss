@@ -13,15 +13,18 @@
   border-radius: $radius-lg;
   box-shadow: $shadow-card;
   min-width: 0;
-  font: inherit;
-  text-align: left;
-  color: inherit;
   cursor: pointer;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 
   &:hover {
     transform: translateY(-6px);
     box-shadow: $shadow-elevated;
+  }
+
+  &:focus-visible {
+    outline: none;
+    border-color: $color-nav-active;
+    box-shadow: 0 0 0 3px rgba(128, 182, 16, 0.2);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -72,9 +75,51 @@
   gap: 6px;
 }
 
-.heartIcon {
+.likeButton {
+  display: flex;
   flex-shrink: 0;
+  padding: 0;
+  border: none;
+  background: none;
   color: $color-text-secondary;
+  cursor: pointer;
+  @include press-scale;
+
+  &:hover {
+    color: #e0454b;
+  }
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.6;
+  }
+}
+
+.likeButtonActive {
+  color: #e0454b;
+
+  svg {
+    fill: currentColor;
+    animation: likePop 0.35s ease;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    svg {
+      animation: none;
+    }
+  }
+}
+
+@keyframes likePop {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.35);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .textGroup {

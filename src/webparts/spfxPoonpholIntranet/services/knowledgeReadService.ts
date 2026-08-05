@@ -1,6 +1,5 @@
-import { SiteURL } from '../../../shared/config/site';
 import { fetchRequestDigest, spApi } from '../../../shared/services/api';
-import { resolveKnowledgeListTitle } from './knowledgeService';
+import { findKnowledgeCountRecord, upsertKnowledgeCount } from './knowledgeCountService';
 
 const HISTORY_LIST_TITLE = 'History_KM_Read';
 
@@ -25,8 +24,8 @@ export async function recordKnowledgeRead(kmId: string, userEmail: string, curre
   }
 
   const digest = await fetchRequestDigest();
-  const listTitle = resolveKnowledgeListTitle(SiteURL);
   const nextReadCount = currentReadCount + 1;
+  const countRecord = await findKnowledgeCountRecord(kmId);
 
   await spApi.post(
     `/lists/getbytitle('${HISTORY_LIST_TITLE}')/items`,
@@ -34,11 +33,7 @@ export async function recordKnowledgeRead(kmId: string, userEmail: string, curre
     { headers: { 'X-RequestDigest': digest } }
   );
 
-  await spApi.post(
-    `/lists/getbytitle('${listTitle}')/items(${kmId})`,
-    { ReadCount: nextReadCount },
-    { headers: { 'X-RequestDigest': digest, 'X-HTTP-Method': 'MERGE', 'IF-MATCH': '*' } }
-  );
+  await upsertKnowledgeCount(kmId, digest, countRecord, { readCount: nextReadCount });
 
   return nextReadCount;
 }

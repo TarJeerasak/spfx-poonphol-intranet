@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Icon } from '../../../../shared/components/Icon/Icon';
 import { Dropdown } from '../../../../shared/components/Dropdown/Dropdown';
 import { useKnowledgeFeed } from '../../hooks/useKnowledgeFeed';
+import { useKnowledgeLikes } from '../../hooks/useKnowledgeLikes';
 import bannerImageUrl from '../../assets/knowledge/hero-banner.jpg';
 import { KnowledgeGridCard } from './KnowledgeGridCard';
 import styles from './KnowledgePage.module.scss';
@@ -13,6 +14,7 @@ const VISIBLE_COUNT_STEP = 8;
 
 export function KnowledgePage(): React.ReactElement {
   const { items, featuredItems, categories, recordRead } = useKnowledgeFeed();
+  const { getLikeState, toggleLike } = useKnowledgeLikes(items);
   const [categoryId, setCategoryId] = React.useState(ALL_CATEGORY_VALUE);
   const [visibleCount, setVisibleCount] = React.useState(INITIAL_VISIBLE_COUNT);
   const [searchDraft, setSearchDraft] = React.useState('');
@@ -73,7 +75,13 @@ export function KnowledgePage(): React.ReactElement {
             <div className={styles.panelDivider} />
             <div className={styles.cardGrid}>
               {featuredItems.slice(0, FEATURED_CARD_COUNT).map(item => (
-                <KnowledgeGridCard key={item.id} item={item} onRead={() => recordRead(item.id)} />
+                <KnowledgeGridCard
+                  key={item.id}
+                  item={item}
+                  likeState={getLikeState(item)}
+                  onRead={() => recordRead(item.id)}
+                  onToggleLike={() => toggleLike(item)}
+                />
               ))}
             </div>
           </section>
@@ -96,7 +104,13 @@ export function KnowledgePage(): React.ReactElement {
           {visibleItems.length > 0 ? (
             <div className={styles.cardGrid}>
               {visibleItems.map(item => (
-                <KnowledgeGridCard key={item.id} item={item} onRead={() => recordRead(item.id)} />
+                <KnowledgeGridCard
+                  key={item.id}
+                  item={item}
+                  likeState={getLikeState(item)}
+                  onRead={() => recordRead(item.id)}
+                  onToggleLike={() => toggleLike(item)}
+                />
               ))}
             </div>
           ) : (

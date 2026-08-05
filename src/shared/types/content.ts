@@ -37,6 +37,7 @@ export interface KnowledgeItem {
   title: string;
   imageUrl: string;
   readCount: number;
+  likeCount: number;
 }
 
 export interface EventItem {

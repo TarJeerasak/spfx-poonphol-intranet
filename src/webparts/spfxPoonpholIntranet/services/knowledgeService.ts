@@ -5,6 +5,7 @@ import { parseMultiChoiceValue } from '../../../shared/utils/parseMultiChoiceVal
 import { parseThumbnailImage } from '../../../shared/utils/parseThumbnailImage';
 import { IAttachmentFile, resolveListItemImageUrl } from '../../../shared/utils/resolveListItemImageUrl';
 import { selectClosestByDate } from '../../../shared/utils/selectClosestByDate';
+import { fetchKnowledgeCountMap, KnowledgeCounts } from './knowledgeCountService';
 
 const KNOWLEDGE_LIST_TITLE = 'KnowledgeManagementList';
 const KNOWLEDGE_LIST_TITLE_UAT = 'KnowledgeManagementList1';
@@ -27,8 +28,7 @@ const KNOWLEDGE_FIELDS = {
   thumbnailImage: 'ThumbnailImage',
   publishDate: 'PublishDate',
   category: 'Category',
-  active: 'Active',
-  readCount: 'ReadCount'
+  active: 'Active'
 } as const;
 
 interface ISPKnowledgeListItem {
@@ -40,7 +40,6 @@ interface ISPKnowledgeListItem {
   PublishDate?: string;
   Category?: string;
   Active: boolean;
-  ReadCount?: number;
 }
 
 export interface KnowledgeFeedResult {
@@ -50,14 +49,17 @@ export interface KnowledgeFeedResult {
   totalCount: number;
 }
 
-export function mapToKnowledgeItem(raw: ISPKnowledgeListItem): KnowledgeItem {
+// Read/like counts live in the History_KM_Count list (keyed by KM_ID), not on this list -
+// `counts` comes from that lookup and defaults to zero when an item has no count record yet.
+export function mapToKnowledgeItem(raw: ISPKnowledgeListItem, counts?: KnowledgeCounts): KnowledgeItem {
   return {
     id: String(raw.Id),
     categoryId: raw.Category ?? '',
     tags: parseMultiChoiceValue(raw.Tag),
     title: raw.Title,
     imageUrl: resolveListItemImageUrl(parseThumbnailImage(raw.ThumbnailImage), raw.AttachmentFiles),
-    readCount: raw.ReadCount ?? 0
+    readCount: counts?.readCount ?? 0,
+    likeCount: counts?.likeCount ?? 0
   };
 }
 
@@ -80,9 +82,8 @@ export function selectKnowledgeItemsByClosestPublishDate(
 
 export async function fetchKnowledgeFeed(): Promise<KnowledgeFeedResult> {
   const listTitle = resolveKnowledgeListTitle(SiteURL);
-  const response = await spApi.get<{ value: ISPKnowledgeListItem[] }>(
-    `/lists/getbytitle('${listTitle}')/items`,
-    {
+  const [response, countMap] = await Promise.all([
+    spApi.get<{ value: ISPKnowledgeListItem[] }>(`/lists/getbytitle('${listTitle}')/items`, {
       params: {
         $select: [
           KNOWLEDGE_FIELDS.id,
@@ -92,19 +93,21 @@ export async function fetchKnowledgeFeed(): Promise<KnowledgeFeedResult> {
           'AttachmentFiles/ServerRelativeUrl',
           KNOWLEDGE_FIELDS.publishDate,
           KNOWLEDGE_FIELDS.category,
-          KNOWLEDGE_FIELDS.active,
-          KNOWLEDGE_FIELDS.readCount
+          KNOWLEDGE_FIELDS.active
         ].join(','),
         $expand: 'AttachmentFiles',
         $filter: `${KNOWLEDGE_FIELDS.active} eq 1`,
         $top: 5000
       }
-    }
-  );
+    }),
+    fetchKnowledgeCountMap()
+  ]);
 
   const activeItems = response.data.value;
-  const items = activeItems.map(mapToKnowledgeItem);
-  const featuredItems = selectKnowledgeItemsByClosestPublishDate(activeItems, Date.now()).map(mapToKnowledgeItem);
+  const items = activeItems.map(item => mapToKnowledgeItem(item, countMap[String(item.Id)]));
+  const featuredItems = selectKnowledgeItemsByClosestPublishDate(activeItems, Date.now()).map(item =>
+    mapToKnowledgeItem(item, countMap[String(item.Id)])
+  );
 
   return {
     items,

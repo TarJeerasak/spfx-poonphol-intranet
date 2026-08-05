@@ -3,6 +3,7 @@ import { SectionHeader } from '../../../../shared/components/SectionHeader/Secti
 import { SectionFooter } from '../../../../shared/components/SectionFooter/SectionFooter';
 import { useScrollReveal } from '../../../../shared/hooks/useScrollReveal';
 import { KnowledgeCategory, KnowledgeItem } from '../../../../shared/types/content';
+import { KnowledgeLikeState } from '../../hooks/useKnowledgeLikes';
 import { KnowledgeCard } from './KnowledgeCard';
 import kmIcon from '../../assets/home/icons/sections/km.svg';
 import styles from './KnowledgeSection.module.scss';
@@ -13,9 +14,19 @@ export interface KnowledgeSectionProps {
   featuredItems: KnowledgeItem[];
   totalCount: number;
   onRead: (itemId: string) => void;
+  getLikeState: (item: KnowledgeItem) => KnowledgeLikeState;
+  onToggleLike: (item: KnowledgeItem) => void;
 }
 
-export function KnowledgeSection({ categories, items, featuredItems, totalCount, onRead }: KnowledgeSectionProps): React.ReactElement {
+export function KnowledgeSection({
+  categories,
+  items,
+  featuredItems,
+  totalCount,
+  onRead,
+  getLikeState,
+  onToggleLike
+}: KnowledgeSectionProps): React.ReactElement {
   const [activeCategoryId, setActiveCategoryId] = React.useState(categories[0]?.id ?? 'all');
   const [ref, isVisible] = useScrollReveal<HTMLElement>();
 
@@ -40,7 +51,13 @@ export function KnowledgeSection({ categories, items, featuredItems, totalCount,
       </div>
       <div className={styles.cards}>
         {visibleItems.map(item => (
-          <KnowledgeCard key={item.id} item={item} onRead={() => onRead(item.id)} />
+          <KnowledgeCard
+            key={item.id}
+            item={item}
+            likeState={getLikeState(item)}
+            onRead={() => onRead(item.id)}
+            onToggleLike={() => onToggleLike(item)}
+          />
         ))}
       </div>
       <SectionFooter shownCount={visibleItems.length} totalCount={totalCount} />

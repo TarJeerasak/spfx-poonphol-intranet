@@ -8,6 +8,7 @@ import { CommunitySection } from '../CommunitySection/CommunitySection';
 import { useNewsFeed } from '../../hooks/useNewsFeed';
 import { useEventFeed } from '../../hooks/useEventFeed';
 import { useKnowledgeFeed } from '../../hooks/useKnowledgeFeed';
+import { useKnowledgeLikes } from '../../hooks/useKnowledgeLikes';
 import { useCommunityFeed } from '../../hooks/useCommunityFeed';
 import { useAnnouncementFeed } from '../../hooks/useAnnouncementFeed';
 import { useFavoriteAppsFeed } from '../../hooks/useFavoriteAppsFeed';
@@ -23,6 +24,7 @@ export function HomePage({ userDisplayName }: HomePageProps): React.ReactElement
   const newsFeed = useNewsFeed();
   const eventFeed = useEventFeed();
   const knowledgeFeed = useKnowledgeFeed();
+  const knowledgeLikes = useKnowledgeLikes(knowledgeFeed.items);
   const communityFeed = useCommunityFeed();
   const announcementFeed = useAnnouncementFeed();
   const favoriteAppsFeed = useFavoriteAppsFeed();
@@ -50,6 +52,8 @@ export function HomePage({ userDisplayName }: HomePageProps): React.ReactElement
               featuredItems={knowledgeFeed.featuredItems}
               totalCount={knowledgeFeed.totalCount}
               onRead={knowledgeFeed.recordRead}
+              getLikeState={knowledgeLikes.getLikeState}
+              onToggleLike={knowledgeLikes.toggleLike}
             />
           )}
         </div>
