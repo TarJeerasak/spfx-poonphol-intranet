@@ -11,6 +11,8 @@ import { MoreAppsPage } from './MoreApps/MoreAppsPage';
 import { TelephoneListPage } from './TelephoneList/TelephoneListPage';
 import { KnowledgePage } from './Knowledge/KnowledgePage';
 import { KnowledgeDetailPage } from './Knowledge/KnowledgeDetailPage';
+import { EventsPage } from './Events/EventsPage';
+import { EventDetailPage } from './Events/EventDetailPage';
 import { navLinks } from './data/mockContent';
 
 const GOOGLE_FONTS_URL =
@@ -27,6 +29,8 @@ export default function SpfxPoonpholIntranet({ hasTeamsContext, userDisplayName 
           <Route path="/" element={<HomePage userDisplayName={userDisplayName} />} />
           <Route path="/knowledge" element={<KnowledgePage />} />
           <Route path="/knowledge/:id" element={<KnowledgeDetailPage />} />
+          <Route path="/events" element={<EventsPage />} />
+          <Route path="/events/:id" element={<EventDetailPage />} />
           <Route path="/documents" element={<DocumentCenterPage />} />
           <Route path="/telephone-list" element={<TelephoneListPage />} />
           <Route path="/more-apps" element={<MoreAppsPage />} />

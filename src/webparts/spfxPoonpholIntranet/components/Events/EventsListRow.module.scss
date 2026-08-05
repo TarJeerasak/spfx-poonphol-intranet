@@ -1,0 +1,140 @@
+@import '../../../../shared/styles/tokens';
+@import '../../../../shared/styles/mixins';
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 16px;
+  border: 1px solid $color-border;
+  border-radius: $radius-sm;
+  transition: box-shadow $transition-fast, border-color $transition-fast;
+
+  &:hover {
+    border-color: #d8b66a;
+    box-shadow: $shadow-card;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+
+  @media (max-width: 720px) {
+    flex-wrap: wrap;
+  }
+}
+
+.dateBadge {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  font-family: $font-thai;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 32px;
+  color: $color-text-primary;
+  text-align: center;
+}
+
+.day,
+.month {
+  display: block;
+}
+
+.thumbnail {
+  flex-shrink: 0;
+  width: 138px;
+  height: 138px;
+  border-radius: 6px;
+  background-color: $color-border;
+  background-size: cover;
+  background-position: center;
+}
+
+.body {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 8px;
+}
+
+.textBlock {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.title {
+  margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-family: $font-thai;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 28px;
+  color: $color-text-primary;
+}
+
+.subtitle {
+  margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-family: $font-thai;
+  font-size: 16px;
+  line-height: 28px;
+  color: $color-text-secondary;
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.metaItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: $font-thai;
+  font-size: 12px;
+  letter-spacing: 0.12px;
+  color: $color-text-secondary;
+}
+
+.detailButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  height: 48px;
+  padding: 0 24px;
+  border: 1px solid #d8b66a;
+  border-radius: $radius-sm;
+  background: transparent;
+  color: #d8b66a;
+  font-family: $font-thai;
+  font-weight: 500;
+  font-size: 16px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color $transition-fast, color $transition-fast;
+  @include press-scale;
+
+  &:hover {
+    background: #d8b66a;
+    color: $color-surface;
+  }
+
+  @media (max-width: 720px) {
+    width: 100%;
+  }
+}

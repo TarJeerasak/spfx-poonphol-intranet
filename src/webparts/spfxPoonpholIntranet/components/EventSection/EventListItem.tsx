@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from '../../../../shared/components/Button/Button';
 import { EventItem } from '../../../../shared/types/content';
 import { EventJoinState } from '../../hooks/useEventJoins';
@@ -11,8 +12,14 @@ export interface EventListItemProps {
 }
 
 export function EventListItem({ item, joinState, onToggleJoin }: EventListItemProps): React.ReactElement {
+  const handleJoinClick = (event: React.MouseEvent): void => {
+    event.preventDefault();
+    event.stopPropagation();
+    onToggleJoin();
+  };
+
   return (
-    <div className={styles.row}>
+    <Link to={`/events/${item.id}`} className={styles.row}>
       <div className={styles.dateBadge}>
         <span className={styles.day}>{item.dateDay}</span>
         <span className={styles.month}>{item.dateMonthLabel}</span>
@@ -40,11 +47,11 @@ export function EventListItem({ item, joinState, onToggleJoin }: EventListItemPr
             ))}
             {joinState.overflowCount > 0 ? <span className={styles.overflow}>+{joinState.overflowCount}</span> : null}
           </div>
-          <Button variant="outline" onClick={onToggleJoin} disabled={joinState.isSaving} aria-pressed={joinState.isJoined}>
+          <Button variant="outline" onClick={handleJoinClick} disabled={joinState.isSaving} aria-pressed={joinState.isJoined}>
             {joinState.isJoined ? 'ยกเลิก' : 'เข้าร่วม'}
           </Button>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

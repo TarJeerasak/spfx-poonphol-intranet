@@ -29,7 +29,7 @@ export function EventSection({ feature, items, totalCount }: EventSectionProps):
         ))}
       </div>
       <div className={styles.divider} />
-      <SectionFooter shownCount={items.length} totalCount={totalCount} />
+      <SectionFooter shownCount={items.length} totalCount={totalCount} viewAllTo="/events" />
     </section>
   );
 }

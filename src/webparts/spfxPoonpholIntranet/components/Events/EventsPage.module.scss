@@ -1,7 +1,7 @@
 @import '../../../../shared/styles/tokens';
 @import '../../../../shared/styles/mixins';
 
-$knowledge-accent: #dbb66a;
+$events-accent: #d8b66a;
 
 .page {
   display: flex;
@@ -27,7 +27,7 @@ $knowledge-accent: #dbb66a;
   background-size: cover;
   background-position: center;
   overflow: hidden;
-  padding: 64px 0;
+  padding: 64px 0 104px;
 }
 
 .bannerFade {
@@ -43,9 +43,6 @@ $knowledge-accent: #dbb66a;
   max-width: $content-max-width;
   margin: 0 auto;
   padding: 0 $content-horizontal-padding;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
 }
 
 .bannerTitle {
@@ -55,8 +52,7 @@ $knowledge-accent: #dbb66a;
   font-size: clamp(32px, 4vw, 56px);
   line-height: 1.14;
   letter-spacing: -0.56px;
-  color: $color-text-primary;
-  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.9), 0 0 16px rgba(255, 255, 255, 0.7);
+  color: #163634;
   animation: fadeSlideUp 0.6s ease both;
 
   @media (prefers-reduced-motion: reduce) {
@@ -65,13 +61,12 @@ $knowledge-accent: #dbb66a;
 }
 
 .bannerSubtitle {
-  margin: 0;
+  margin: 10px 0 0;
   font-family: $font-thai;
   font-size: clamp(15px, 1.4vw, 18px);
   line-height: 1.65;
-  color: #3d4643;
-  max-width: 640px;
-  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.9), 0 0 16px rgba(255, 255, 255, 0.7);
+  color: #5f7a78;
+  max-width: 480px;
   animation: fadeSlideUp 0.6s ease both;
   animation-delay: 0.12s;
 
@@ -80,20 +75,85 @@ $knowledge-accent: #dbb66a;
   }
 }
 
-.searchForm {
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: $content-max-width;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 $content-horizontal-padding 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.filterBar {
   display: flex;
   align-items: center;
-  gap: 10px;
-  max-width: 640px;
-  animation: fadeSlideUp 0.6s ease both;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: -56px;
+  padding: 16px;
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  box-shadow: $shadow-section;
+  animation: fadeSlideUp 0.55s ease both;
   animation-delay: 0.2s;
 
   @media (prefers-reduced-motion: reduce) {
     animation: none;
   }
+}
+
+.categoryTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.categoryTab {
+  height: 48px;
+  padding: 4px 24px;
+  border: 1px solid $color-border;
+  border-radius: $radius-sm;
+  background: transparent;
+  color: $color-text-primary;
+  font-family: $font-thai;
+  font-weight: 500;
+  font-size: 14px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color $transition-fast, border-color $transition-fast;
+  @include press-scale;
+
+  &:hover {
+    border-color: $events-accent;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+.categoryTabActive {
+  border-color: $events-accent;
+  background: $events-accent;
+
+  &:hover {
+    border-color: $events-accent;
+  }
+}
+
+.searchForm {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 
   @media (max-width: 480px) {
     flex-wrap: wrap;
+    width: 100%;
   }
 }
 
@@ -101,17 +161,18 @@ $knowledge-accent: #dbb66a;
   display: flex;
   align-items: center;
   gap: 10px;
-  flex: 1 1 auto;
+  width: 350px;
+  max-width: 100%;
   height: 48px;
   padding: 0 18px;
-  border-radius: $radius-sm;
+  border-radius: $radius-md;
   border: 1px solid $color-stroke;
   background: $color-surface;
   transition: border-color $transition-fast, box-shadow $transition-fast;
 
   &:focus-within {
-    border-color: $color-nav-active;
-    box-shadow: 0 0 0 3px rgba(128, 182, 16, 0.15);
+    border-color: $events-accent;
+    box-shadow: 0 0 0 3px rgba(216, 182, 106, 0.2);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -136,7 +197,7 @@ $knowledge-accent: #dbb66a;
   color: $color-text-primary;
 
   &::placeholder {
-    color: #a1aca8;
+    color: #9ca3af;
   }
 }
 
@@ -153,7 +214,7 @@ $knowledge-accent: #dbb66a;
   background: transparent;
   color: $color-text-secondary;
   cursor: pointer;
-  transition: color 0.15s ease, background 0.15s ease, transform 0.15s ease;
+  transition: color $transition-fast, background $transition-fast, transform $transition-fast;
 
   &:hover {
     color: $color-text-primary;
@@ -162,7 +223,7 @@ $knowledge-accent: #dbb66a;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    transition: color 0.15s ease, background 0.15s ease;
+    transition: color $transition-fast, background $transition-fast;
 
     &:hover {
       transform: none;
@@ -176,7 +237,7 @@ $knowledge-accent: #dbb66a;
   padding: 0 24px;
   border: none;
   border-radius: $radius-sm;
-  background: $knowledge-accent;
+  background: $events-accent;
   color: $color-text-primary;
   font-family: $font-thai;
   font-weight: 500;
@@ -190,18 +251,6 @@ $knowledge-accent: #dbb66a;
   }
 }
 
-.container {
-  position: relative;
-  z-index: 1;
-  max-width: $content-max-width;
-  width: 100%;
-  margin: 0 auto;
-  padding: 40px $content-horizontal-padding 40px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
 .panel {
   display: flex;
   flex-direction: column;
@@ -212,7 +261,7 @@ $knowledge-accent: #dbb66a;
   border-radius: $radius-md;
   box-shadow: $shadow-section;
   animation: fadeSlideUp 0.55s ease both;
-  animation-delay: 0.2s;
+  animation-delay: 0.3s;
 
   @media (prefers-reduced-motion: reduce) {
     animation: none;
@@ -223,6 +272,7 @@ $knowledge-accent: #dbb66a;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
   gap: 16px;
 }
 
@@ -236,25 +286,32 @@ $knowledge-accent: #dbb66a;
   color: $color-text-primary;
 }
 
+.sortControl {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.sortLabel {
+  font-family: $font-thai;
+  font-weight: 500;
+  font-size: 14px;
+  color: $color-text-primary;
+  white-space: nowrap;
+}
+
 .panelDivider {
   height: 1px;
   background: $color-border;
 }
 
-.cardGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-
-  @media (max-width: 900px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  @media (max-width: 560px) {
-    grid-template-columns: 1fr;
-  }
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
+.stateMessage,
 .emptyMessage {
   margin: 0;
   padding: 32px 0;
@@ -276,10 +333,10 @@ $knowledge-accent: #dbb66a;
   gap: 4px;
   height: 48px;
   padding: 4px 24px;
-  border: 1px solid $knowledge-accent;
+  border: 1px solid $events-accent;
   border-radius: $radius-pill;
   background: transparent;
-  color: $knowledge-accent;
+  color: $events-accent;
   font-family: $font-thai;
   font-weight: 500;
   font-size: 14px;
@@ -288,7 +345,7 @@ $knowledge-accent: #dbb66a;
   @include press-scale;
 
   &:hover {
-    background: $knowledge-accent;
+    background: $events-accent;
     color: $color-text-primary;
   }
 }

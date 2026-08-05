@@ -52,8 +52,14 @@ export interface KnowledgeItem {
 
 export interface EventItem {
   id: string;
+  categoryId: string;
+  categoryLabel: string;
+  categoryColor: string;
+  categoryTextColor: string;
+  categoryBorderColor: string;
   dateDay: string;
   dateMonthLabel: string;
+  dateFromIso: string;
   title: string;
   subtitle: string;
   timeLabel: string;
