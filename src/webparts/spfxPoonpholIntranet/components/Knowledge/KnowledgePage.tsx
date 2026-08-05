@@ -13,7 +13,7 @@ const INITIAL_VISIBLE_COUNT = 8;
 const VISIBLE_COUNT_STEP = 8;
 
 export function KnowledgePage(): React.ReactElement {
-  const { items, featuredItems, categories, recordRead } = useKnowledgeFeed();
+  const { items, featuredItems, categories } = useKnowledgeFeed();
   const { getLikeState, toggleLike } = useKnowledgeLikes(items);
   const [categoryId, setCategoryId] = React.useState(ALL_CATEGORY_VALUE);
   const [visibleCount, setVisibleCount] = React.useState(INITIAL_VISIBLE_COUNT);
@@ -79,7 +79,7 @@ export function KnowledgePage(): React.ReactElement {
                   key={item.id}
                   item={item}
                   likeState={getLikeState(item)}
-                  onRead={() => recordRead(item.id)}
+                  to={`/knowledge/${item.id}`}
                   onToggleLike={() => toggleLike(item)}
                 />
               ))}
@@ -108,7 +108,7 @@ export function KnowledgePage(): React.ReactElement {
                   key={item.id}
                   item={item}
                   likeState={getLikeState(item)}
-                  onRead={() => recordRead(item.id)}
+                  to={`/knowledge/${item.id}`}
                   onToggleLike={() => toggleLike(item)}
                 />
               ))}

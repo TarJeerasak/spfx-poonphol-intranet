@@ -13,7 +13,6 @@ export interface KnowledgeSectionProps {
   items: KnowledgeItem[];
   featuredItems: KnowledgeItem[];
   totalCount: number;
-  onRead: (itemId: string) => void;
   getLikeState: (item: KnowledgeItem) => KnowledgeLikeState;
   onToggleLike: (item: KnowledgeItem) => void;
 }
@@ -23,7 +22,6 @@ export function KnowledgeSection({
   items,
   featuredItems,
   totalCount,
-  onRead,
   getLikeState,
   onToggleLike
 }: KnowledgeSectionProps): React.ReactElement {
@@ -55,7 +53,7 @@ export function KnowledgeSection({
             key={item.id}
             item={item}
             likeState={getLikeState(item)}
-            onRead={() => onRead(item.id)}
+            to={`/knowledge/${item.id}`}
             onToggleLike={() => onToggleLike(item)}
           />
         ))}

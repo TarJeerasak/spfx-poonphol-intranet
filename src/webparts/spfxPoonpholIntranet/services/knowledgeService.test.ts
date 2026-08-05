@@ -1,4 +1,5 @@
 import {
+  buildKnowledgeAttachments,
   buildKnowledgeCategories,
   mapToKnowledgeItem,
   resolveKnowledgeListTitle,
@@ -58,7 +59,10 @@ describe('mapToKnowledgeItem', () => {
       }),
       PublishDate: '2026-06-10T00:00:00',
       Category: 'Mindset',
-      Active: true
+      Active: true,
+      Description: 'A short guide on staying safe online.',
+      Created: '2026-01-05T00:00:00Z',
+      Modified: '2026-07-10T00:00:00Z'
     };
 
     expect(mapToKnowledgeItem(raw, { readCount: 12, likeCount: 3 })).toEqual({
@@ -66,9 +70,13 @@ describe('mapToKnowledgeItem', () => {
       categoryId: 'Mindset',
       tags: ['Keyword', 'Test'],
       title: 'ETHICS MATTERS EP.1-4',
+      description: 'A short guide on staying safe online.',
       imageUrl: 'https://fusionsoftcompany.sharepoint.com/sites/Project-PoonpholIntranetPortal/SiteAssets/km-5.jpg',
       readCount: 12,
-      likeCount: 3
+      likeCount: 3,
+      attachments: [],
+      createdAt: '2026-01-05T00:00:00Z',
+      modifiedAt: '2026-07-10T00:00:00Z'
     });
   });
 
@@ -100,10 +108,41 @@ describe('mapToKnowledgeItem', () => {
       categoryId: '',
       tags: [],
       title: 'No category yet',
+      description: '',
       imageUrl: '',
       readCount: 0,
-      likeCount: 0
+      likeCount: 0,
+      attachments: [],
+      createdAt: '',
+      modifiedAt: ''
     });
+  });
+});
+
+describe('buildKnowledgeAttachments', () => {
+  it('maps each attachment to a name, absolute url, and uppercase file type', () => {
+    expect(
+      buildKnowledgeAttachments([
+        { ServerRelativeUrl: '/sites/Project-PoonpholIntranetPortal/Lists/KnowledgeManagementList/Attachments/6/handbook.pdf' },
+        { ServerRelativeUrl: '/sites/Project-PoonpholIntranetPortal/Lists/KnowledgeManagementList/Attachments/6/quiz.docx' }
+      ])
+    ).toEqual([
+      {
+        name: 'handbook.pdf',
+        url: 'https://poonphol.sharepoint.com/sites/Project-PoonpholIntranetPortal/Lists/KnowledgeManagementList/Attachments/6/handbook.pdf',
+        fileType: 'PDF'
+      },
+      {
+        name: 'quiz.docx',
+        url: 'https://poonphol.sharepoint.com/sites/Project-PoonpholIntranetPortal/Lists/KnowledgeManagementList/Attachments/6/quiz.docx',
+        fileType: 'DOCX'
+      }
+    ]);
+  });
+
+  it('returns an empty array when there are no attachments', () => {
+    expect(buildKnowledgeAttachments(undefined)).toEqual([]);
+    expect(buildKnowledgeAttachments([])).toEqual([]);
   });
 });
 
@@ -122,9 +161,9 @@ describe('resolveKnowledgeListTitle', () => {
 describe('buildKnowledgeCategories', () => {
   it('prefixes an "all" tab followed by the distinct categories found in the items', () => {
     const items = [
-      { id: '1', categoryId: 'Mindset', tags: [], title: '', imageUrl: '', readCount: 0, likeCount: 0 },
-      { id: '2', categoryId: 'Learning', tags: [], title: '', imageUrl: '', readCount: 0, likeCount: 0 },
-      { id: '3', categoryId: 'Mindset', tags: [], title: '', imageUrl: '', readCount: 0, likeCount: 0 }
+      { id: '1', categoryId: 'Mindset', tags: [], title: '', description: '', imageUrl: '', readCount: 0, likeCount: 0, attachments: [], createdAt: '', modifiedAt: '' },
+      { id: '2', categoryId: 'Learning', tags: [], title: '', description: '', imageUrl: '', readCount: 0, likeCount: 0, attachments: [], createdAt: '', modifiedAt: '' },
+      { id: '3', categoryId: 'Mindset', tags: [], title: '', description: '', imageUrl: '', readCount: 0, likeCount: 0, attachments: [], createdAt: '', modifiedAt: '' }
     ];
 
     expect(buildKnowledgeCategories(items)).toEqual([
@@ -135,7 +174,9 @@ describe('buildKnowledgeCategories', () => {
   });
 
   it('ignores items without a category', () => {
-    const items = [{ id: '1', categoryId: '', tags: [], title: '', imageUrl: '', readCount: 0, likeCount: 0 }];
+    const items = [
+      { id: '1', categoryId: '', tags: [], title: '', description: '', imageUrl: '', readCount: 0, likeCount: 0, attachments: [], createdAt: '', modifiedAt: '' }
+    ];
 
     expect(buildKnowledgeCategories(items)).toEqual([{ id: 'all', label: 'ดูทั้งหมด' }]);
   });

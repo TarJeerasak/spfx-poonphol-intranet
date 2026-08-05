@@ -51,7 +51,6 @@ export function HomePage({ userDisplayName }: HomePageProps): React.ReactElement
               items={knowledgeFeed.items}
               featuredItems={knowledgeFeed.featuredItems}
               totalCount={knowledgeFeed.totalCount}
-              onRead={knowledgeFeed.recordRead}
               getLikeState={knowledgeLikes.getLikeState}
               onToggleLike={knowledgeLikes.toggleLike}
             />

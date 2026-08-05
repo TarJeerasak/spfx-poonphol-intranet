@@ -1,10 +1,11 @@
 import { spApi } from '../../../shared/services/api';
 import { SiteURL } from '../../../shared/config/site';
-import { KnowledgeCategory, KnowledgeItem } from '../../../shared/types/content';
+import { KnowledgeAttachment, KnowledgeCategory, KnowledgeItem } from '../../../shared/types/content';
 import { parseMultiChoiceValue } from '../../../shared/utils/parseMultiChoiceValue';
 import { parseThumbnailImage } from '../../../shared/utils/parseThumbnailImage';
 import { IAttachmentFile, resolveListItemImageUrl } from '../../../shared/utils/resolveListItemImageUrl';
 import { selectClosestByDate } from '../../../shared/utils/selectClosestByDate';
+import { SITE_ORIGIN } from '../../../shared/utils/siteOrigin';
 import { fetchKnowledgeCountMap, KnowledgeCounts } from './knowledgeCountService';
 
 const KNOWLEDGE_LIST_TITLE = 'KnowledgeManagementList';
@@ -24,22 +25,28 @@ export function resolveKnowledgeListTitle(siteUrl: string): string {
 const KNOWLEDGE_FIELDS = {
   id: 'Id',
   title: 'Title',
+  description: 'Description',
   tag: 'Tag',
   thumbnailImage: 'ThumbnailImage',
   publishDate: 'PublishDate',
   category: 'Category',
-  active: 'Active'
+  active: 'Active',
+  created: 'Created',
+  modified: 'Modified'
 } as const;
 
 interface ISPKnowledgeListItem {
   Id: number;
   Title: string;
+  Description?: string;
   Tag?: string[] | string;
   ThumbnailImage?: string;
   AttachmentFiles?: IAttachmentFile[];
   PublishDate?: string;
   Category?: string;
   Active: boolean;
+  Created?: string;
+  Modified?: string;
 }
 
 export interface KnowledgeFeedResult {
@@ -47,6 +54,19 @@ export interface KnowledgeFeedResult {
   featuredItems: KnowledgeItem[];
   categories: KnowledgeCategory[];
   totalCount: number;
+}
+
+export function buildKnowledgeAttachments(attachmentFiles: IAttachmentFile[] | undefined): KnowledgeAttachment[] {
+  if (!attachmentFiles) {
+    return [];
+  }
+
+  return attachmentFiles.map(file => {
+    const name = file.ServerRelativeUrl.split('/').pop() ?? file.ServerRelativeUrl;
+    const fileType = name.split('.').pop()?.toUpperCase() ?? '';
+
+    return { name, url: `${SITE_ORIGIN}${file.ServerRelativeUrl}`, fileType };
+  });
 }
 
 // Read/like counts live in the History_KM_Count list (keyed by KM_ID), not on this list -
@@ -57,9 +77,13 @@ export function mapToKnowledgeItem(raw: ISPKnowledgeListItem, counts?: Knowledge
     categoryId: raw.Category ?? '',
     tags: parseMultiChoiceValue(raw.Tag),
     title: raw.Title,
+    description: raw.Description ?? '',
     imageUrl: resolveListItemImageUrl(parseThumbnailImage(raw.ThumbnailImage), raw.AttachmentFiles),
     readCount: counts?.readCount ?? 0,
-    likeCount: counts?.likeCount ?? 0
+    likeCount: counts?.likeCount ?? 0,
+    attachments: buildKnowledgeAttachments(raw.AttachmentFiles),
+    createdAt: raw.Created ?? '',
+    modifiedAt: raw.Modified ?? ''
   };
 }
 
@@ -88,12 +112,15 @@ export async function fetchKnowledgeFeed(): Promise<KnowledgeFeedResult> {
         $select: [
           KNOWLEDGE_FIELDS.id,
           KNOWLEDGE_FIELDS.title,
+          KNOWLEDGE_FIELDS.description,
           KNOWLEDGE_FIELDS.tag,
           KNOWLEDGE_FIELDS.thumbnailImage,
           'AttachmentFiles/ServerRelativeUrl',
           KNOWLEDGE_FIELDS.publishDate,
           KNOWLEDGE_FIELDS.category,
-          KNOWLEDGE_FIELDS.active
+          KNOWLEDGE_FIELDS.active,
+          KNOWLEDGE_FIELDS.created,
+          KNOWLEDGE_FIELDS.modified
         ].join(','),
         $expand: 'AttachmentFiles',
         $filter: `${KNOWLEDGE_FIELDS.active} eq 1`,

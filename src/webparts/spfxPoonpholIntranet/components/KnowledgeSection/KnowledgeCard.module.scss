@@ -13,6 +13,8 @@
   border-radius: $radius-lg;
   box-shadow: $shadow-card;
   min-width: 0;
+  color: inherit;
+  text-decoration: none;
   cursor: pointer;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 

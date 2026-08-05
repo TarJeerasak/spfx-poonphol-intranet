@@ -30,14 +30,24 @@ export interface KnowledgeCategory {
   label: string;
 }
 
+export interface KnowledgeAttachment {
+  name: string;
+  url: string;
+  fileType: string;
+}
+
 export interface KnowledgeItem {
   id: string;
   categoryId: string;
   tags: string[];
   title: string;
+  description: string;
   imageUrl: string;
   readCount: number;
   likeCount: number;
+  attachments: KnowledgeAttachment[];
+  createdAt: string;
+  modifiedAt: string;
 }
 
 export interface EventItem {

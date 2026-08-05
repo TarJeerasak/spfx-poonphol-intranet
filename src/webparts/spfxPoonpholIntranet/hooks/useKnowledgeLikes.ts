@@ -15,6 +15,10 @@ export interface UseKnowledgeLikesResult {
   toggleLike: (item: KnowledgeItem) => void;
 }
 
+// Used to mark an item as liked in local state before the create request returns its real
+// History_KM_Like item id - only ever checked for presence via the `in` operator, never read.
+const PENDING_HISTORY_ITEM_ID = -1;
+
 export function useKnowledgeLikes(items: KnowledgeItem[]): UseKnowledgeLikesResult {
   const [currentUserEmail, setCurrentUserEmail] = useState<string | undefined>(undefined);
   const [likedItemIdByKmId, setLikedItemIdByKmId] = useState<Record<string, number>>({});
@@ -74,30 +78,49 @@ export function useKnowledgeLikes(items: KnowledgeItem[]): UseKnowledgeLikesResu
     };
   }
 
+  // Optimistic: the heart and count flip immediately on click, before the SharePoint round trip
+  // resolves - the write happens in the background and rolls the UI back if it fails.
   async function toggleLike(item: KnowledgeItem): Promise<void> {
     if (!currentUserEmail || savingKmIds[item.id]) {
       return;
     }
 
-    const isLiked = item.id in likedItemIdByKmId;
-    const currentCount = likeCountByKmId[item.id] ?? item.likeCount;
+    const wasLiked = item.id in likedItemIdByKmId;
+    const previousHistoryItemId = likedItemIdByKmId[item.id];
+    const previousCount = likeCountByKmId[item.id] ?? item.likeCount;
+    const nextCount = wasLiked ? Math.max(0, previousCount - 1) : previousCount + 1;
 
     setSavingKmIds(current => ({ ...current, [item.id]: true }));
+    setLikedItemIdByKmId(current => {
+      const next = { ...current };
+      if (wasLiked) {
+        delete next[item.id];
+      } else {
+        next[item.id] = PENDING_HISTORY_ITEM_ID;
+      }
+      return next;
+    });
+    setLikeCountByKmId(current => ({ ...current, [item.id]: nextCount }));
 
     try {
-      if (isLiked) {
-        await unlikeKnowledgeItem(likedItemIdByKmId[item.id], item.id, currentCount);
-        setLikedItemIdByKmId(current => {
-          const next = { ...current };
-          delete next[item.id];
-          return next;
-        });
-        setLikeCountByKmId(current => ({ ...current, [item.id]: Math.max(0, currentCount - 1) }));
+      if (wasLiked) {
+        await unlikeKnowledgeItem(previousHistoryItemId, item.id, previousCount);
       } else {
-        const historyItemId = await likeKnowledgeItem(item.id, currentUserEmail, currentCount);
+        const historyItemId = await likeKnowledgeItem(item.id, currentUserEmail, previousCount);
         setLikedItemIdByKmId(current => ({ ...current, [item.id]: historyItemId }));
-        setLikeCountByKmId(current => ({ ...current, [item.id]: currentCount + 1 }));
       }
+    } catch (error) {
+      setLikedItemIdByKmId(current => {
+        const next = { ...current };
+        if (wasLiked) {
+          next[item.id] = previousHistoryItemId;
+        } else {
+          delete next[item.id];
+        }
+        return next;
+      });
+      setLikeCountByKmId(current => ({ ...current, [item.id]: previousCount }));
+      throw error;
     } finally {
       setSavingKmIds(current => {
         const next = { ...current };

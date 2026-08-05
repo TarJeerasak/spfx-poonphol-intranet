@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { Tag } from '../../../../shared/components/Tag/Tag';
 import { Icon } from '../../../../shared/components/Icon/Icon';
 import { KnowledgeItem } from '../../../../shared/types/content';
@@ -9,18 +10,11 @@ import styles from './KnowledgeGridCard.module.scss';
 export interface KnowledgeGridCardProps {
   item: KnowledgeItem;
   likeState: KnowledgeLikeState;
-  onRead: () => void;
+  to: string;
   onToggleLike: () => void;
 }
 
-export function KnowledgeGridCard({ item, likeState, onRead, onToggleLike }: KnowledgeGridCardProps): React.ReactElement {
-  const handleKeyDown = (event: React.KeyboardEvent): void => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      onRead();
-    }
-  };
-
+export function KnowledgeGridCard({ item, likeState, to, onToggleLike }: KnowledgeGridCardProps): React.ReactElement {
   const handleLikeClick = (event: React.MouseEvent): void => {
     event.preventDefault();
     event.stopPropagation();
@@ -28,7 +22,7 @@ export function KnowledgeGridCard({ item, likeState, onRead, onToggleLike }: Kno
   };
 
   return (
-    <div className={styles.card} role="button" tabIndex={0} onClick={onRead} onKeyDown={handleKeyDown}>
+    <Link to={to} className={styles.card}>
       <div className={styles.thumbnail}>
         <div className={styles.thumbnailImage} style={{ backgroundImage: `url(${item.imageUrl})` }} />
       </div>
@@ -51,6 +45,6 @@ export function KnowledgeGridCard({ item, likeState, onRead, onToggleLike }: Kno
           <p className={styles.readCountLabel}>{formatReadCountLabel(item.readCount)}</p>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
