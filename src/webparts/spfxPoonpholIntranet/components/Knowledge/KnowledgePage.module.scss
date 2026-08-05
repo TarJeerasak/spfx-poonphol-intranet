@@ -1,6 +1,8 @@
 @import '../../../../shared/styles/tokens';
 @import '../../../../shared/styles/mixins';
 
+$knowledge-accent: #dbb66a;
+
 .page {
   display: flex;
   flex-direction: column;
@@ -136,13 +138,43 @@
   }
 }
 
+.searchClearButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: $color-text-secondary;
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease, transform 0.15s ease;
+
+  &:hover {
+    color: $color-text-primary;
+    background: $color-border;
+    transform: scale(1.1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: color 0.15s ease, background 0.15s ease;
+
+    &:hover {
+      transform: none;
+    }
+  }
+}
+
 .searchButton {
   flex-shrink: 0;
   height: 48px;
   padding: 0 24px;
   border: none;
   border-radius: $radius-sm;
-  background: $color-accent;
+  background: $knowledge-accent;
   color: $color-text-primary;
   font-family: $font-thai;
   font-weight: 500;
@@ -242,10 +274,10 @@
   gap: 4px;
   height: 48px;
   padding: 4px 24px;
-  border: 1px solid $color-accent;
+  border: 1px solid $knowledge-accent;
   border-radius: $radius-pill;
   background: transparent;
-  color: $color-accent;
+  color: $knowledge-accent;
   font-family: $font-thai;
   font-weight: 500;
   font-size: 14px;
@@ -254,7 +286,7 @@
   @include press-scale;
 
   &:hover {
-    background: $color-accent;
+    background: $knowledge-accent;
     color: $color-text-primary;
   }
 }

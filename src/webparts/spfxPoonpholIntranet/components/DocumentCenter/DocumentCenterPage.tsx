@@ -116,7 +116,7 @@ export function DocumentCenterPage(): React.ReactElement {
                     <input
                       type="text"
                       className={styles.searchInput}
-                      placeholder="search"
+                      placeholder="ค้นหา"
                       value={searchDraft}
                       onChange={event => setSearchDraft(event.target.value)}
                       aria-label="ค้นหาเอกสาร"
@@ -136,7 +136,7 @@ export function DocumentCenterPage(): React.ReactElement {
                     )}
                   </span>
                   <button type="submit" className={styles.searchButton}>
-                    Search
+                    ค้นหา
                   </button>
                 </form>
               </div>

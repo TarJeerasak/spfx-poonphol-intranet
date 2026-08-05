@@ -111,6 +111,27 @@ $directory-accent: #d8b66a;
   }
 }
 
+.clearButton {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  border-radius: $radius-pill;
+  background: $color-border;
+  color: $color-text-secondary;
+  cursor: pointer;
+  @include press-scale;
+
+  &:hover {
+    background: $directory-accent;
+    color: $color-surface;
+  }
+}
+
 .searchButton {
   flex-shrink: 0;
   height: 40px;
@@ -118,7 +139,7 @@ $directory-accent: #d8b66a;
   border: 1px solid $color-border;
   border-radius: $radius-sm;
   background: $directory-accent;
-  color: $color-surface;
+  color: $color-text-primary;
   font-family: $font-thai;
   font-weight: 500;
   font-size: 14px;

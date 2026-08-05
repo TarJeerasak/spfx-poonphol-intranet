@@ -147,8 +147,6 @@ export interface CompanyPhoneEntry {
   branch: string;
   phoneNumber: string;
   extension: string;
-  location: string;
-  note: string;
 }
 
 export interface InternalExtensionEntry {
@@ -157,5 +155,4 @@ export interface InternalExtensionEntry {
   department: string;
   location: string;
   deskNumber: string;
-  phoneNumber: string;
 }

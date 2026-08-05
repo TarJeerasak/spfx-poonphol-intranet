@@ -58,7 +58,7 @@ export function KnowledgeSection({
           />
         ))}
       </div>
-      <SectionFooter shownCount={visibleItems.length} totalCount={totalCount} />
+      <SectionFooter shownCount={visibleItems.length} totalCount={totalCount} viewAllTo="/knowledge" />
     </section>
   );
 }

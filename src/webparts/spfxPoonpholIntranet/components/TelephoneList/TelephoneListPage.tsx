@@ -7,7 +7,9 @@ import bannerImageUrl from '../../assets/telephone-list/hero-banner.jpg';
 import { DirectoryCard, DirectoryCellText, DirectoryCellTwoLine, DirectoryColumn } from './DirectoryCard';
 import styles from './TelephoneListPage.module.scss';
 
-const ALL_OPTION_LABEL = 'ทั้งหมด';
+const ALL_COMPANIES_OPTION_LABEL = 'ทุกบริษัท';
+const ALL_DEPARTMENTS_OPTION_LABEL = 'ทุกแผนก';
+const ALL_LOCATIONS_OPTION_LABEL = 'ทุกสถานที่';
 
 const UTF8_BOM = String.fromCharCode(0xfeff);
 
@@ -47,6 +49,8 @@ const EXTENSION_GRID_COLUMNS = 'minmax(220px, 1.4fr) minmax(160px, 1fr) minmax(2
 
 export function TelephoneListPage(): React.ReactElement {
   const {
+    isLoading,
+    error,
     companyOptions,
     companyFilters,
     companyEntries,
@@ -72,9 +76,44 @@ export function TelephoneListPage(): React.ReactElement {
   const [companySearchDraft, setCompanySearchDraft] = React.useState(companyFilters.search);
   const [extensionSearchDraft, setExtensionSearchDraft] = React.useState(extensionFilters.search);
 
-  const companyFilterOptions = [{ value: 'All', label: ALL_OPTION_LABEL }, ...companyOptions.map(value => ({ value, label: value }))];
-  const departmentFilterOptions = [{ value: 'All', label: ALL_OPTION_LABEL }, ...departmentOptions.map(value => ({ value, label: value }))];
-  const locationFilterOptions = [{ value: 'All', label: ALL_OPTION_LABEL }, ...locationOptions.map(value => ({ value, label: value }))];
+  const clearCompanySearch = (): void => {
+    setCompanySearchDraft('');
+    setCompanySearch('');
+  };
+
+  const clearExtensionSearch = (): void => {
+    setExtensionSearchDraft('');
+    setExtensionSearch('');
+  };
+
+  const companyFilterOptions = [
+    { value: 'All', label: ALL_COMPANIES_OPTION_LABEL },
+    ...companyOptions.map(value => ({ value, label: value }))
+  ];
+  const departmentFilterOptions = [
+    { value: 'All', label: ALL_DEPARTMENTS_OPTION_LABEL },
+    ...departmentOptions.map(value => ({ value, label: value }))
+  ];
+  const locationFilterOptions = [
+    { value: 'All', label: ALL_LOCATIONS_OPTION_LABEL },
+    ...locationOptions.map(value => ({ value, label: value }))
+  ];
+
+  if (isLoading) {
+    return (
+      <div className={styles.page}>
+        <p className={styles.stateMessage}>กำลังโหลด...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={styles.page}>
+        <p className={styles.stateMessage}>ไม่สามารถโหลดข้อมูลเบอร์โทรศัพท์ได้ กรุณาลองใหม่อีกครั้ง</p>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.page}>
@@ -95,6 +134,7 @@ export function TelephoneListPage(): React.ReactElement {
           searchValue={companySearchDraft}
           onSearchChange={setCompanySearchDraft}
           onSearchSubmit={() => setCompanySearch(companySearchDraft)}
+          onSearchClear={clearCompanySearch}
           onExport={() => downloadCsv(buildCompanyDirectoryCsv(companyEntries), 'company-phone-directory.csv')}
           gridTemplateColumns={COMPANY_GRID_COLUMNS}
           columns={COMPANY_COLUMNS}
@@ -115,11 +155,12 @@ export function TelephoneListPage(): React.ReactElement {
               <Dropdown label="กรองตามสถานที่" value={extensionFilters.location} options={locationFilterOptions} onChange={setExtensionLocation} />
             </>
           }
-          searchPlaceholder="ค้นหาเบอร์"
+          searchPlaceholder="ค้นหา"
           searchAriaLabel="ค้นหาเบอร์โทรศัพท์ภายใน"
           searchValue={extensionSearchDraft}
           onSearchChange={setExtensionSearchDraft}
           onSearchSubmit={() => setExtensionSearch(extensionSearchDraft)}
+          onSearchClear={clearExtensionSearch}
           onExport={() => downloadCsv(buildExtensionDirectoryCsv(extensionEntries), 'internal-extension-directory.csv')}
           gridTemplateColumns={EXTENSION_GRID_COLUMNS}
           columns={EXTENSION_COLUMNS}

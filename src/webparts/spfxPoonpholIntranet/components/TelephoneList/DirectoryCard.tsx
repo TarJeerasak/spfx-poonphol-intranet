@@ -35,6 +35,7 @@ export interface DirectoryCardProps<T> {
   searchValue: string;
   onSearchChange: (value: string) => void;
   onSearchSubmit: () => void;
+  onSearchClear: () => void;
   onExport: () => void;
   gridTemplateColumns: string;
   columns: Array<DirectoryColumn<T>>;
@@ -55,6 +56,7 @@ export function DirectoryCard<T>({
   searchValue,
   onSearchChange,
   onSearchSubmit,
+  onSearchClear,
   onExport,
   gridTemplateColumns,
   columns,
@@ -95,6 +97,16 @@ export function DirectoryCard<T>({
               onChange={event => onSearchChange(event.target.value)}
               aria-label={searchAriaLabel}
             />
+            {searchValue.length > 0 && (
+              <button
+                type="button"
+                className={styles.clearButton}
+                onClick={onSearchClear}
+                aria-label="ล้างคำค้นหา"
+              >
+                <Icon name="close" size={14} />
+              </button>
+            )}
           </span>
           <button type="submit" className={styles.searchButton}>
             ค้นหา

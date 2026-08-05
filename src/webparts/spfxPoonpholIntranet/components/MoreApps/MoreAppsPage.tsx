@@ -61,6 +61,11 @@ export function MoreAppsPage(): React.ReactElement {
     setSearch(searchDraft);
   };
 
+  const handleSearchClear = (): void => {
+    setSearchDraft('');
+    setSearch('');
+  };
+
   return (
     <div className={styles.page}>
       <section className={styles.hero} style={{ backgroundImage: `url(${heroIllustration})` }}>
@@ -97,14 +102,19 @@ export function MoreAppsPage(): React.ReactElement {
                 <input
                   type="text"
                   className={styles.searchInput}
-                  placeholder="search"
+                  placeholder="ค้นหา"
                   value={searchDraft}
                   onChange={event => setSearchDraft(event.target.value)}
                   aria-label="ค้นหาแอปพลิเคชัน"
                 />
+                {searchDraft.length > 0 && (
+                  <button type="button" className={styles.searchClearButton} onClick={handleSearchClear} aria-label="ล้างคำค้นหา">
+                    <Icon name="close" size={14} />
+                  </button>
+                )}
               </span>
               <button type="submit" className={styles.searchButton}>
-                Search
+                ค้นหา
               </button>
             </form>
           </div>

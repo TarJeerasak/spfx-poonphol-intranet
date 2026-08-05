@@ -30,7 +30,7 @@ export function Hero({ userDisplayName, backgroundUrl, favoriteApps, announcemen
           </div>
           <div className={styles.searchBox}>
             <img src={searchIcon} alt="" width={18} height={18} />
-            <span>search</span>
+            <span>ค้นหา</span>
           </div>
           <div className={styles.quickApps}>
             {favoriteApps.map(app => (

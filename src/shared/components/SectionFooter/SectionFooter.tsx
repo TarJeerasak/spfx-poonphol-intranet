@@ -1,14 +1,23 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { Icon } from '../Icon/Icon';
 import styles from './SectionFooter.module.scss';
 
 export interface SectionFooterProps {
   shownCount?: number;
   totalCount?: number;
+  viewAllTo?: string;
   viewAllHref?: string;
 }
 
-export function SectionFooter({ shownCount, totalCount, viewAllHref = '#' }: SectionFooterProps): React.ReactElement {
+export function SectionFooter({ shownCount, totalCount, viewAllTo, viewAllHref = '#' }: SectionFooterProps): React.ReactElement {
+  const label = (
+    <>
+      ดูทั้งหมด
+      <Icon name="arrowRight" size={16} />
+    </>
+  );
+
   return (
     <div className={styles.footer}>
       {shownCount !== undefined && totalCount !== undefined ? (
@@ -18,10 +27,15 @@ export function SectionFooter({ shownCount, totalCount, viewAllHref = '#' }: Sec
       ) : (
         <span />
       )}
-      <a href={viewAllHref} className={styles.viewAll}>
-        ดูทั้งหมด
-        <Icon name="arrowRight" size={16} />
-      </a>
+      {viewAllTo ? (
+        <Link to={viewAllTo} className={styles.viewAll}>
+          {label}
+        </Link>
+      ) : (
+        <a href={viewAllHref} className={styles.viewAll}>
+          {label}
+        </a>
+      )}
     </div>
   );
 }

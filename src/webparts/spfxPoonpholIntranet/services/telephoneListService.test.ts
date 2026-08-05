@@ -9,6 +9,8 @@ import {
   getCompanyOptions,
   getDepartmentOptions,
   getLocationOptions,
+  mapToCompanyPhoneEntry,
+  mapToInternalExtensionEntry,
   paginateEntries
 } from './telephoneListService';
 
@@ -19,8 +21,6 @@ function buildCompanyEntry(overrides: Partial<CompanyPhoneEntry>): CompanyPhoneE
     branch: '',
     phoneNumber: '02 233 3990',
     extension: '-',
-    location: 'อาคาร A ชั้น 1',
-    note: '-',
     ...overrides
   };
 }
@@ -32,15 +32,80 @@ function buildExtensionEntry(overrides: Partial<InternalExtensionEntry>): Intern
     department: 'ฝ่ายจัดการ',
     location: 'ชั้น 18',
     deskNumber: '2100',
-    phoneNumber: '02-001-1000',
     ...overrides
   };
 }
 
+describe('mapToCompanyPhoneEntry', () => {
+  it('maps a Master_CompanyTelephone item to the CompanyPhoneEntry shape used by the UI', () => {
+    const raw = {
+      Id: 4,
+      CompanyName: 'บริษัท สิทธินันท์ จำกัด',
+      ShortDescription: 'สิทธินันท์ ปทุมธานี',
+      TelephoneNumber: '02 598 3300-9',
+      ExtensionNumber: '-',
+      Active: true
+    };
+
+    expect(mapToCompanyPhoneEntry(raw)).toEqual({
+      id: '4',
+      company: 'บริษัท สิทธินันท์ จำกัด',
+      branch: 'สิทธินันท์ ปทุมธานี',
+      phoneNumber: '02 598 3300-9',
+      extension: '-'
+    });
+  });
+
+  it('falls back to empty strings when optional fields are missing', () => {
+    const raw = { Id: 1, Active: true };
+
+    expect(mapToCompanyPhoneEntry(raw)).toEqual({
+      id: '1',
+      company: '',
+      branch: '',
+      phoneNumber: '',
+      extension: ''
+    });
+  });
+});
+
+describe('mapToInternalExtensionEntry', () => {
+  it('maps a Master_InternalTelephone item to the InternalExtensionEntry shape used by the UI', () => {
+    const raw = {
+      Id: 1,
+      ContactName: 'คุณสมจิตต์ (พี่ส้ม)',
+      DepartmentName: 'ฝ่ายจัดการ',
+      LocationName: 'ชั้น 18',
+      ExtensionNumber: '2100',
+      Active: true
+    };
+
+    expect(mapToInternalExtensionEntry(raw)).toEqual({
+      id: '1',
+      contactName: 'คุณสมจิตต์ (พี่ส้ม)',
+      department: 'ฝ่ายจัดการ',
+      location: 'ชั้น 18',
+      deskNumber: '2100'
+    });
+  });
+
+  it('falls back to empty strings when optional fields are missing', () => {
+    const raw = { Id: 9, Active: true };
+
+    expect(mapToInternalExtensionEntry(raw)).toEqual({
+      id: '9',
+      contactName: '',
+      department: '',
+      location: '',
+      deskNumber: ''
+    });
+  });
+});
+
 describe('filterCompanyDirectory', () => {
   const entries = [
-    buildCompanyEntry({ id: 'cp-1', company: 'บริษัท พูลผล จำกัด', phoneNumber: '02 233 3990', note: 'เริ่มทำงานตั้งแต่เวลา 08:00 น.' }),
-    buildCompanyEntry({ id: 'cp-2', company: 'บริษัท สิทธินันท์ จำกัด', branch: 'สิทธินันท์ ปทุมธานี', phoneNumber: '02 598 3300-9', note: '-' })
+    buildCompanyEntry({ id: 'cp-1', company: 'บริษัท พูลผล จำกัด', phoneNumber: '02 233 3990' }),
+    buildCompanyEntry({ id: 'cp-2', company: 'บริษัท สิทธินันท์ จำกัด', branch: 'สิทธินันท์ ปทุมธานี', phoneNumber: '02 598 3300-9' })
   ];
 
   it('returns all entries when filters are left at defaults', () => {
@@ -55,11 +120,6 @@ describe('filterCompanyDirectory', () => {
   it('matches search text against the phone number', () => {
     const result = filterCompanyDirectory(entries, { ...DEFAULT_COMPANY_DIRECTORY_FILTERS, search: '598 3300' });
     expect(result.map(entry => entry.id)).toEqual(['cp-2']);
-  });
-
-  it('matches search text against the note', () => {
-    const result = filterCompanyDirectory(entries, { ...DEFAULT_COMPANY_DIRECTORY_FILTERS, search: '08:00' });
-    expect(result.map(entry => entry.id)).toEqual(['cp-1']);
   });
 
   it('filters by company', () => {
@@ -159,7 +219,7 @@ describe('buildCompanyDirectoryCsv', () => {
     const lines = csv.split('\r\n');
 
     expect(lines).toHaveLength(2);
-    expect(lines[0]).toEqual('"บริษัท","สาขา","เบอร์โทรศัพท์","ต่อ","สถานที่","หมายเหตุ"');
+    expect(lines[0]).toEqual('"บริษัท","สาขา","เบอร์โทรศัพท์","ต่อ"');
     expect(lines[1]).toContain('"บริษัท ""พูลผล"" จำกัด"');
     expect(lines[1]).toContain('"02 233 3990"');
   });
@@ -171,7 +231,7 @@ describe('buildExtensionDirectoryCsv', () => {
     const lines = csv.split('\r\n');
 
     expect(lines).toHaveLength(2);
-    expect(lines[0]).toEqual('"แผนก","สถานที่","เบอร์ภายในหรือโต๊ะทำงาน","เบอร์โทรศัพท์"');
+    expect(lines[0]).toEqual('"แผนก","สถานที่","เบอร์ภายในหรือโต๊ะทำงาน"');
     expect(lines[1]).toContain('"ดาริน (หยุน)"');
     expect(lines[1]).toContain('"2204"');
   });

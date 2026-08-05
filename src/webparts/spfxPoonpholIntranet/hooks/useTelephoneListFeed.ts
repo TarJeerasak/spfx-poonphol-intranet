@@ -1,12 +1,12 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { CompanyPhoneEntry, InternalExtensionEntry } from '../../../shared/types/content';
 import {
-  COMPANY_PHONE_DIRECTORY,
   CompanyDirectoryFilters,
   DEFAULT_COMPANY_DIRECTORY_FILTERS,
   DEFAULT_EXTENSION_DIRECTORY_FILTERS,
   ExtensionDirectoryFilters,
-  INTERNAL_EXTENSION_DIRECTORY,
+  fetchCompanyPhoneDirectory,
+  fetchInternalExtensionDirectory,
   filterCompanyDirectory,
   filterExtensionDirectory,
   getCompanyOptions,
@@ -18,6 +18,9 @@ import {
 const PAGE_SIZE = 10;
 
 export interface UseTelephoneListFeedResult {
+  isLoading: boolean;
+  error: Error | undefined;
+
   companyOptions: string[];
   companyFilters: CompanyDirectoryFilters;
   companyEntries: CompanyPhoneEntry[];
@@ -42,27 +45,57 @@ export interface UseTelephoneListFeedResult {
 }
 
 export function useTelephoneListFeed(): UseTelephoneListFeedResult {
-  const companyOptions = useMemo(() => getCompanyOptions(COMPANY_PHONE_DIRECTORY), []);
+  const [companyDirectory, setCompanyDirectory] = useState<CompanyPhoneEntry[]>([]);
+  const [extensionDirectory, setExtensionDirectory] = useState<InternalExtensionEntry[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<Error | undefined>(undefined);
+
+  useEffect(() => {
+    let isCancelled = false;
+
+    Promise.all([fetchCompanyPhoneDirectory(), fetchInternalExtensionDirectory()])
+      .then(([companyEntries, extensionEntries]) => {
+        if (isCancelled) {
+          return;
+        }
+        setCompanyDirectory(companyEntries);
+        setExtensionDirectory(extensionEntries);
+        setIsLoading(false);
+      })
+      .catch((fetchError: Error) => {
+        if (isCancelled) {
+          return;
+        }
+        setError(fetchError);
+        setIsLoading(false);
+      });
+
+    return () => {
+      isCancelled = true;
+    };
+  }, []);
+
+  const companyOptions = useMemo(() => getCompanyOptions(companyDirectory), [companyDirectory]);
   const [companyFilters, setCompanyFilters] = useState<CompanyDirectoryFilters>(DEFAULT_COMPANY_DIRECTORY_FILTERS);
   const [companyPage, setCompanyPage] = useState(1);
 
   const filteredCompanyEntries = useMemo(
-    () => filterCompanyDirectory(COMPANY_PHONE_DIRECTORY, companyFilters),
-    [companyFilters]
+    () => filterCompanyDirectory(companyDirectory, companyFilters),
+    [companyDirectory, companyFilters]
   );
   const companyResult = useMemo(
     () => paginateEntries(filteredCompanyEntries, companyPage, PAGE_SIZE),
     [filteredCompanyEntries, companyPage]
   );
 
-  const departmentOptions = useMemo(() => getDepartmentOptions(INTERNAL_EXTENSION_DIRECTORY), []);
-  const locationOptions = useMemo(() => getLocationOptions(INTERNAL_EXTENSION_DIRECTORY), []);
+  const departmentOptions = useMemo(() => getDepartmentOptions(extensionDirectory), [extensionDirectory]);
+  const locationOptions = useMemo(() => getLocationOptions(extensionDirectory), [extensionDirectory]);
   const [extensionFilters, setExtensionFilters] = useState<ExtensionDirectoryFilters>(DEFAULT_EXTENSION_DIRECTORY_FILTERS);
   const [extensionPage, setExtensionPage] = useState(1);
 
   const filteredExtensionEntries = useMemo(
-    () => filterExtensionDirectory(INTERNAL_EXTENSION_DIRECTORY, extensionFilters),
-    [extensionFilters]
+    () => filterExtensionDirectory(extensionDirectory, extensionFilters),
+    [extensionDirectory, extensionFilters]
   );
   const extensionResult = useMemo(
     () => paginateEntries(filteredExtensionEntries, extensionPage, PAGE_SIZE),
@@ -70,6 +103,9 @@ export function useTelephoneListFeed(): UseTelephoneListFeedResult {
   );
 
   return {
+    isLoading,
+    error,
+
     companyOptions,
     companyFilters,
     companyEntries: companyResult.items,

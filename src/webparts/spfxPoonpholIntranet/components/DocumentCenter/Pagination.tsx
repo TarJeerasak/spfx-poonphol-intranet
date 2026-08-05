@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Icon } from '../../../../shared/components/Icon/Icon';
 import styles from './Pagination.module.scss';
 
 export interface PaginationProps {
@@ -43,7 +42,7 @@ export function Pagination({ page, pageCount, onPageChange, activeVariant = 'gol
         onClick={() => onPageChange(page - 1)}
         aria-label="หน้าก่อนหน้า"
       >
-        <Icon name="arrowLeft" size={14} />
+        &lt;
       </button>
       {pageNumbers.map((value, index) =>
         value === 'ellipsis' ? (
@@ -68,7 +67,7 @@ export function Pagination({ page, pageCount, onPageChange, activeVariant = 'gol
         onClick={() => onPageChange(page + 1)}
         aria-label="หน้าถัดไป"
       >
-        <Icon name="arrowRight" size={14} />
+        &gt;
       </button>
     </div>
   );

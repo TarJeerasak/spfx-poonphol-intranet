@@ -179,8 +179,7 @@ export function KnowledgeDetailPage(): React.ReactElement {
                       key={attachment.url}
                       className={styles.attachmentRow}
                       href={attachment.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      data-interception="off"
                     >
                       {iconUrl ? (
                         <img src={iconUrl} alt="" className={styles.attachmentIconImage} />

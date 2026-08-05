@@ -40,6 +40,12 @@ export function KnowledgePage(): React.ReactElement {
     setVisibleCount(INITIAL_VISIBLE_COUNT);
   };
 
+  const handleSearchClear = (): void => {
+    setSearchDraft('');
+    setSearch('');
+    setVisibleCount(INITIAL_VISIBLE_COUNT);
+  };
+
   return (
     <div className={styles.page}>
       <section className={styles.banner} style={{ backgroundImage: `url(${bannerImageUrl})` }}>
@@ -55,14 +61,19 @@ export function KnowledgePage(): React.ReactElement {
               <input
                 type="text"
                 className={styles.searchInput}
-                placeholder="search"
+                placeholder="ค้นหา"
                 value={searchDraft}
                 onChange={event => setSearchDraft(event.target.value)}
                 aria-label="ค้นหาความรู้"
               />
+              {searchDraft.length > 0 && (
+                <button type="button" className={styles.searchClearButton} onClick={handleSearchClear} aria-label="ล้างคำค้นหา">
+                  <Icon name="close" size={14} />
+                </button>
+              )}
             </span>
             <button type="submit" className={styles.searchButton}>
-              Search
+              ค้นหา
             </button>
           </form>
         </div>
