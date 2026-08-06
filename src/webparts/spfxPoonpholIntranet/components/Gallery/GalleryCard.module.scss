@@ -1,0 +1,80 @@
+@import '../../../../shared/styles/tokens';
+@import '../../../../shared/styles/mixins';
+
+$gallery-accent: #d8b66a;
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  background: $color-surface-elevated;
+  border: 1px solid $color-border;
+  border-radius: $radius-sm $radius-sm 0 0;
+  box-shadow: $shadow-card;
+  overflow: hidden;
+  font: inherit;
+  text-align: inherit;
+  color: inherit;
+  cursor: pointer;
+  @include hover-lift(6px, $shadow-elevated);
+
+  &:focus-visible {
+    outline: none;
+    border-color: $color-nav-active;
+    box-shadow: 0 0 0 3px rgba(128, 182, 16, 0.2);
+  }
+}
+
+.cardSelected {
+  border-color: $gallery-accent;
+  box-shadow: 0 0 0 3px rgba(216, 182, 106, 0.35);
+}
+
+.thumbnail {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background-color: $color-border;
+  background-size: cover;
+  background-position: center;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 16px;
+}
+
+.title {
+  margin: 0;
+  width: 100%;
+  min-height: 2.8em;
+  font-family: $font-thai;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.4;
+  color: $color-text-primary;
+  @include line-clamp(2);
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.metaItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: $font-thai;
+  font-size: 12px;
+  letter-spacing: 0.12px;
+  color: $color-text-secondary;
+  white-space: nowrap;
+}

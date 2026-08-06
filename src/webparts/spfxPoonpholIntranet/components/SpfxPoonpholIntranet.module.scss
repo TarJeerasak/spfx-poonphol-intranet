@@ -3,6 +3,9 @@
 .page {
   background: #f2f6f3;
   color: var(--bodyText);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 
   // Scoped to this web part only (not a global `*` reset) so width:100% +
   // padding/border combos (e.g. the hero search box) size to their parent
@@ -14,6 +17,15 @@
   &.teams {
     font-family: $font-thai;
   }
+}
+
+// Grows to fill leftover viewport height so the footer below it stays pinned
+// to the bottom of the screen on pages with little/no content, instead of
+// floating right under a short page.
+.main {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
 }
 
 // Hide SharePoint's own page chrome (suite nav bar, site header/nav, command
@@ -53,4 +65,9 @@
   .ms-Fabric {
     font-family: $font-thai !important;
   }
+}
+[data-automationid="AppChrome"] {
+  margin-top: 0 !important;
+  border-radius: 0 !important;
+  border:0 !important;
 }

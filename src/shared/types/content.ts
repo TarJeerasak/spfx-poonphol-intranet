@@ -69,6 +69,28 @@ export interface EventItem {
   imageUrl: string;
 }
 
+export interface GalleryCategory {
+  id: string;
+  label: string;
+  color: string;
+  textColor: string;
+  borderColor: string;
+}
+
+export interface GalleryItem {
+  id: string;
+  categoryId: string;
+  categoryLabel: string;
+  categoryColor: string;
+  categoryTextColor: string;
+  categoryBorderColor: string;
+  title: string;
+  dateLabel: string;
+  photoCount: number;
+  imageUrl: string;
+  folderUrl: string;
+}
+
 export interface CommunityPost {
   id: string;
   authorName: string;

@@ -192,3 +192,6 @@ export default [
 - [ ] ตั้งค่า path alias `@/` → `src/` ที่ `tsconfig.json` + `vite.config.ts`
 - [ ] ตั้งค่า `.nvmrc`, `.env.example`
 - [ ] เพิ่ม CI pipeline: lint → typecheck → test → build
+
+## 10. การถามตอบ
+- เวลาตอบหรือสรุป ให้ตอบฉันเป็นภาษาไทย

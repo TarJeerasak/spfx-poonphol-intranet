@@ -14,7 +14,7 @@ export const navLinks: NavLink[] = [
   { id: 'home', label: 'หน้าหลัก', href: '#', to: '/' },
   { id: 'knowledge', label: 'ความรู้', href: '#', to: '/knowledge' },
   { id: 'documents', label: 'เอกสาร', href: '#', to: '/documents' },
-  { id: 'gallery', label: 'แกลเลอรี่', href: '#' },
+  { id: 'gallery', label: 'แกลเลอรี่', href: '#', to: '/gallery' },
   { id: 'about', label: 'เกี่ยวกับเรา', href: '#' }
 ];
 
@@ -23,6 +23,6 @@ export const quickLinks: QuickLink[] = [
   { id: 'dt-helpdesk', label: 'DT Helpdesk', iconUrl: dtHelpdeskIcon, backgroundColor: '#80b835' },
   { id: 'telephone', label: 'Telephone Lists', iconUrl: telephoneListsIcon, backgroundColor: '#72b7a1', to: '/telephone-list' },
   { id: 'km', label: 'KM', iconUrl: kmIcon, backgroundColor: '#445a6c', to: '/knowledge' },
-  { id: 'gallery', label: 'Gallery', iconUrl: galleryIcon, backgroundColor: '#29444e' },
+  { id: 'gallery', label: 'Gallery', iconUrl: galleryIcon, backgroundColor: '#29444e', to: '/gallery' },
   { id: 'more-apps', label: 'More Apps', iconUrl: moreAppsIcon, backgroundColor: '#30705c', to: '/more-apps' }
 ];
