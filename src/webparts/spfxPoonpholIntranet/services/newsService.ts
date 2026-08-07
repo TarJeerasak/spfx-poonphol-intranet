@@ -130,3 +130,34 @@ export async function fetchNewsFeed(): Promise<NewsFeedResult> {
     totalCount: activeItems.length
   };
 }
+
+export async function fetchAllActiveNews(): Promise<NewsItem[]> {
+  const response = await spApi.get<{ value: ISPNewsListItem[] }>(
+    `/lists/getbytitle('${NEWS_LIST_TITLE}')/items`,
+    {
+      params: {
+        $select: [
+          NEWS_FIELDS.id,
+          NEWS_FIELDS.title,
+          NEWS_FIELDS.pageContent,
+          NEWS_FIELDS.thumbnailImage,
+          NEWS_FIELDS.publishDate,
+          NEWS_FIELDS.effectiveDate,
+          NEWS_FIELDS.active,
+          NEWS_FIELDS.newsType,
+          NEWS_FIELDS.category,
+          NEWS_FIELDS.location,
+          NEWS_FIELDS.time,
+          `${NEWS_FIELDS.author}/Title`,
+          `${NEWS_FIELDS.author}/EMail`
+        ].join(','),
+        $expand: NEWS_FIELDS.author,
+        $filter: `${NEWS_FIELDS.active} eq 1 and ${NEWS_FIELDS.newsType} eq '${NEWS_TYPE_FILTER_VALUE}'`,
+        $orderby: `${NEWS_FIELDS.publishDate} desc`,
+        $top: 5000
+      }
+    }
+  );
+
+  return response.data.value.map(mapToNewsItem);
+}

@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { Icon } from '../../../../shared/components/Icon/Icon';
+import { Pagination } from '../../../../shared/components/Pagination/Pagination';
 import { useDocumentCenterFeed } from '../../hooks/useDocumentCenterFeed';
 import { DOCUMENT_TYPES } from '../../services/documentCenterService';
 import bannerImageUrl from '../../assets/document-center/hero-banner.jpg';
 import { CategoryCard } from './CategoryCard';
 import { DocumentTable } from './DocumentTable';
 import { FilterOption, FilterSidebar } from './FilterSidebar';
-import { Pagination } from './Pagination';
 import { RecentDocuments } from './RecentDocuments';
 import styles from './DocumentCenterPage.module.scss';
 

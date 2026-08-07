@@ -4,6 +4,7 @@ import { ALBUM_CAROUSEL_PHOTO_COUNT, useAlbumPhotos } from '../../hooks/useAlbum
 import { useEventCategories } from '../../hooks/useEventCategories';
 import { useGalleryFeed } from '../../hooks/useGalleryFeed';
 import { GalleryAlbumMediaItem } from '../../services/galleryService';
+import { AlbumLightbox } from './AlbumLightbox';
 import { GalleryCarousel } from './GalleryCarousel';
 import { GalleryCard } from './GalleryCard';
 import styles from './GalleryPage.module.scss';
@@ -32,6 +33,7 @@ export function GalleryPage(): React.ReactElement {
   const [searchDraft, setSearchDraft] = React.useState('');
   const [search, setSearch] = React.useState('');
   const [selectedAlbumId, setSelectedAlbumId] = React.useState<string | undefined>(undefined);
+  const [lightboxIndex, setLightboxIndex] = React.useState<number | undefined>(undefined);
   const pageRef = React.useRef<HTMLDivElement>(null);
 
   const handleAlbumSelect = (albumId: string): void => {
@@ -84,7 +86,16 @@ export function GalleryPage(): React.ReactElement {
       </section>
 
       <div className={styles.container}>
-        {selectedAlbum && <GalleryCarousel key={selectedAlbum.id} media={carouselMedia} />}
+        {selectedAlbum && <GalleryCarousel key={selectedAlbum.id} media={carouselMedia} onMediaClick={setLightboxIndex} />}
+
+        {selectedAlbum && lightboxIndex !== undefined && (
+          <AlbumLightbox
+            media={mediaItems}
+            title={selectedAlbum.title}
+            startIndex={lightboxIndex}
+            onClose={() => setLightboxIndex(undefined)}
+          />
+        )}
 
         <section className={styles.filterBar}>
           <div className={styles.categoryTabs}>

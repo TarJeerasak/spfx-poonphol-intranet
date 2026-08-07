@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Icon } from '../../../../shared/components/Icon/Icon';
-import { Pagination } from '../DocumentCenter/Pagination';
+import { Pagination } from '../../../../shared/components/Pagination/Pagination';
 import styles from './DirectoryCard.module.scss';
 
 export function DirectoryCellText({ children }: { children: React.ReactNode }): React.ReactElement {

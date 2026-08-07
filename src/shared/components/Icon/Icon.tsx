@@ -22,7 +22,8 @@ export type IconName =
   | 'eye'
   | 'moreHorizontal'
   | 'edit'
-  | 'trash';
+  | 'trash'
+  | 'play';
 
 export interface IconProps {
   name: IconName;
@@ -123,7 +124,8 @@ const PATHS: Record<IconName, React.ReactNode> = {
       <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14z" />
       <path d="M10 11v6M14 11v6" />
     </>
-  )
+  ),
+  play: <path d="M8 5v14l11-7z" fill="currentColor" stroke="none" />
 };
 
 export function Icon({ name, size = 20, className }: IconProps): React.ReactElement {

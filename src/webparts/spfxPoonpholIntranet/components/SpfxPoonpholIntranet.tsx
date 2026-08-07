@@ -14,6 +14,10 @@ import { KnowledgeDetailPage } from './Knowledge/KnowledgeDetailPage';
 import { EventsPage } from './Events/EventsPage';
 import { EventDetailPage } from './Events/EventDetailPage';
 import { GalleryPage } from './Gallery/GalleryPage';
+import { NewsPage } from './News/NewsPage';
+import { NewsDetailPage } from './News/NewsDetailPage';
+import { AnnouncementsPage } from './Announcements/AnnouncementsPage';
+import { AnnouncementDetailPage } from './Announcements/AnnouncementDetailPage';
 import { navLinks } from './data/mockContent';
 
 const GOOGLE_FONTS_URL =
@@ -29,6 +33,10 @@ export default function SpfxPoonpholIntranet({ hasTeamsContext, userDisplayName 
         <main className={styles.main}>
           <Routes>
             <Route path="/" element={<HomePage userDisplayName={userDisplayName} />} />
+            <Route path="/news" element={<NewsPage />} />
+            <Route path="/news/:id" element={<NewsDetailPage />} />
+            <Route path="/announcements" element={<AnnouncementsPage />} />
+            <Route path="/announcements/:id" element={<AnnouncementDetailPage />} />
             <Route path="/knowledge" element={<KnowledgePage />} />
             <Route path="/knowledge/:id" element={<KnowledgeDetailPage />} />
             <Route path="/events" element={<EventsPage />} />

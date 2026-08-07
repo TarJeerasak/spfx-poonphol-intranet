@@ -5,6 +5,7 @@ import styles from './GalleryCarousel.module.scss';
 
 export interface GalleryCarouselProps {
   media: GalleryAlbumMediaItem[];
+  onMediaClick: (mediaIndex: number) => void;
 }
 
 const VISIBLE_SLOT_COUNT = 5;
@@ -14,6 +15,16 @@ const DRAG_THRESHOLD_PX = 50;
 interface DragState {
   startX: number;
   hasTriggered: boolean;
+  pressedMediaIndex: number | undefined;
+}
+
+function getMediaIndexFromEventTarget(target: EventTarget): number | undefined {
+  if (!(target instanceof Element)) {
+    return undefined;
+  }
+  const slideElement = target.closest('[data-media-index]');
+  const rawIndex = slideElement?.getAttribute('data-media-index');
+  return rawIndex ? Number(rawIndex) : undefined;
 }
 
 function getSlideClassName(offset: number): string {
@@ -26,7 +37,7 @@ function getSlideClassName(offset: number): string {
   return styles.far;
 }
 
-export function GalleryCarousel({ media }: GalleryCarouselProps): React.ReactElement {
+export function GalleryCarousel({ media, onMediaClick }: GalleryCarouselProps): React.ReactElement {
   const [startIndex, setStartIndex] = React.useState(0);
 
   // Warm the browser cache for every photo in the album up front - these are full-size photos
@@ -63,7 +74,11 @@ export function GalleryCarousel({ media }: GalleryCarouselProps): React.ReactEle
       return;
     }
     event.currentTarget.setPointerCapture(event.pointerId);
-    dragStateRef.current = { startX: event.clientX, hasTriggered: false };
+    dragStateRef.current = {
+      startX: event.clientX,
+      hasTriggered: false,
+      pressedMediaIndex: getMediaIndexFromEventTarget(event.target)
+    };
   };
 
   const handleTrackPointerMove = (event: React.PointerEvent<HTMLDivElement>): void => {
@@ -86,6 +101,14 @@ export function GalleryCarousel({ media }: GalleryCarouselProps): React.ReactEle
     if (event.currentTarget.hasPointerCapture(event.pointerId)) {
       event.currentTarget.releasePointerCapture(event.pointerId);
     }
+
+    const dragState = dragStateRef.current;
+    if (dragState && !dragState.hasTriggered && dragState.pressedMediaIndex !== undefined) {
+      if (media[dragState.pressedMediaIndex]?.url) {
+        onMediaClick(dragState.pressedMediaIndex);
+      }
+    }
+
     dragStateRef.current = undefined;
   };
 
@@ -106,6 +129,7 @@ export function GalleryCarousel({ media }: GalleryCarouselProps): React.ReactEle
         {visibleSlots.map(slot => (
           <div
             key={slot.offset}
+            data-media-index={slot.mediaIndex}
             className={`${styles.slide} ${getSlideClassName(slot.offset)} ${slot.item.url ? '' : styles.blank}`}
             style={{ zIndex: slot.offset === CENTER_SLOT_INDEX ? 3 : 2 - Math.abs(slot.offset - CENTER_SLOT_INDEX) }}
           >

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { Announcement } from '../../../../shared/types/content';
 import headerIcon from '../../assets/home/icons/announcements-header.svg';
 import clockIcon from '../../assets/home/icons/announcement-clock.svg';
@@ -22,7 +23,7 @@ export function Announcements({ items }: AnnouncementsProps): React.ReactElement
       </div>
       <div className={styles.list}>
         {visibleItems.map(item => (
-          <div key={item.id} className={styles.item}>
+          <Link key={item.id} to={`/announcements/${item.id}`} className={styles.item}>
             <span className={styles.dot} />
             <div className={styles.itemBody}>
               <p className={styles.itemTitle}>{item.title}</p>
@@ -32,13 +33,13 @@ export function Announcements({ items }: AnnouncementsProps): React.ReactElement
                 <span>{item.dateTimeLabel}</span>
               </div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
-      <a href="#" className={styles.viewAll}>
+      <Link to="/announcements" className={styles.viewAll}>
         View All Announcements
         <img src={viewAllArrowIcon} alt="" width={16} height={16} />
-      </a>
+      </Link>
     </div>
   );
 }

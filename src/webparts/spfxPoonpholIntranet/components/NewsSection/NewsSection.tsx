@@ -27,7 +27,7 @@ export function NewsSection({ feature, items, totalCount }: NewsSectionProps): R
         ))}
       </div>
       <div className={styles.divider} />
-      <SectionFooter shownCount={items.length} totalCount={totalCount} />
+      <SectionFooter shownCount={items.length} totalCount={totalCount} viewAllTo="/news" />
     </section>
   );
 }

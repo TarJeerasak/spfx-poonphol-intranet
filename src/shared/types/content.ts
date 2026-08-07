@@ -4,11 +4,25 @@ export interface HeroBanner {
   imageUrl: string;
 }
 
+export interface AnnouncementAttachment {
+  name: string;
+  url: string;
+  fileType: string;
+}
+
 export interface Announcement {
   id: string;
   title: string;
   description: string;
+  publishedAtIso: string;
   dateTimeLabel: string;
+  dateLabel: string;
+  updatedLabel: string;
+  typeLabel: string;
+  typeColor: string;
+  typeTextColor: string;
+  typeBorderColor: string;
+  attachments: AnnouncementAttachment[];
 }
 
 export interface NewsItem {

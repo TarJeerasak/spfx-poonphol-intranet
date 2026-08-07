@@ -1,0 +1,365 @@
+@import '../../../../shared/styles/tokens';
+@import '../../../../shared/styles/mixins';
+
+$news-accent: #d8b66a;
+
+.page {
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.banner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 420px;
+  overflow: hidden;
+  padding: 64px 0 104px;
+}
+
+.bannerImageWrap {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.bannerImage {
+  position: absolute;
+  left: -6.67%;
+  top: -21.95%;
+  width: 106.67%;
+  height: 243.81%;
+  max-width: none;
+  object-fit: cover;
+}
+
+.bannerFade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to left, rgba(245, 247, 244, 0) 50%, #f5f7f4 78.437%);
+}
+
+.bannerInner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: $content-max-width;
+  margin: 0 auto;
+  padding: 0 $content-horizontal-padding;
+}
+
+.bannerTitle {
+  margin: 0;
+  font-family: $font-thai;
+  font-weight: 600;
+  font-size: clamp(32px, 4vw, 56px);
+  line-height: 1.14;
+  letter-spacing: -0.56px;
+  color: #163634;
+  animation: fadeSlideUp 0.6s ease both;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+.bannerSubtitle {
+  margin: 10px 0 0;
+  font-family: $font-thai;
+  font-size: clamp(15px, 1.4vw, 18px);
+  line-height: 1.65;
+  color: #5f7a78;
+  max-width: 480px;
+  animation: fadeSlideUp 0.6s ease both;
+  animation-delay: 0.12s;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: $content-max-width;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 $content-horizontal-padding 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.filterBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: -56px;
+  padding: 16px;
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  box-shadow: $shadow-section;
+  animation: fadeSlideUp 0.55s ease both;
+  animation-delay: 0.2s;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+.categoryTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.categoryTab {
+  height: 48px;
+  padding: 4px 24px;
+  border: 1px solid $color-border;
+  border-radius: $radius-sm;
+  background: transparent;
+  color: $color-text-primary;
+  font-family: $font-thai;
+  font-weight: 500;
+  font-size: 14px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color $transition-fast, border-color $transition-fast;
+  @include press-scale;
+
+  &:hover {
+    border-color: $news-accent;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+.categoryTabActive {
+  border-color: $news-accent;
+  background: $news-accent;
+
+  &:hover {
+    border-color: $news-accent;
+  }
+}
+
+.searchForm {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  @media (max-width: 480px) {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+}
+
+.searchBox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 350px;
+  max-width: 100%;
+  height: 48px;
+  padding: 0 18px;
+  border-radius: $radius-md;
+  border: 1px solid $color-stroke;
+  background: $color-surface;
+  transition: border-color $transition-fast, box-shadow $transition-fast;
+
+  &:focus-within {
+    border-color: $news-accent;
+    box-shadow: 0 0 0 3px rgba(216, 182, 106, 0.2);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+.searchIcon {
+  display: flex;
+  flex-shrink: 0;
+  color: $color-text-secondary;
+}
+
+.searchInput {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: none;
+  outline: none;
+  font-family: $font-thai;
+  font-size: 16px;
+  background: transparent;
+  color: $color-text-primary;
+
+  &::placeholder {
+    color: #9ca3af;
+  }
+}
+
+.searchClearButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: $color-text-secondary;
+  cursor: pointer;
+  transition: color $transition-fast, background $transition-fast, transform $transition-fast;
+
+  &:hover {
+    color: $color-text-primary;
+    background: $color-border;
+    transform: scale(1.1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: color $transition-fast, background $transition-fast;
+
+    &:hover {
+      transform: none;
+    }
+  }
+}
+
+.searchButton {
+  flex-shrink: 0;
+  height: 48px;
+  padding: 0 24px;
+  border: none;
+  border-radius: $radius-sm;
+  background: $news-accent;
+  color: $color-text-primary;
+  font-family: $font-thai;
+  font-weight: 500;
+  font-size: 16px;
+  cursor: pointer;
+  transition: opacity $transition-fast;
+  @include press-scale;
+
+  &:hover {
+    opacity: 0.85;
+  }
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  background: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  box-shadow: $shadow-section;
+  animation: fadeSlideUp 0.55s ease both;
+  animation-delay: 0.3s;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.panelTitle {
+  margin: 0;
+  flex: 1 1 auto;
+  font-family: $font-thai;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 32px;
+  color: $color-text-primary;
+}
+
+.sortControl {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.sortLabel {
+  font-family: $font-thai;
+  font-weight: 500;
+  font-size: 14px;
+  color: $color-text-primary;
+  white-space: nowrap;
+}
+
+.panelDivider {
+  height: 1px;
+  background: $color-border;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.stateMessage,
+.emptyMessage {
+  margin: 0;
+  padding: 32px 0;
+  text-align: center;
+  font-family: $font-thai;
+  font-size: 14px;
+  color: $color-text-secondary;
+}
+
+.viewMoreRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.viewMoreButton {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 48px;
+  padding: 4px 24px;
+  border: 1px solid $news-accent;
+  border-radius: $radius-pill;
+  background: transparent;
+  color: $news-accent;
+  font-family: $font-thai;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color $transition-fast, color $transition-fast;
+  @include press-scale;
+
+  &:hover {
+    background: $news-accent;
+    color: $color-text-primary;
+  }
+}
