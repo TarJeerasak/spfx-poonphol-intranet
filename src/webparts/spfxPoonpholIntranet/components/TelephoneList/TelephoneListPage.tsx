@@ -148,7 +148,7 @@ export function TelephoneListPage(): React.ReactElement {
         />
 
         <DirectoryCard
-          title="เบอร์โทรศัพท์ภายในหรือโต๊ะทำงาน"
+          title="เบอร์โทรศัพท์ภายใน"
           toolbar={
             <>
               <Dropdown label="กรองตามแผนก" value={extensionFilters.department} options={departmentFilterOptions} onChange={setExtensionDepartment} />

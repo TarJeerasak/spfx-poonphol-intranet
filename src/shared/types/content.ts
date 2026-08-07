@@ -47,6 +47,7 @@ export interface KnowledgeCategory {
 export interface KnowledgeAttachment {
   name: string;
   url: string;
+  serverRelativeUrl: string;
   fileType: string;
 }
 
@@ -55,10 +56,13 @@ export interface KnowledgeItem {
   categoryId: string;
   tags: string[];
   title: string;
+  authorName: string;
+  shortDescription: string;
   description: string;
   imageUrl: string;
   readCount: number;
   likeCount: number;
+  isRecommended: boolean;
   attachments: KnowledgeAttachment[];
   createdAt: string;
   modifiedAt: string;

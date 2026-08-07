@@ -7,6 +7,7 @@ import { recordKnowledgeRead } from '../services/knowledgeReadService';
 export interface UseKnowledgeFeedResult {
   items: KnowledgeItem[];
   featuredItems: KnowledgeItem[];
+  latestItems: KnowledgeItem[];
   categories: KnowledgeCategory[];
   totalCount: number;
   isLoading: boolean;
@@ -21,6 +22,7 @@ function applyReadCount(items: KnowledgeItem[], itemId: string, readCount: numbe
 export function useKnowledgeFeed(): UseKnowledgeFeedResult {
   const [items, setItems] = useState<KnowledgeItem[]>([]);
   const [featuredItems, setFeaturedItems] = useState<KnowledgeItem[]>([]);
+  const [latestItems, setLatestItems] = useState<KnowledgeItem[]>([]);
   const [categories, setCategories] = useState<KnowledgeCategory[]>([]);
   const [totalCount, setTotalCount] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -55,6 +57,7 @@ export function useKnowledgeFeed(): UseKnowledgeFeedResult {
         }
         setItems(result.items);
         setFeaturedItems(result.featuredItems);
+        setLatestItems(result.latestItems);
         setCategories(result.categories);
         setTotalCount(result.totalCount);
         setIsLoading(false);
@@ -86,11 +89,13 @@ export function useKnowledgeFeed(): UseKnowledgeFeedResult {
 
     setItems(current => applyReadCount(current, itemId, nextReadCount));
     setFeaturedItems(current => applyReadCount(current, itemId, nextReadCount));
+    setLatestItems(current => applyReadCount(current, itemId, nextReadCount));
   }
 
   return {
     items,
     featuredItems,
+    latestItems,
     categories,
     totalCount,
     isLoading,

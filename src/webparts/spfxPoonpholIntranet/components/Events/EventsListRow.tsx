@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { Icon } from '../../../../shared/components/Icon/Icon';
+import { ImageFallback } from '../../../../shared/components/ImageFallback/ImageFallback';
 import { Tag } from '../../../../shared/components/Tag/Tag';
 import { EventItem } from '../../../../shared/types/content';
 import styles from './EventsListRow.module.scss';
@@ -16,7 +17,7 @@ export function EventsListRow({ item }: EventsListRowProps): React.ReactElement 
         <span className={styles.day}>{item.dateDay}</span>
         <span className={styles.month}>{item.dateMonthLabel}</span>
       </div>
-      <div className={styles.thumbnail} style={{ backgroundImage: `url(${item.imageUrl})` }} />
+      <ImageFallback imageUrl={item.imageUrl} className={styles.thumbnail} />
       <div className={styles.body}>
         {item.categoryLabel && (
           <Tag

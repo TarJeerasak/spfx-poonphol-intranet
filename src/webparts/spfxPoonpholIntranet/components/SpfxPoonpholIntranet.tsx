@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { HashRouter, Route, Routes } from 'react-router-dom';
+import { ScrollToTop, scrollPageToTop } from '../../../shared/components/ScrollToTop/ScrollToTop';
 import { useExternalStylesheet } from '../../../shared/hooks/useExternalStylesheet';
 import styles from './SpfxPoonpholIntranet.module.scss';
 import type { ISpfxPoonpholIntranetProps } from './ISpfxPoonpholIntranetProps';
@@ -26,9 +27,20 @@ const GOOGLE_FONTS_URL =
 export default function SpfxPoonpholIntranet({ hasTeamsContext, userDisplayName }: ISpfxPoonpholIntranetProps): React.ReactElement {
   useExternalStylesheet(GOOGLE_FONTS_URL);
 
+  const handleInternalLinkClick = (event: React.MouseEvent<HTMLDivElement>): void => {
+    if (!(event.target instanceof Element)) {
+      return;
+    }
+    const link = event.target.closest('a');
+    if (link?.hash.startsWith('#/')) {
+      scrollPageToTop(event.currentTarget);
+    }
+  };
+
   return (
     <HashRouter>
-      <div className={`${styles.page} ${hasTeamsContext ? styles.teams : ''}`}>
+      <ScrollToTop />
+      <div className={`${styles.page} ${hasTeamsContext ? styles.teams : ''}`} onClickCapture={handleInternalLinkClick}>
         <Header navLinks={navLinks} userDisplayName={userDisplayName} />
         <main className={styles.main}>
           <Routes>

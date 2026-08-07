@@ -62,7 +62,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 6px;
+  gap: 8px;
 }
 
 .title {
@@ -73,6 +73,15 @@
   line-height: 1.25;
   letter-spacing: -0.5px;
   color: $color-text-primary;
+}
+
+.shortDescription {
+  margin: 0;
+  font-family: $font-thai;
+  font-size: 16px;
+  line-height: 26px;
+  color: $color-text-secondary;
+  white-space: pre-line;
 }
 
 .metaRow {
@@ -246,17 +255,51 @@
   gap: 16px;
 }
 
+.attachmentEmptyMessage {
+  margin: 0;
+  padding: 8px 0;
+  text-align: center;
+  font-family: $font-thai;
+  font-size: 14px;
+  color: $color-text-secondary;
+}
+
 .attachmentRow {
   display: flex;
   align-items: center;
   gap: 8px;
   width: 100%;
+}
+
+.attachmentOpenLink {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1 1 auto;
+  min-width: 0;
   color: inherit;
   text-decoration: none;
   transition: opacity $transition-fast;
 
   &:hover {
     opacity: 0.75;
+  }
+}
+
+.attachmentDownloadLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  color: inherit;
+  text-decoration: none;
+  border-radius: $radius-sm;
+  transition: background-color $transition-fast;
+
+  &:hover {
+    background-color: $color-border;
   }
 }
 

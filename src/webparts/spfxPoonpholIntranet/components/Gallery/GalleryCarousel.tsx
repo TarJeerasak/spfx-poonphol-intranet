@@ -39,6 +39,15 @@ function getSlideClassName(offset: number): string {
 
 export function GalleryCarousel({ media, onMediaClick }: GalleryCarouselProps): React.ReactElement {
   const [startIndex, setStartIndex] = React.useState(0);
+  const trackRef = React.useRef<HTMLDivElement>(null);
+  const slideRefs = React.useRef<Map<number, HTMLDivElement>>(new Map());
+  const previousRectsRef = React.useRef<Map<number, DOMRect> | undefined>(undefined);
+
+  const captureSlideRects = (): void => {
+    previousRectsRef.current = new Map(
+      Array.from(slideRefs.current.entries()).map(([index, element]) => [index, element.getBoundingClientRect()])
+    );
+  };
 
   // Warm the browser cache for every photo in the album up front - these are full-size photos
   // straight from SharePoint (often several MB each), so without this, revealing a not-yet-seen
@@ -55,12 +64,50 @@ export function GalleryCarousel({ media, onMediaClick }: GalleryCarouselProps): 
   }, [media]);
 
   const handlePrevious = (): void => {
+    captureSlideRects();
     setStartIndex(current => (current - 1 + media.length) % media.length);
   };
 
   const handleNext = (): void => {
+    captureSlideRects();
     setStartIndex(current => (current + 1) % media.length);
   };
+
+  React.useLayoutEffect(() => {
+    const previousRects = previousRectsRef.current;
+    if (!previousRects) {
+      return;
+    }
+
+    const trackWidth = trackRef.current?.getBoundingClientRect().width ?? 0;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!prefersReducedMotion) {
+      slideRefs.current.forEach((element, index) => {
+        const previousRect = previousRects.get(index);
+        if (!previousRect) {
+          return;
+        }
+
+        const nextRect = element.getBoundingClientRect();
+        const deltaX = previousRect.left + previousRect.width / 2 - (nextRect.left + nextRect.width / 2);
+        const scaleX = previousRect.width / nextRect.width;
+        const scaleY = previousRect.height / nextRect.height;
+        const hasWrapped = trackWidth > 0 && Math.abs(deltaX) > trackWidth * 0.55;
+
+        element.animate(
+          hasWrapped
+            ? [{ opacity: 0, transform: 'scale(0.82)' }, { opacity: 1, transform: 'scale(1)' }]
+            : [
+                { transform: `translateX(${deltaX}px) scale(${scaleX}, ${scaleY})` },
+                { transform: 'translateX(0) scale(1)' }
+              ],
+          { duration: 900, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'both' }
+        );
+      });
+    }
+
+    previousRectsRef.current = undefined;
+  }, [startIndex]);
 
   const dragStateRef = React.useRef<DragState | undefined>(undefined);
 
@@ -120,30 +167,40 @@ export function GalleryCarousel({ media, onMediaClick }: GalleryCarouselProps): 
   return (
     <div className={styles.carousel}>
       <div
+        ref={trackRef}
         className={styles.track}
         onPointerDown={handleTrackPointerDown}
         onPointerMove={handleTrackPointerMove}
         onPointerUp={handleTrackPointerEnd}
         onPointerCancel={handleTrackPointerEnd}
       >
-        {visibleSlots.map(slot => (
-          <div
-            key={slot.offset}
-            data-media-index={slot.mediaIndex}
-            className={`${styles.slide} ${getSlideClassName(slot.offset)} ${slot.item.url ? '' : styles.blank}`}
-            style={{ zIndex: slot.offset === CENTER_SLOT_INDEX ? 3 : 2 - Math.abs(slot.offset - CENTER_SLOT_INDEX) }}
-          >
-            {slot.item.url ? (
-              slot.item.type === 'video' ? (
-                <video key={slot.item.url} className={styles.videoLayer} src={slot.item.url} controls playsInline preload="metadata" />
+        <div className={styles.slides}>
+          {visibleSlots.map(slot => (
+            <div
+              key={slot.mediaIndex}
+              ref={element => {
+                if (element) {
+                  slideRefs.current.set(slot.mediaIndex, element);
+                } else {
+                  slideRefs.current.delete(slot.mediaIndex);
+                }
+              }}
+              data-media-index={slot.mediaIndex}
+              className={`${styles.slide} ${getSlideClassName(slot.offset)} ${slot.item.url ? '' : styles.blank}`}
+              style={{ zIndex: slot.offset === CENTER_SLOT_INDEX ? 3 : 2 - Math.abs(slot.offset - CENTER_SLOT_INDEX) }}
+            >
+              {slot.item.url ? (
+                slot.item.type === 'video' ? (
+                  <video key={slot.item.url} className={styles.videoLayer} src={slot.item.url} controls playsInline preload="metadata" />
+                ) : (
+                  <div key={slot.item.url} className={styles.imageLayer} style={{ backgroundImage: `url(${slot.item.url})` }} />
+                )
               ) : (
-                <div key={slot.item.url} className={styles.imageLayer} style={{ backgroundImage: `url(${slot.item.url})` }} />
-              )
-            ) : (
-              <Icon name="image" size={28} className={styles.blankIcon} />
-            )}
-          </div>
-        ))}
+                <Icon name="image" size={28} className={styles.blankIcon} />
+              )}
+            </div>
+          ))}
+        </div>
         <button
           type="button"
           className={`${styles.navButton} ${styles.navButtonPrev}`}

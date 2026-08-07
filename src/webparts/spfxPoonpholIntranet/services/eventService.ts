@@ -2,7 +2,8 @@ import { spApi } from '../../../shared/services/api';
 import { EventItem } from '../../../shared/types/content';
 import { formatThaiDayAndMonth } from '../../../shared/utils/formatThaiDayAndMonth';
 import { lightenHexColor } from '../../../shared/utils/lightenHexColor';
-import { parseThumbnailImage } from '../../../shared/utils/parseThumbnailImage';
+import { resolveImageColumnUrl } from '../../../shared/utils/resolveImageColumnUrl';
+import { IAttachmentFile } from '../../../shared/utils/resolveListItemImageUrl';
 import { selectClosestByDate } from '../../../shared/utils/selectClosestByDate';
 import { stripHtml } from '../../../shared/utils/stripHtml';
 import { fetchEventAttendees } from './eventJoinService';
@@ -34,6 +35,7 @@ const EVENT_SELECT_FIELDS = [
   EVENT_FIELDS.title,
   EVENT_FIELDS.shortDescription,
   EVENT_FIELDS.image,
+  'AttachmentFiles/ServerRelativeUrl',
   EVENT_FIELDS.location,
   EVENT_FIELDS.time,
   EVENT_FIELDS.dateFrom,
@@ -42,13 +44,14 @@ const EVENT_SELECT_FIELDS = [
   `${EVENT_FIELDS.category}/Title`
 ].join(',');
 
-const EVENT_EXPAND_FIELDS = EVENT_FIELDS.category;
+const EVENT_EXPAND_FIELDS = `${EVENT_FIELDS.category},AttachmentFiles`;
 
 interface ISPCalendarListItem {
   Id: number;
   Title: string;
   ShortDescription?: string;
   Image?: string;
+  AttachmentFiles?: IAttachmentFile[];
   Location?: string;
   Time?: string;
   DateFrom?: string;
@@ -133,7 +136,7 @@ export function mapToEventItem(raw: ISPCalendarListItem, categories: EventCatego
     dateFromIso: raw.DateFrom ?? '',
     timeLabel: raw.Time ?? '',
     locationLabel: raw.Location ?? '',
-    imageUrl: parseThumbnailImage(raw.Image),
+    imageUrl: resolveImageColumnUrl(raw.Image, raw.AttachmentFiles),
     attendeeAvatarUrls: [],
     overflowCount: 0
   };

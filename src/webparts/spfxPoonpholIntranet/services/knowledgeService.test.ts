@@ -1,6 +1,7 @@
 import {
   buildKnowledgeAttachments,
   buildKnowledgeCategories,
+  filterRecommendedKnowledgeItems,
   mapToKnowledgeItem,
   resolveKnowledgeListTitle,
   selectKnowledgeItemsByClosestPublishDate
@@ -47,6 +48,22 @@ describe('selectKnowledgeItemsByClosestPublishDate', () => {
   });
 });
 
+describe('filterRecommendedKnowledgeItems', () => {
+  it('keeps only items with IsRecommended checked', () => {
+    const items = [
+      { Id: 1, IsRecommended: true },
+      { Id: 2, IsRecommended: false },
+      { Id: 3 }
+    ] as never[];
+
+    expect(filterRecommendedKnowledgeItems(items).map(item => item.Id)).toEqual([1]);
+  });
+
+  it('returns an empty array when nothing is recommended', () => {
+    expect(filterRecommendedKnowledgeItems([{ Id: 1 }] as never[])).toEqual([]);
+  });
+});
+
 describe('mapToKnowledgeItem', () => {
   it('maps a KnowledgeManagementList item to the KnowledgeItem shape used by the UI', () => {
     const raw = {
@@ -59,7 +76,10 @@ describe('mapToKnowledgeItem', () => {
       }),
       PublishDate: '2026-06-10T00:00:00',
       Category: 'Mindset',
+      Author0: 'สมชาย ใจดี',
+      IsRecommended: true,
       Active: true,
+      ShortDescription: 'สำนักตรวจสอบขอเชิญชวนทุกท่านติดตามสื่อสร้างสรรค์ด้านจรรยาบรรณในการทำงาน',
       Description: 'A short guide on staying safe online.',
       Created: '2026-01-05T00:00:00Z',
       Modified: '2026-07-10T00:00:00Z'
@@ -70,10 +90,13 @@ describe('mapToKnowledgeItem', () => {
       categoryId: 'Mindset',
       tags: ['Keyword', 'Test'],
       title: 'ETHICS MATTERS EP.1-4',
+      authorName: 'สมชาย ใจดี',
+      shortDescription: 'สำนักตรวจสอบขอเชิญชวนทุกท่านติดตามสื่อสร้างสรรค์ด้านจรรยาบรรณในการทำงาน',
       description: 'A short guide on staying safe online.',
       imageUrl: 'https://fusionsoftcompany.sharepoint.com/sites/Project-PoonpholIntranetPortal/SiteAssets/km-5.jpg',
       readCount: 12,
       likeCount: 3,
+      isRecommended: true,
       attachments: [],
       createdAt: '2026-01-05T00:00:00Z',
       modifiedAt: '2026-07-10T00:00:00Z'
@@ -96,6 +119,36 @@ describe('mapToKnowledgeItem', () => {
     );
   });
 
+  it('resolves the thumbnail from the reserved attachment when ThumbnailImage uses the modern Image-column shape', () => {
+    const raw = {
+      Id: 65,
+      Title: 'การตั้งรหัสผ่านที่ปลอดภัย',
+      AttachmentFiles: [
+        { ServerRelativeUrl: '/sites/PPG_UAT/Lists/KnowledgeManagementList1/Attachments/65/Reserved_ImageAttachment_[14]_[ThumbnailImage][32]_[hash][1].jpg' },
+        { ServerRelativeUrl: '/sites/PPG_UAT/Lists/KnowledgeManagementList1/Attachments/65/THINK First - Password-EP2.jpg' }
+      ],
+      ThumbnailImage: JSON.stringify({ fileName: 'Reserved_ImageAttachment_[14]_[ThumbnailImage][32]_[hash][1].jpg' }),
+      Category: 'Mindset',
+      Active: true
+    };
+
+    const result = mapToKnowledgeItem(raw);
+
+    expect(result.imageUrl).toEqual(
+      'https://poonphol.sharepoint.com/sites/PPG_UAT/Lists/KnowledgeManagementList1/Attachments/65/Reserved_ImageAttachment_%5B14%5D_%5BThumbnailImage%5D%5B32%5D_%5Bhash%5D%5B1%5D.jpg'
+    );
+    // The reserved attachment backs the thumbnail itself, so it must not also appear as a
+    // user-facing attachment/gallery image - only the separately uploaded file should.
+    expect(result.attachments).toEqual([
+      {
+        name: 'THINK First - Password-EP2.jpg',
+        url: 'https://poonphol.sharepoint.com/sites/PPG_UAT/Lists/KnowledgeManagementList1/Attachments/65/THINK%20First%20-%20Password-EP2.jpg',
+        serverRelativeUrl: '/sites/PPG_UAT/Lists/KnowledgeManagementList1/Attachments/65/THINK First - Password-EP2.jpg',
+        fileType: 'JPG'
+      }
+    ]);
+  });
+
   it('falls back to empty values when optional fields are missing', () => {
     const raw = {
       Id: 9,
@@ -108,10 +161,13 @@ describe('mapToKnowledgeItem', () => {
       categoryId: '',
       tags: [],
       title: 'No category yet',
+      authorName: '',
+      shortDescription: '',
       description: '',
       imageUrl: '',
       readCount: 0,
       likeCount: 0,
+      isRecommended: false,
       attachments: [],
       createdAt: '',
       modifiedAt: ''
@@ -130,11 +186,13 @@ describe('buildKnowledgeAttachments', () => {
       {
         name: 'handbook.pdf',
         url: 'https://poonphol.sharepoint.com/sites/Project-PoonpholIntranetPortal/Lists/KnowledgeManagementList/Attachments/6/handbook.pdf',
+        serverRelativeUrl: '/sites/Project-PoonpholIntranetPortal/Lists/KnowledgeManagementList/Attachments/6/handbook.pdf',
         fileType: 'PDF'
       },
       {
         name: 'quiz.docx',
         url: 'https://poonphol.sharepoint.com/sites/Project-PoonpholIntranetPortal/Lists/KnowledgeManagementList/Attachments/6/quiz.docx',
+        serverRelativeUrl: '/sites/Project-PoonpholIntranetPortal/Lists/KnowledgeManagementList/Attachments/6/quiz.docx',
         fileType: 'DOCX'
       }
     ]);
@@ -143,6 +201,22 @@ describe('buildKnowledgeAttachments', () => {
   it('returns an empty array when there are no attachments', () => {
     expect(buildKnowledgeAttachments(undefined)).toEqual([]);
     expect(buildKnowledgeAttachments([])).toEqual([]);
+  });
+
+  it('excludes the hidden Reserved_ImageAttachment file SharePoint creates for the Image column', () => {
+    expect(
+      buildKnowledgeAttachments([
+        { ServerRelativeUrl: '/sites/PPG_UAT/Lists/KnowledgeManagementList1/Attachments/65/Reserved_ImageAttachment_[14]_[1].jpg' },
+        { ServerRelativeUrl: '/sites/PPG_UAT/Lists/KnowledgeManagementList1/Attachments/65/handbook.pdf' }
+      ])
+    ).toEqual([
+      {
+        name: 'handbook.pdf',
+        url: 'https://poonphol.sharepoint.com/sites/PPG_UAT/Lists/KnowledgeManagementList1/Attachments/65/handbook.pdf',
+        serverRelativeUrl: '/sites/PPG_UAT/Lists/KnowledgeManagementList1/Attachments/65/handbook.pdf',
+        fileType: 'PDF'
+      }
+    ]);
   });
 });
 
@@ -161,9 +235,9 @@ describe('resolveKnowledgeListTitle', () => {
 describe('buildKnowledgeCategories', () => {
   it('prefixes an "all" tab followed by the distinct categories found in the items', () => {
     const items = [
-      { id: '1', categoryId: 'Mindset', tags: [], title: '', description: '', imageUrl: '', readCount: 0, likeCount: 0, attachments: [], createdAt: '', modifiedAt: '' },
-      { id: '2', categoryId: 'Learning', tags: [], title: '', description: '', imageUrl: '', readCount: 0, likeCount: 0, attachments: [], createdAt: '', modifiedAt: '' },
-      { id: '3', categoryId: 'Mindset', tags: [], title: '', description: '', imageUrl: '', readCount: 0, likeCount: 0, attachments: [], createdAt: '', modifiedAt: '' }
+      { id: '1', categoryId: 'Mindset', tags: [], title: '', authorName: '', shortDescription: '', description: '', imageUrl: '', readCount: 0, likeCount: 0, isRecommended: false, attachments: [], createdAt: '', modifiedAt: '' },
+      { id: '2', categoryId: 'Learning', tags: [], title: '', authorName: '', shortDescription: '', description: '', imageUrl: '', readCount: 0, likeCount: 0, isRecommended: false, attachments: [], createdAt: '', modifiedAt: '' },
+      { id: '3', categoryId: 'Mindset', tags: [], title: '', authorName: '', shortDescription: '', description: '', imageUrl: '', readCount: 0, likeCount: 0, isRecommended: false, attachments: [], createdAt: '', modifiedAt: '' }
     ];
 
     expect(buildKnowledgeCategories(items)).toEqual([
@@ -175,7 +249,7 @@ describe('buildKnowledgeCategories', () => {
 
   it('ignores items without a category', () => {
     const items = [
-      { id: '1', categoryId: '', tags: [], title: '', description: '', imageUrl: '', readCount: 0, likeCount: 0, attachments: [], createdAt: '', modifiedAt: '' }
+      { id: '1', categoryId: '', tags: [], title: '', authorName: '', shortDescription: '', description: '', imageUrl: '', readCount: 0, likeCount: 0, isRecommended: false, attachments: [], createdAt: '', modifiedAt: '' }
     ];
 
     expect(buildKnowledgeCategories(items)).toEqual([{ id: 'all', label: 'ดูทั้งหมด' }]);

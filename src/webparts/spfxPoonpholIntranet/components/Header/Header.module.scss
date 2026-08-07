@@ -2,7 +2,7 @@
 
 .header {
   background: $color-header-footer-bg;
-  padding: 20px 0;
+  padding: 10px 0;
   // SharePoint's page container already starts below the suite bar, so adding
   // the suite bar height here would create a second 48px top offset.
   position: sticky;

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Icon } from '../../../../shared/components/Icon/Icon';
+import { scrollPageToTop } from '../../../../shared/components/ScrollToTop/ScrollToTop';
 import { ALBUM_CAROUSEL_PHOTO_COUNT, useAlbumPhotos } from '../../hooks/useAlbumPhotos';
 import { useEventCategories } from '../../hooks/useEventCategories';
 import { useGalleryFeed } from '../../hooks/useGalleryFeed';
@@ -14,11 +15,17 @@ const INITIAL_VISIBLE_COUNT = 12;
 const VISIBLE_COUNT_STEP = 12;
 const BLANK_MEDIA_ITEM: GalleryAlbumMediaItem = { url: '', type: 'image' };
 
-function padCarouselMedia(mediaItems: GalleryAlbumMediaItem[], minLength: number): GalleryAlbumMediaItem[] {
-  if (mediaItems.length >= minLength) {
+function arrangeCarouselMedia(mediaItems: GalleryAlbumMediaItem[]): GalleryAlbumMediaItem[] {
+  if (mediaItems.length >= ALBUM_CAROUSEL_PHOTO_COUNT) {
     return mediaItems;
   }
-  return [...mediaItems, ...Array.from({ length: minLength - mediaItems.length }, () => BLANK_MEDIA_ITEM)];
+
+  const slots = Array.from({ length: ALBUM_CAROUSEL_PHOTO_COUNT }, () => BLANK_MEDIA_ITEM);
+  const slotOrder = [2, 3, 1, 0];
+  mediaItems.forEach((item, index) => {
+    slots[slotOrder[index]] = item;
+  });
+  return slots;
 }
 
 export function GalleryPage(): React.ReactElement {
@@ -38,8 +45,8 @@ export function GalleryPage(): React.ReactElement {
 
   const handleAlbumSelect = (albumId: string): void => {
     setSelectedAlbumId(albumId);
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    pageRef.current?.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
+    scrollPageToTop(pageRef.current ?? undefined);
+    window.requestAnimationFrame(() => scrollPageToTop(pageRef.current ?? undefined));
   };
 
   React.useEffect(() => {
@@ -48,9 +55,36 @@ export function GalleryPage(): React.ReactElement {
     }
   }, [items, selectedAlbumId]);
 
+  React.useLayoutEffect(() => {
+    if (!selectedAlbumId) {
+      return undefined;
+    }
+
+    const resetScroll = (): void => scrollPageToTop(pageRef.current ?? undefined);
+    resetScroll();
+    const frameId = window.requestAnimationFrame(resetScroll);
+    const timeoutIds = [50, 150, 300, 600].map(delay => window.setTimeout(resetScroll, delay));
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+      timeoutIds.forEach(timeoutId => window.clearTimeout(timeoutId));
+    };
+  }, [selectedAlbumId]);
+
   const selectedAlbum = items.find(item => item.id === selectedAlbumId);
   const { mediaItems } = useAlbumPhotos(selectedAlbum?.folderUrl);
-  const carouselMedia = padCarouselMedia(mediaItems, ALBUM_CAROUSEL_PHOTO_COUNT);
+  const carouselMedia = arrangeCarouselMedia(mediaItems);
+
+  const handleMediaSelect = (carouselIndex: number): void => {
+    const selectedMedia = carouselMedia[carouselIndex];
+    const mediaIndex = mediaItems.findIndex(item => item.url === selectedMedia?.url);
+    if (mediaIndex < 0) {
+      return;
+    }
+    scrollPageToTop(pageRef.current ?? undefined);
+    setLightboxIndex(mediaIndex);
+    window.requestAnimationFrame(() => scrollPageToTop(pageRef.current ?? undefined));
+  };
 
   const filteredItems = items
     .filter(item => categoryId === ALL_CATEGORY_VALUE || item.categoryId === categoryId)
@@ -86,7 +120,7 @@ export function GalleryPage(): React.ReactElement {
       </section>
 
       <div className={styles.container}>
-        {selectedAlbum && <GalleryCarousel key={selectedAlbum.id} media={carouselMedia} onMediaClick={setLightboxIndex} />}
+        {selectedAlbum && <GalleryCarousel key={selectedAlbum.id} media={carouselMedia} onMediaClick={handleMediaSelect} />}
 
         {selectedAlbum && lightboxIndex !== undefined && (
           <AlbumLightbox

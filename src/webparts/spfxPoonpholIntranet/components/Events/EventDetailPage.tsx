@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Icon } from '../../../../shared/components/Icon/Icon';
+import { ImageFallback } from '../../../../shared/components/ImageFallback/ImageFallback';
 import { Tag } from '../../../../shared/components/Tag/Tag';
 import { formatThaiDateShort } from '../../../../shared/utils/formatThaiDateShort';
 import { useAllEventsFeed } from '../../hooks/useAllEventsFeed';
@@ -68,7 +69,7 @@ export function EventDetailPage(): React.ReactElement {
         </div>
 
         <div className={styles.hero}>
-          <div className={styles.heroImage} style={{ backgroundImage: `url(${item.imageUrl})` }} />
+          <ImageFallback imageUrl={item.imageUrl} className={styles.heroImage} />
         </div>
 
         {item.subtitle && (

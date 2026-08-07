@@ -5,10 +5,13 @@ import { Icon } from '../../../../shared/components/Icon/Icon';
 import { Tag } from '../../../../shared/components/Tag/Tag';
 import { formatReadCountLabel } from '../../../../shared/utils/formatReadCountLabel';
 import { formatThaiDateShort } from '../../../../shared/utils/formatThaiDateShort';
+import { isImageFileType } from '../../../../shared/utils/isImageFileType';
 import { parseDescriptionSegments } from '../../../../shared/utils/parseDescriptionLinks';
+import { useAttachmentSizeLabels } from '../../hooks/useAttachmentSizeLabels';
 import { useKnowledgeFeed } from '../../hooks/useKnowledgeFeed';
 import { useKnowledgeLikes } from '../../hooks/useKnowledgeLikes';
 import { KnowledgeGridCard } from './KnowledgeGridCard';
+import { KnowledgeImageGallery } from './KnowledgeImageGallery';
 import backChevronIcon from '../../assets/knowledge/icons/back-chevron.svg';
 import filePdfIcon from '../../assets/knowledge/icons/file-pdf.svg';
 import fileWordIcon from '../../assets/knowledge/icons/file-word.svg';
@@ -30,6 +33,8 @@ export function KnowledgeDetailPage(): React.ReactElement {
   const [recommendedCategoryId, setRecommendedCategoryId] = React.useState(ALL_CATEGORY_VALUE);
 
   const item = items.find(candidate => candidate.id === id);
+  const documentAttachments = (item?.attachments ?? []).filter(attachment => !isImageFileType(attachment.fileType));
+  const attachmentSizeLabelByUrl = useAttachmentSizeLabels(documentAttachments);
 
   React.useEffect(() => {
     if (item) {
@@ -59,12 +64,15 @@ export function KnowledgeDetailPage(): React.ReactElement {
   }
 
   const likeState = getLikeState(item);
+  const imageAttachments = item.attachments.filter(attachment => isImageFileType(attachment.fileType));
+  const galleryImageUrls = Array.from(new Set([item.imageUrl, ...imageAttachments.map(attachment => attachment.url)].filter(Boolean)));
   const categoryOptions = [
     { value: ALL_CATEGORY_VALUE, label: 'ทุกหมวดหมู่' },
     ...categories.filter(category => category.id !== ALL_CATEGORY_VALUE).map(category => ({ value: category.id, label: category.label }))
   ];
   const otherItems = items.filter(candidate => candidate.id !== item.id);
   const recommendedItems = otherItems
+    .filter(candidate => candidate.isRecommended)
     .filter(candidate => recommendedCategoryId === ALL_CATEGORY_VALUE || candidate.categoryId === recommendedCategoryId)
     .slice(0, RECOMMENDED_CARD_COUNT);
 
@@ -80,6 +88,7 @@ export function KnowledgeDetailPage(): React.ReactElement {
           <div className={styles.headerBlock}>
             {item.categoryId && <Tag label={item.categoryId} color="#cadfff" textColor="#062b62" borderColor="#062b62" />}
             <h1 className={styles.title}>{item.title}</h1>
+            {item.shortDescription && <p className={styles.shortDescription}>{item.shortDescription}</p>}
           </div>
 
           <div className={styles.metaRow}>
@@ -106,9 +115,13 @@ export function KnowledgeDetailPage(): React.ReactElement {
             </button>
           </div>
 
-          <div className={styles.hero}>
-            <div className={styles.heroImage} style={{ backgroundImage: `url(${item.imageUrl})` }} />
-          </div>
+          {galleryImageUrls.length > 1 ? (
+            <KnowledgeImageGallery images={galleryImageUrls} />
+          ) : (
+            <div className={styles.hero}>
+              <div className={styles.heroImage} style={{ backgroundImage: `url(${item.imageUrl})` }} />
+            </div>
+          )}
 
           {item.description && (
             <div className={styles.detailsSection}>
@@ -139,6 +152,10 @@ export function KnowledgeDetailPage(): React.ReactElement {
                   <p className={styles.infoValue}>{item.categoryId}</p>
                 </div>
               )}
+              <div className={styles.infoField}>
+                <p className={styles.infoLabel}>ผู้เขียน</p>
+                <p className={styles.infoValue}>{item.authorName || 'ไม่ระบุข้อมูล'}</p>
+              </div>
               {item.createdAt && (
                 <div className={styles.infoField}>
                   <p className={styles.infoLabel}>วันที่สร้าง</p>
@@ -166,37 +183,57 @@ export function KnowledgeDetailPage(): React.ReactElement {
             </section>
           )}
 
-          {item.attachments.length > 0 && (
-            <section className={styles.sidebarPanel}>
-              <p className={styles.sidebarPanelTitle}>ไฟล์แนบ (Attachments)</p>
-              <div className={styles.sidebarPanelDivider} />
+          <section className={styles.sidebarPanel}>
+            <p className={styles.sidebarPanelTitle}>ไฟล์แนบ (Attachments)</p>
+            <div className={styles.sidebarPanelDivider} />
+            {documentAttachments.length === 0 ? (
+              <p className={styles.attachmentEmptyMessage}>ไม่พบไฟล์แนบ</p>
+            ) : (
               <div className={styles.attachmentList}>
-                {item.attachments.map(attachment => {
+                {documentAttachments.map(attachment => {
                   const iconUrl = ATTACHMENT_ICON_URL_BY_FILE_TYPE[attachment.fileType];
+                  const sizeLabel = attachmentSizeLabelByUrl[attachment.url];
+
+                  const querySeparator = attachment.url.includes('?') ? '&' : '?';
 
                   return (
-                    <a
-                      key={attachment.url}
-                      className={styles.attachmentRow}
-                      href={attachment.url}
-                      data-interception="off"
-                    >
-                      {iconUrl ? (
-                        <img src={iconUrl} alt="" className={styles.attachmentIconImage} />
-                      ) : (
-                        <Icon name="document" size={24} className={styles.attachmentIcon} />
-                      )}
-                      <span className={styles.attachmentText}>
-                        <span className={styles.attachmentName}>{attachment.name}</span>
-                        <span className={styles.attachmentType}>{attachment.fileType}</span>
-                      </span>
-                      <Icon name="download" size={16} className={styles.attachmentDownloadIcon} />
-                    </a>
+                    <div key={attachment.url} className={styles.attachmentRow}>
+                      <a
+                        className={styles.attachmentOpenLink}
+                        href={`${attachment.url}${querySeparator}web=1`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        data-interception="off"
+                      >
+                        {iconUrl ? (
+                          <img src={iconUrl} alt="" className={styles.attachmentIconImage} />
+                        ) : (
+                          <Icon name="document" size={24} className={styles.attachmentIcon} />
+                        )}
+                        <span className={styles.attachmentText}>
+                          <span className={styles.attachmentName}>{attachment.name}</span>
+                          <span className={styles.attachmentType}>
+                            {attachment.fileType}
+                            {sizeLabel ? ` (${sizeLabel})` : ''}
+                          </span>
+                        </span>
+                      </a>
+                      <a
+                        className={styles.attachmentDownloadLink}
+                        href={`${attachment.url}${querySeparator}download=1`}
+                        download={attachment.name}
+                        aria-label={`ดาวน์โหลด ${attachment.name}`}
+                        title={`ดาวน์โหลด ${attachment.name}`}
+                        data-interception="off"
+                      >
+                        <Icon name="download" size={16} className={styles.attachmentDownloadIcon} />
+                      </a>
+                    </div>
                   );
                 })}
               </div>
-            </section>
-          )}
+            )}
+          </section>
         </div>
       </div>
 

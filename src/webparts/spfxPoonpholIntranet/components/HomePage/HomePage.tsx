@@ -49,7 +49,7 @@ export function HomePage({ userDisplayName }: HomePageProps): React.ReactElement
             <KnowledgeSection
               categories={knowledgeFeed.categories}
               items={knowledgeFeed.items}
-              featuredItems={knowledgeFeed.featuredItems}
+              latestItems={knowledgeFeed.latestItems}
               totalCount={knowledgeFeed.totalCount}
               getLikeState={knowledgeLikes.getLikeState}
               onToggleLike={knowledgeLikes.toggleLike}

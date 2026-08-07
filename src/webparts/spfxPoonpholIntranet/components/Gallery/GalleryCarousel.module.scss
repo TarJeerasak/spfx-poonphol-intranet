@@ -13,7 +13,6 @@ $gallery-accent: #d8b66a;
   position: relative;
   display: flex;
   align-items: center;
-  gap: 16px;
   cursor: grab;
   touch-action: none;
   user-select: none;
@@ -21,6 +20,12 @@ $gallery-accent: #d8b66a;
   &:active {
     cursor: grabbing;
   }
+}
+
+.slides {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
 .slide {
@@ -33,11 +38,8 @@ $gallery-accent: #d8b66a;
   aspect-ratio: 3 / 4;
   background-color: $color-border;
   box-shadow: $shadow-card;
-  transition: width $transition-base, height $transition-base;
-
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-  }
+  transform-origin: center;
+  will-change: transform, opacity;
 }
 
 .imageLayer {

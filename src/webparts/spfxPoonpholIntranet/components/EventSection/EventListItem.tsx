@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../../../../shared/components/Button/Button';
+import { ImageFallback } from '../../../../shared/components/ImageFallback/ImageFallback';
 import { EventItem } from '../../../../shared/types/content';
 import { EventJoinState } from '../../hooks/useEventJoins';
 import styles from './EventListItem.module.scss';
@@ -25,7 +26,7 @@ export function EventListItem({ item, joinState, onToggleJoin }: EventListItemPr
         <span className={styles.month}>{item.dateMonthLabel}</span>
       </div>
       <div className={styles.thumbnail}>
-        <div className={styles.thumbnailImage} style={{ backgroundImage: `url(${item.imageUrl})` }} />
+        <ImageFallback imageUrl={item.imageUrl} className={styles.thumbnailImage} />
       </div>
       <div className={styles.body}>
         <p className={styles.title}>{item.title}</p>

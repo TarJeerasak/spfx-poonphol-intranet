@@ -42,6 +42,7 @@ export function KnowledgeCard({ item, likeState, to, onToggleLike }: KnowledgeCa
             aria-label={likeState.isLiked ? `นำ ${item.title} ออกจากรายการที่ถูกใจ` : `เพิ่ม ${item.title} เป็นรายการที่ถูกใจ`}
           >
             <Icon name="heart" size={20} />
+            <span className={styles.likeCount}>{likeState.likeCount}</span>
           </button>
         </div>
         <div className={styles.textGroup}>

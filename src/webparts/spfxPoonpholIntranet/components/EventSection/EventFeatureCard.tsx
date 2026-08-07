@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { Icon } from '../../../../shared/components/Icon/Icon';
+import { ImageFallback } from '../../../../shared/components/ImageFallback/ImageFallback';
 import { EventItem } from '../../../../shared/types/content';
 import styles from './EventFeatureCard.module.scss';
 
@@ -11,7 +12,7 @@ export interface EventFeatureCardProps {
 export function EventFeatureCard({ item }: EventFeatureCardProps): React.ReactElement {
   return (
     <Link to={`/events/${item.id}`} className={styles.card}>
-      <div className={styles.imageLayer} style={{ backgroundImage: `url(${item.imageUrl})` }} />
+      <ImageFallback imageUrl={item.imageUrl} className={styles.imageLayer} />
       <div className={styles.content}>
         <h3 className={styles.title}>{item.title}</h3>
         {item.subtitle && <p className={styles.subtitle}>{item.subtitle}</p>}

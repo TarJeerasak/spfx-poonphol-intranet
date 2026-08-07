@@ -11,7 +11,7 @@ import styles from './KnowledgeSection.module.scss';
 export interface KnowledgeSectionProps {
   categories: KnowledgeCategory[];
   items: KnowledgeItem[];
-  featuredItems: KnowledgeItem[];
+  latestItems: KnowledgeItem[];
   totalCount: number;
   getLikeState: (item: KnowledgeItem) => KnowledgeLikeState;
   onToggleLike: (item: KnowledgeItem) => void;
@@ -20,7 +20,7 @@ export interface KnowledgeSectionProps {
 export function KnowledgeSection({
   categories,
   items,
-  featuredItems,
+  latestItems,
   totalCount,
   getLikeState,
   onToggleLike
@@ -29,7 +29,7 @@ export function KnowledgeSection({
   const [ref, isVisible] = useScrollReveal<HTMLElement>();
 
   const visibleItems =
-    activeCategoryId === 'all' ? featuredItems : items.filter(item => item.categoryId === activeCategoryId);
+    activeCategoryId === 'all' ? latestItems : items.filter(item => item.categoryId === activeCategoryId);
 
   return (
     <section ref={ref} className={`${styles.section} ${isVisible ? styles.isVisible : ''}`}>

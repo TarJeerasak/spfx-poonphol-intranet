@@ -2,10 +2,9 @@ import { spApi } from '../../../shared/services/api';
 import { SiteURL } from '../../../shared/config/site';
 import { KnowledgeAttachment, KnowledgeCategory, KnowledgeItem } from '../../../shared/types/content';
 import { parseMultiChoiceValue } from '../../../shared/utils/parseMultiChoiceValue';
-import { parseThumbnailImage } from '../../../shared/utils/parseThumbnailImage';
-import { IAttachmentFile, resolveListItemImageUrl } from '../../../shared/utils/resolveListItemImageUrl';
+import { buildAttachmentUrl, isReservedAttachment, resolveImageColumnUrl } from '../../../shared/utils/resolveImageColumnUrl';
+import { IAttachmentFile } from '../../../shared/utils/resolveListItemImageUrl';
 import { selectClosestByDate } from '../../../shared/utils/selectClosestByDate';
-import { SITE_ORIGIN } from '../../../shared/utils/siteOrigin';
 import { fetchKnowledgeCountMap, KnowledgeCounts } from './knowledgeCountService';
 
 const KNOWLEDGE_LIST_TITLE = 'KnowledgeManagementList';
@@ -22,14 +21,21 @@ export function resolveKnowledgeListTitle(siteUrl: string): string {
 // Internal names guessed from the list's display names - verify against
 // `${SiteURL}/_api/web/lists/getbytitle('KnowledgeManagementList')/fields?$select=Title,InternalName,TypeAsString&$filter=Hidden eq false`
 // and adjust the constants below if the request returns a "field does not exist" error.
+// "Author" collides with the display name of the list's built-in Created By field (whose real
+// internal name is "Author"), so SharePoint auto-suffixed this custom column's internal name to
+// "Author0" - confirmed via the column's Edit Column page. It's a plain "Single line of text"
+// column (not a Person field), so it's read directly with no $expand.
 const KNOWLEDGE_FIELDS = {
   id: 'Id',
   title: 'Title',
+  shortDescription: 'ShortDescription',
   description: 'Description',
   tag: 'Tag',
   thumbnailImage: 'ThumbnailImage',
   publishDate: 'PublishDate',
   category: 'Category',
+  author: 'Author0',
+  isRecommended: 'IsRecommended',
   active: 'Active',
   created: 'Created',
   modified: 'Modified'
@@ -38,12 +44,15 @@ const KNOWLEDGE_FIELDS = {
 interface ISPKnowledgeListItem {
   Id: number;
   Title: string;
+  ShortDescription?: string;
   Description?: string;
   Tag?: string[] | string;
   ThumbnailImage?: string;
   AttachmentFiles?: IAttachmentFile[];
   PublishDate?: string;
   Category?: string;
+  Author0?: string;
+  IsRecommended?: boolean;
   Active: boolean;
   Created?: string;
   Modified?: string;
@@ -51,9 +60,16 @@ interface ISPKnowledgeListItem {
 
 export interface KnowledgeFeedResult {
   items: KnowledgeItem[];
+  // Editorially curated via IsRecommended - powers "บทเรียนแนะนำ" on the Knowledge page.
   featuredItems: KnowledgeItem[];
+  // Most recently published, regardless of IsRecommended - powers the home page's KM widget.
+  latestItems: KnowledgeItem[];
   categories: KnowledgeCategory[];
   totalCount: number;
+}
+
+function getAttachmentFileName(file: IAttachmentFile): string {
+  return file.ServerRelativeUrl.split('/').pop() ?? file.ServerRelativeUrl;
 }
 
 export function buildKnowledgeAttachments(attachmentFiles: IAttachmentFile[] | undefined): KnowledgeAttachment[] {
@@ -61,12 +77,14 @@ export function buildKnowledgeAttachments(attachmentFiles: IAttachmentFile[] | u
     return [];
   }
 
-  return attachmentFiles.map(file => {
-    const name = file.ServerRelativeUrl.split('/').pop() ?? file.ServerRelativeUrl;
-    const fileType = name.split('.').pop()?.toUpperCase() ?? '';
+  return attachmentFiles
+    .filter(file => !isReservedAttachment(file))
+    .map(file => {
+      const name = getAttachmentFileName(file);
+      const fileType = name.split('.').pop()?.toUpperCase() ?? '';
 
-    return { name, url: `${SITE_ORIGIN}${file.ServerRelativeUrl}`, fileType };
-  });
+      return { name, url: buildAttachmentUrl(file), serverRelativeUrl: file.ServerRelativeUrl, fileType };
+    });
 }
 
 // Read/like counts live in the History_KM_Count list (keyed by KM_ID), not on this list -
@@ -77,10 +95,13 @@ export function mapToKnowledgeItem(raw: ISPKnowledgeListItem, counts?: Knowledge
     categoryId: raw.Category ?? '',
     tags: parseMultiChoiceValue(raw.Tag),
     title: raw.Title,
+    authorName: raw.Author0 ?? '',
+    shortDescription: raw.ShortDescription ?? '',
     description: raw.Description ?? '',
-    imageUrl: resolveListItemImageUrl(parseThumbnailImage(raw.ThumbnailImage), raw.AttachmentFiles),
+    imageUrl: resolveImageColumnUrl(raw.ThumbnailImage, raw.AttachmentFiles),
     readCount: counts?.readCount ?? 0,
     likeCount: counts?.likeCount ?? 0,
+    isRecommended: !!raw.IsRecommended,
     attachments: buildKnowledgeAttachments(raw.AttachmentFiles),
     createdAt: raw.Created ?? '',
     modifiedAt: raw.Modified ?? ''
@@ -104,6 +125,12 @@ export function selectKnowledgeItemsByClosestPublishDate(
   return selectClosestByDate(activeItems, item => item.PublishDate, now, maxCount);
 }
 
+// "บทเรียนแนะนำ" (featured lessons) is an editorial choice, not an automatic heuristic - only
+// items explicitly checked IsRecommended in the list are eligible.
+export function filterRecommendedKnowledgeItems(items: ISPKnowledgeListItem[]): ISPKnowledgeListItem[] {
+  return items.filter(item => !!item.IsRecommended);
+}
+
 export async function fetchKnowledgeFeed(): Promise<KnowledgeFeedResult> {
   const listTitle = resolveKnowledgeListTitle(SiteURL);
   const [response, countMap] = await Promise.all([
@@ -112,12 +139,15 @@ export async function fetchKnowledgeFeed(): Promise<KnowledgeFeedResult> {
         $select: [
           KNOWLEDGE_FIELDS.id,
           KNOWLEDGE_FIELDS.title,
+          KNOWLEDGE_FIELDS.shortDescription,
           KNOWLEDGE_FIELDS.description,
           KNOWLEDGE_FIELDS.tag,
           KNOWLEDGE_FIELDS.thumbnailImage,
           'AttachmentFiles/ServerRelativeUrl',
           KNOWLEDGE_FIELDS.publishDate,
           KNOWLEDGE_FIELDS.category,
+          KNOWLEDGE_FIELDS.author,
+          KNOWLEDGE_FIELDS.isRecommended,
           KNOWLEDGE_FIELDS.active,
           KNOWLEDGE_FIELDS.created,
           KNOWLEDGE_FIELDS.modified
@@ -132,13 +162,18 @@ export async function fetchKnowledgeFeed(): Promise<KnowledgeFeedResult> {
 
   const activeItems = response.data.value;
   const items = activeItems.map(item => mapToKnowledgeItem(item, countMap[String(item.Id)]));
-  const featuredItems = selectKnowledgeItemsByClosestPublishDate(activeItems, Date.now()).map(item =>
+  const recommendedItems = filterRecommendedKnowledgeItems(activeItems);
+  const featuredItems = selectKnowledgeItemsByClosestPublishDate(recommendedItems, Date.now()).map(item =>
+    mapToKnowledgeItem(item, countMap[String(item.Id)])
+  );
+  const latestItems = selectKnowledgeItemsByClosestPublishDate(activeItems, Date.now()).map(item =>
     mapToKnowledgeItem(item, countMap[String(item.Id)])
   );
 
   return {
     items,
     featuredItems,
+    latestItems,
     categories: buildKnowledgeCategories(items),
     totalCount: activeItems.length
   };

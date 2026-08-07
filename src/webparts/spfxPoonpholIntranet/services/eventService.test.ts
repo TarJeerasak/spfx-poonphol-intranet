@@ -83,6 +83,24 @@ describe('mapToEventItem', () => {
     });
   });
 
+  it('resolves the image from the reserved attachment when Image uses the modern Image-column shape', () => {
+    const raw = {
+      Id: 20,
+      Title: 'วันสงกรานต์',
+      AttachmentFiles: [
+        { ServerRelativeUrl: '/sites/PPG_UAT/Lists/CalendarList/Attachments/20/Reserved_ImageAttachment_[14]_[Image][32]_[hash][1].jpg' }
+      ],
+      Image: JSON.stringify({ fileName: 'Reserved_ImageAttachment_[14]_[Image][32]_[hash][1].jpg' }),
+      DateFrom: '2026-04-13T14:00:00',
+      Active: true,
+      Category: { Title: 'วันหยุด' }
+    };
+
+    expect(mapToEventItem(raw, CATEGORIES).imageUrl).toEqual(
+      'https://poonphol.sharepoint.com/sites/PPG_UAT/Lists/CalendarList/Attachments/20/Reserved_ImageAttachment_%5B14%5D_%5BImage%5D%5B32%5D_%5Bhash%5D%5B1%5D.jpg'
+    );
+  });
+
   it('falls back to the first category when the item has no Category or it is unknown', () => {
     const raw = {
       Id: 7,
